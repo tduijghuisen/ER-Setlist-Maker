@@ -1,0 +1,2584 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="theme-color" content="#1A1612" />
+<title>Setlist Maker · The Explosion Rockets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Bebas+Neue&family=Special+Elite&family=Limelight&display=swap" rel="stylesheet" />
+<script>
+  // Suppress the in-browser Babel transformer warning before Babel loads
+  (function(){
+    var ow = console.warn;
+    console.warn = function(){
+      var m = arguments[0];
+      if(typeof m === 'string' && (
+        m.indexOf('in-browser Babel') !== -1 ||
+        m.indexOf('precompile your scripts') !== -1
+      )) return;
+      return ow.apply(console, arguments);
+    };
+  })();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+  :root{
+    --cream: #F4E8D0;
+    --cream-lite: #FFFAEC;
+    --cream-shadow: #E0D2B4;
+    --red: #C2342A;
+    --red-dark: #8C2820;
+    --red-deep: #5E1A14;
+    --ink: #1A1612;
+    --ink-soft: #3A322A;
+    --muted: #7A6E5C;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);
+    font-family:'Special Elite', 'Courier New', monospace;
+    overscroll-behavior:none;
+  }
+  body{
+    background-color:var(--cream);
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(140,40,32,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(26,22,18,0.04) 0%, transparent 50%),
+      radial-gradient(rgba(26,22,18,0.07) 1px, transparent 1px);
+    background-size: auto, auto, 4px 4px;
+    background-position: 0 0, 0 0, 0 0;
+    min-height:100vh;
+    min-height:100dvh;
+  }
+  /* ----- Typography ----- */
+  .f-display{font-family:'Alfa Slab One', Georgia, serif; letter-spacing:0.01em; font-weight:400;}
+  .f-poster{font-family:'Bebas Neue', Impact, sans-serif; letter-spacing:0.04em; font-weight:400;}
+  .f-neon{font-family:'Limelight', Georgia, serif;}
+  .f-type{font-family:'Special Elite', 'Courier New', monospace;}
+  /* ----- App scaffolding ----- */
+  #root{min-height:100vh; min-height:100dvh;}
+  .app{max-width:680px; margin:0 auto; padding:0 0 120px 0;}
+  /* ----- Header ----- */
+  .hdr{
+    position:sticky; top:0; z-index:30;
+    background:var(--ink);
+    color:var(--cream-lite);
+    border-bottom:4px double var(--red);
+    box-shadow:0 4px 0 rgba(26,22,18,0.15);
+  }
+  .hdr-row{display:flex; align-items:center; gap:10px; padding:10px 14px;}
+  .hdr-mark{
+    width:42px; height:42px; flex-shrink:0;
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, var(--red) 0%, var(--red-dark) 60%, var(--red-deep) 100%);
+    border:2px solid var(--cream-lite);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Alfa Slab One', serif;
+    color:var(--cream-lite);
+    font-size:18px;
+    box-shadow:0 0 0 2px var(--ink), 0 2px 0 var(--red-deep);
+    transform:rotate(-6deg);
+  }
+  .hdr-title{
+    font-family:'Alfa Slab One', serif;
+    font-size:18px; line-height:1; letter-spacing:0.02em;
+    color:var(--cream-lite);
+    text-shadow: 1px 1px 0 var(--red-deep);
+  }
+  .hdr-sub{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:11px; letter-spacing:0.18em;
+    color:var(--red);
+    margin-top:2px;
+  }
+  .hdr-zip{
+    margin-left:auto; flex-shrink:0;
+    font-family:'Bebas Neue', sans-serif;
+    font-size:13px; letter-spacing:0.08em;
+    padding:6px 9px; border-radius:3px;
+    border:1.5px solid currentColor;
+    background:rgba(244,232,208,0.06);
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .hdr-zip.ok{color:#9BE3B0; border-color:#9BE3B0;}
+  .hdr-zip.warn{color:#F4A03C; border-color:#F4A03C; animation:pulse 2s ease-in-out infinite;}
+  .hdr-zip.loading{color:var(--cream-lite); border-color:var(--cream-lite);}
+  .hdr-zip.sync-off{color:#888; border-color:#888;}
+  .hdr-zip.sync-ok{color:#9BE3B0; border-color:#9BE3B0;}
+  .hdr-zip.sync-busy{color:#7FBEFD; border-color:#7FBEFD; animation:pulse 1.5s ease-in-out infinite;}
+  .hdr-zip.sync-err{color:#FF6B5C; border-color:#FF6B5C; animation:pulse 1.5s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.55}}
+  .hdr-tabs{display:flex; border-top:1px solid rgba(244,232,208,0.15);}
+  .hdr-tab{
+    flex:1; padding:12px 6px; border:none; background:transparent;
+    color:var(--cream-lite); opacity:0.6;
+    font-family:'Bebas Neue', sans-serif; font-size:15px; letter-spacing:0.12em;
+    cursor:pointer; border-bottom:3px solid transparent;
+    transition:opacity .15s, border-color .15s, background .15s;
+  }
+  .hdr-tab.active{opacity:1; border-bottom-color:var(--red); background:rgba(194,52,42,0.08);}
+  .hdr-tab:active{background:rgba(194,52,42,0.18);}
+  /* ----- Content ----- */
+  .view{padding:18px 14px 28px;}
+  .view h2{
+    font-family:'Alfa Slab One', serif;
+    font-size:28px; line-height:1.05; margin:0 0 4px 0;
+    color:var(--ink);
+  }
+  .view-sub{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:14px; letter-spacing:0.16em;
+    color:var(--red-dark); margin-bottom:18px;
+  }
+  /* ----- Search / inputs ----- */
+  .input{
+    width:100%; display:block;
+    background:var(--cream-lite);
+    border:2px solid var(--ink);
+    border-radius:2px;
+    padding:11px 12px;
+    font-family:'Special Elite', monospace; font-size:15px;
+    color:var(--ink);
+    box-shadow:3px 3px 0 var(--ink);
+  }
+  .input:focus{outline:none; border-color:var(--red); box-shadow:3px 3px 0 var(--red-dark);}
+  .input-row{display:flex; gap:8px; margin-bottom:10px;}
+  .input-row .input{flex:1; min-width:0;}
+  label.field{display:block; margin-bottom:14px;}
+  label.field > span{
+    display:block;
+    font-family:'Bebas Neue', sans-serif; font-size:13px; letter-spacing:0.16em;
+    color:var(--red-dark); margin-bottom:5px;
+  }
+  /* ----- Buttons ----- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-family:'Bebas Neue', sans-serif; font-size:16px; letter-spacing:0.1em;
+    padding:11px 16px; border:2px solid var(--ink);
+    background:var(--cream-lite); color:var(--ink);
+    cursor:pointer; border-radius:2px;
+    box-shadow:3px 3px 0 var(--ink);
+    transition:transform .07s, box-shadow .07s;
+  }
+  .btn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink);}
+  .btn-red{background:var(--red); color:var(--cream-lite); border-color:var(--ink);
+    text-shadow:1px 1px 0 var(--red-deep);}
+  .btn-red:hover{background:var(--red-dark);}
+  .btn-ink{background:var(--ink); color:var(--cream-lite); border-color:var(--ink);}
+  .btn-sm{padding:6px 10px; font-size:13px; box-shadow:2px 2px 0 var(--ink);}
+  .btn-icon{padding:6px 8px; font-size:14px; min-width:32px;}
+  .btn-block{width:100%;}
+  .btn:disabled{opacity:0.5; cursor:not-allowed;}
+  .btn-ghost{background:transparent; box-shadow:none; border-color:transparent;}
+  /* ----- Cards ----- */
+  .card{
+    background:var(--cream-lite);
+    border:2px solid var(--ink);
+    border-radius:2px;
+    padding:14px;
+    box-shadow:4px 4px 0 var(--ink);
+    margin-bottom:14px;
+    position:relative;
+  }
+  .card-red{background:var(--red); color:var(--cream-lite);}
+  /* ----- Song row ----- */
+  .song-row{
+    display:flex; align-items:center; gap:10px;
+    padding:9px 10px;
+    background:var(--cream-lite);
+    border:1.5px solid var(--ink);
+    margin-bottom:6px; border-radius:2px;
+    box-shadow:2px 2px 0 rgba(26,22,18,0.6);
+  }
+  .song-row.selected{background:var(--red); color:var(--cream-lite); border-color:var(--ink);}
+  .song-row.dim{opacity:0.5;}
+  .song-num{
+    flex-shrink:0; width:30px; height:30px; border-radius:50%;
+    background:var(--ink); color:var(--cream-lite);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Bebas Neue', sans-serif; font-size:14px;
+  }
+  .song-row.selected .song-num{background:var(--cream-lite); color:var(--ink);}
+  .song-info{flex:1; min-width:0;}
+  .song-title{
+    font-family:'Special Elite', monospace; font-size:15px;
+    line-height:1.2; color:inherit; font-weight:bold;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .song-artist{
+    font-family:'Bebas Neue', sans-serif; font-size:12px;
+    letter-spacing:0.1em; color:var(--red-dark);
+    opacity:0.95; margin-top:1px;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .song-row.selected .song-artist{color:var(--cream-lite); opacity:0.8;}
+  .song-actions{display:flex; flex-shrink:0; gap:4px; align-items:center;}
+  /* ----- Setlist card ----- */
+  .setlist-card{
+    background:var(--cream-lite);
+    border:2px solid var(--ink);
+    padding:14px 16px;
+    box-shadow:4px 4px 0 var(--ink);
+    margin-bottom:14px;
+    border-radius:2px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+  }
+  .setlist-card::before{
+    content:''; position:absolute; top:-6px; left:-6px; right:-6px; height:8px;
+    background:repeating-linear-gradient(45deg, var(--red) 0 6px, var(--ink) 6px 12px);
+  }
+  .sl-name{
+    font-family:'Alfa Slab One', serif; font-size:20px; line-height:1.1;
+    margin:6px 0 4px 0; color:var(--ink);
+  }
+  .sl-meta{
+    font-family:'Bebas Neue', sans-serif; font-size:13px; letter-spacing:0.12em;
+    color:var(--red-dark); margin-bottom:8px;
+  }
+  .sl-stats{
+    font-family:'Special Elite', monospace; font-size:12px;
+    color:var(--muted); display:flex; gap:14px;
+  }
+  /* ----- Set card ----- */
+  .setcard{
+    background:var(--cream-lite);
+    border:2px solid var(--ink);
+    box-shadow:4px 4px 0 var(--ink);
+    margin-bottom:18px;
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .setcard-hdr{
+    background:var(--ink); color:var(--cream-lite);
+    padding:10px 12px;
+    display:flex; align-items:center; gap:10px;
+    border-bottom:2px solid var(--red);
+  }
+  .setcard-name{
+    font-family:'Alfa Slab One', serif; font-size:18px;
+    flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis;
+  }
+  .setcard-name-input{
+    flex:1; background:transparent; border:none; color:var(--cream-lite);
+    font-family:'Alfa Slab One', serif; font-size:18px;
+    padding:2px 4px; min-width:0;
+  }
+  .setcard-name-input:focus{outline:1px dashed var(--cream-lite); outline-offset:2px;}
+  .setcard-body{padding:10px;}
+  .setcard-empty{
+    padding:18px 10px; text-align:center;
+    font-family:'Bebas Neue', sans-serif; font-size:14px; letter-spacing:0.1em;
+    color:var(--muted);
+  }
+  /* ----- Modal ----- */
+  .modal-bg{
+    position:fixed; inset:0; background:rgba(26,22,18,0.7);
+    z-index:50; display:flex; align-items:flex-end; justify-content:center;
+    animation:fadein .15s ease-out;
+  }
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .modal{
+    background:var(--cream);
+    width:100%; max-width:680px; height:92vh; height:92dvh;
+    border-top:4px solid var(--red);
+    border-top-left-radius:14px; border-top-right-radius:14px;
+    display:flex; flex-direction:column;
+    animation:slideup .22s cubic-bezier(.2,.7,.3,1);
+  }
+  @keyframes slideup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .modal-hdr{
+    padding:10px 14px; border-bottom:2px solid var(--ink);
+    display:flex; align-items:center; gap:10px;
+    background:var(--cream);
+  }
+  .modal-title{
+    font-family:'Alfa Slab One', serif; font-size:18px; flex:1; min-width:0;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .modal-body{flex:1; overflow-y:auto; padding:12px 14px;}
+  .modal-foot{
+    padding:10px 14px;
+    border-top:2px solid var(--ink);
+    background:var(--cream-lite);
+    display:flex; gap:8px;
+  }
+  /* ----- Chips ----- */
+  .chip-row{display:flex; gap:6px; flex-wrap:nowrap; overflow-x:auto; padding-bottom:6px; margin-bottom:10px; -webkit-overflow-scrolling:touch;}
+  .chip-row::-webkit-scrollbar{display:none;}
+  .chip{
+    flex-shrink:0;
+    font-family:'Bebas Neue', sans-serif; font-size:13px; letter-spacing:0.08em;
+    padding:6px 11px; border:1.5px solid var(--ink);
+    background:var(--cream-lite); color:var(--ink);
+    border-radius:99px; cursor:pointer;
+    white-space:nowrap;
+  }
+  .chip.active{background:var(--red); color:var(--cream-lite); border-color:var(--ink);}
+  /* ----- Bottom action bar ----- */
+  .action-bar{
+    position:fixed; bottom:0; left:0; right:0;
+    background:var(--ink); border-top:3px solid var(--red);
+    padding:10px 12px; padding-bottom:calc(10px + env(safe-area-inset-bottom));
+    z-index:25;
+    display:flex; gap:8px;
+    max-width:680px; margin:0 auto;
+  }
+  .action-bar .btn{flex:1;}
+  /* ----- Zip drop ----- */
+  .zip-box{
+    border:3px dashed var(--ink); background:var(--cream-lite);
+    padding:22px 16px; text-align:center; border-radius:2px;
+    box-shadow:4px 4px 0 var(--ink);
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .zip-box.over{background:var(--red); color:var(--cream-lite); border-color:var(--cream-lite);}
+  .zip-box-title{font-family:'Alfa Slab One', serif; font-size:20px; margin-bottom:6px;}
+  .zip-box-sub{font-family:'Bebas Neue', sans-serif; letter-spacing:0.1em; font-size:13px;}
+  /* ----- Toast ----- */
+  .toast{
+    position:fixed; left:50%; bottom:90px; transform:translateX(-50%);
+    background:var(--ink); color:var(--cream-lite);
+    padding:10px 18px; border:2px solid var(--red);
+    font-family:'Bebas Neue', sans-serif; letter-spacing:0.1em;
+    z-index:99; box-shadow:3px 3px 0 var(--red-dark);
+    animation:slideup .18s ease-out;
+    max-width:90%; text-align:center;
+  }
+  /* ----- Misc ----- */
+  .divider-stars{
+    text-align:center; font-family:'Bebas Neue', sans-serif;
+    letter-spacing:0.6em; color:var(--red); font-size:16px;
+    margin:18px 0 14px 0;
+  }
+  .empty-state{
+    text-align:center; padding:36px 16px; color:var(--muted);
+  }
+  .empty-state-title{
+    font-family:'Alfa Slab One', serif; font-size:22px; color:var(--ink);
+    margin-bottom:8px;
+  }
+  .danger-text{color:var(--red-dark);}
+  .ticket-tag{
+    display:inline-block; padding:3px 9px;
+    background:var(--ink); color:var(--cream-lite);
+    font-family:'Bebas Neue', sans-serif; letter-spacing:0.12em; font-size:12px;
+    border-radius:2px;
+  }
+  .custom-badge{
+    display:inline-block; margin-left:6px;
+    padding:1px 6px; vertical-align:middle;
+    background:var(--red); color:var(--cream-lite);
+    font-family:'Bebas Neue', sans-serif; letter-spacing:0.1em; font-size:10px;
+    border-radius:2px; transform:translateY(-1px);
+  }
+  .song-row.selected .custom-badge{background:var(--cream-lite); color:var(--red-dark);}
+  .no-pdf-tag{
+    display:inline-block; margin-left:6px;
+    font-family:'Bebas Neue', sans-serif; letter-spacing:0.08em; font-size:10px;
+    color:var(--muted); opacity:0.85;
+  }
+  .song-row.selected .no-pdf-tag{color:var(--cream-lite); opacity:0.7;}
+  .pdf-result{
+    background: var(--cream-lite);
+    border-top: 8px solid var(--red);
+    box-shadow: 4px 4px 0 var(--ink);
+    animation: slidein .25s cubic-bezier(.2,.7,.3,1);
+  }
+  @keyframes slidein{from{transform:translateY(-8px); opacity:0} to{transform:translateY(0); opacity:1}}
+  .pdf-result a.btn{display:inline-flex; align-items:center; justify-content:center;}
+  .preview-warning{
+    background:#FFE7B3; color:#5E1A14;
+    border-bottom:2px solid var(--red);
+    border-top:1px solid var(--red-deep);
+    padding:10px 14px;
+    box-shadow:0 3px 0 rgba(94,26,20,0.15);
+  }
+  .preview-warning-title{
+    font-family:'Bebas Neue', sans-serif;
+    letter-spacing:0.14em; font-size:13px;
+    color:var(--red-deep);
+    margin-bottom:2px;
+  }
+  .preview-warning-text{
+    font-family:'Special Elite', monospace;
+    font-size:13px; line-height:1.45;
+    color:var(--ink);
+  }
+  .progress{
+    height:8px; background:var(--cream-shadow);
+    border:1.5px solid var(--ink); overflow:hidden;
+    margin-top:10px;
+  }
+  .progress-bar{
+    height:100%; background:var(--red);
+    transition:width .2s;
+  }
+  /* hide arrows on number inputs */
+  input[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.2) sepia(1) hue-rotate(330deg) saturate(3);}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const SONGS_RAW = "[{\"f\": \"A Fool such as I ab6670c3b5b14937b7b40c87199c9d13.pdf\", \"t\": \"A Fool such as I\", \"a\": \"Elvis Presley\"}, {\"f\": \"A little less conversation ffdbb83050c84982b45b0de028858569.pdf\", \"t\": \"A little less conversation\", \"a\": \"Elvis Presley\"}, {\"f\": \"Ain’t that a shame 1aaa3b920b888038bc13d1bff50e174d.pdf\", \"t\": \"Ain’t that a shame\", \"a\": \"Fats Domino\"}, {\"f\": \"Ain’t that loving you baby e9a5bd12c25e474aade55e0d585ead2a.pdf\", \"t\": \"Ain’t that loving you baby\", \"a\": \"Elvis Presley\"}, {\"f\": \"Ajoen Ajoen 0ba319378f574b92a6ea9f4d28070f83.pdf\", \"t\": \"Ajoen Ajoen\", \"a\": \"Willy & His Giants\"}, {\"f\": \"Al Capone 8adbdba21b5c4291a1801d1c236b2001.pdf\", \"t\": \"Al Capone\", \"a\": \"The Javelins\"}, {\"f\": \"All Shook Up 70s 16fa3b920b888078b0f7e431748c7739.pdf\", \"t\": \"All Shook Up 70s\", \"a\": \"Elvis Presley\"}, {\"f\": \"All shook up fd213eed12df4f1aa4cbf37d09809090.pdf\", \"t\": \"All shook up\", \"a\": \"Elvis Presley\"}, {\"f\": \"Always on my mind 4540cd3d24794e47a69b6a0c6255ddbd.pdf\", \"t\": \"Always on my mind\", \"a\": \"Elvis Presley\"}, {\"f\": \"Amapola 670d843d9ef74296bdd074f0b4f167af.pdf\", \"t\": \"Amapola\", \"a\": \"The Spotnicks\"}, {\"f\": \"Apache 1910cb8612f9426ca138e83baa141028.pdf\", \"t\": \"Apache\", \"a\": \"The Shadows\"}, {\"f\": \"Apron Strings 70af1d90bad34c1182066c6838e0c80d.pdf\", \"t\": \"Apron Strings\", \"a\": \"Cliff Richards\"}, {\"f\": \"Around and Around 19da3b920b8880a0b860e39793d88ecc.pdf\", \"t\": \"Around and Around\", \"a\": \"The Rolling Stones\"}, {\"f\": \"As long as I live 25fa3b920b888074aab0c14f08b7ce08.pdf\", \"t\": \"As long as I live\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Atlantis 5e4c3e327adc4ca3b5000fc93f1dff3e.pdf\", \"t\": \"Atlantis\", \"a\": \"The Shadows\"}, {\"f\": \"Baby I don’t care 740a43cc9eff4345812b969f28b82839.pdf\", \"t\": \"Baby I don’t care\", \"a\": \"Buddy Holly\"}, {\"f\": \"Baby Sittin’ 99515c847ca04bf5a0e3b85a6982ec31.pdf\", \"t\": \"Baby Sittin’\", \"a\": \"The Explosion Rockets\"}, {\"f\": \"Baby if we touch 44d79b8266224df19f2ea5f3e8562b62.pdf\", \"t\": \"Baby if we touch\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Baby let’s play house c9240e94b64241758e949732d747668d.pdf\", \"t\": \"Baby let’s play house\", \"a\": \"Elvis Presley\"}, {\"f\": \"Baby what you want me to do 51efc901e3414246b3054353f4a9229e.pdf\", \"t\": \"Baby what you want me to do\", \"a\": \"Elvis Presley\"}, {\"f\": \"Baby won’t you come out tonight e38bf049daf447129f9f0082c4bd3787.pdf\", \"t\": \"Baby won’t you come out tonight\", \"a\": \"Buddy Holly\"}, {\"f\": \"Back in the USA 2aea3b920b88808cab67f1a9050ab717.pdf\", \"t\": \"Back in the USA\", \"a\": \"Chuck Berry\"}, {\"f\": \"Because they’re young 8384f762ba9a4ff3b555077b4b2eb633.pdf\", \"t\": \"Because they’re young\", \"a\": \"Duane Eddy\"}, {\"f\": \"Believe what you say 40ed395967ed49738be2d4e71178ac90.pdf\", \"t\": \"Believe what you say\", \"a\": \"Ricky Nelson\"}, {\"f\": \"Big Blon’ Baby a66b882138ba4c9cac8120d9cec0faef.pdf\", \"t\": \"Big Blon’ Baby\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Big Boss Man 46315cb68b82460fa2063f861c667644.pdf\", \"t\": \"Big Boss Man\", \"a\": \"Elvis Presley\"}, {\"f\": \"Blue Blue Day 254a3b920b8880efad6ff35ea9390a56.pdf\", \"t\": \"Blue Blue Day\", \"a\": \"Simon Crashly\"}, {\"f\": \"Blue Christmas 707fa26f58fd466d936ebde65943d3d0.pdf\", \"t\": \"Blue Christmas\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Blue Suede Shoes e97dcd1f8b704d55bebbcca651b9deb0.pdf\", \"t\": \"Blue Suede Shoes\", \"a\": \"Carl Perkins / Elvis Presley\"}, {\"f\": \"Blue Swinging Mama 1d489b59fd2b40a7902d68cb457fc17b.pdf\", \"t\": \"Blue Swinging Mama\", \"a\": \"The Explosion Rockets\"}, {\"f\": \"Blue moon of Kentucky 12ea3b920b8880e5badff5d159528fdf.pdf\", \"t\": \"Blue moon of Kentucky\", \"a\": \"Elvis Presley\"}, {\"f\": \"Blueberry Hill 30a09f401ccc4bb3892fee0bb0223582.pdf\", \"t\": \"Blueberry Hill\", \"a\": \"Fats Domino\"}, {\"f\": \"Blueberry Hill I Can’t Stop Loving You 2cf5f0b90431445894e05e8308b64120.pdf\", \"t\": \"Blueberry Hill I Can’t Stop Loving You\", \"a\": \"Elvis Presley\"}, {\"f\": \"Bo Diddley f3d0a5d5140b437b9baf490f99b0c4e8.pdf\", \"t\": \"Bo Diddley\", \"a\": \"Buddy Holly\"}, {\"f\": \"Bongo Blues 6c99aec7c5c74a139c183ff9909da9ac.pdf\", \"t\": \"Bongo Blues\", \"a\": \"The Shadows\"}, {\"f\": \"Bop pretty baby a0dcb6d1f0ce4b31b04983ad5f2b50b4.pdf\", \"t\": \"Bop pretty baby\", \"a\": \"Crazy Cavan & the Rhythm Rockers\"}, {\"f\": \"Boppin’ the Blues ed0f1bdb340148859797df8c8a4f5f99.pdf\", \"t\": \"Boppin’ the Blues\", \"a\": \"Carl Perkins\"}, {\"f\": \"Bossa Nova Baby ffb944baa2784882ab81f7c0e359be55.pdf\", \"t\": \"Bossa Nova Baby\", \"a\": \"Elvis Presley\"}, {\"f\": \"Break up 41a8d8199dbf4628b34cbc1e2599a924.pdf\", \"t\": \"Break up\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Breathless 7452c9dd102f439fb8cca9307dc55f3a.pdf\", \"t\": \"Breathless\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Bring back your love to me 310a3b920b8880cda6c2c42f9f5afd0e.pdf\", \"t\": \"Bring back your love to me\", \"a\": \"Don Gibson\"}, {\"f\": \"Bring it on home to me 34ca3b920b8880c4a626e89d793cea72.pdf\", \"t\": \"Bring it on home to me\", \"a\": \"Sam Cooke\"}, {\"f\": \"Brown Eyed handsome man 16aa3b920b8880fba098d84efc181350.pdf\", \"t\": \"Brown Eyed handsome man\", \"a\": \"Buddy Holly\"}, {\"f\": \"Brush those tears c5dce1e34b084b439913cbaef63a88ba.pdf\", \"t\": \"Brush those tears\", \"a\": \"Explosion Rockets\"}, {\"f\": \"Bulldog ad0a38ec055f456ea9d6f0756078b7f3.pdf\", \"t\": \"Bulldog\", \"a\": \"The Ventures\"}, {\"f\": \"Buona Sera Oh Marie 254a3b920b8880c5a299ec1fe72819bb.pdf\", \"t\": \"Buona Sera Oh Marie\", \"a\": \"André Hazes\"}, {\"f\": \"Burning Love f85499936dd74dfbbb2dc7f071b00b26.pdf\", \"t\": \"Burning Love\", \"a\": \"Elvis Presley\"}, {\"f\": \"Can’t help fallin’ in love 63f954fe0c7a4a3a9a7f764f9348ae6e.pdf\", \"t\": \"Can’t help fallin’ in love\", \"a\": \"Elvis Presley\"}, {\"f\": \"Carol 2aea3b920b8880918cf9c7641792e59a.pdf\", \"t\": \"Carol\", \"a\": \"Chuck Berry\"}, {\"f\": \"Cosy 2eefc599607e4bb797fb982300b95124.pdf\", \"t\": \"Cosy\", \"a\": \"The Shadows\"}, {\"f\": \"Crazy 1b8a3b920b8880ef8a44d03525dc96e2.pdf\", \"t\": \"Crazy\", \"a\": \"Patsy Cline\"}, {\"f\": \"Crazy Arms 73a33e44f99a4719a378320e6ef4bcbd.pdf\", \"t\": \"Crazy Arms\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Cyring waiting hoping 16aa3b920b8880cf8ccef1818f786af7.pdf\", \"t\": \"Cyring waiting hoping\", \"a\": \"Buddy Holly\"}, {\"f\": \"C’est la vie 319357bc7fe045b29ba10de3fd79f7e3.pdf\", \"t\": \"C’est la vie\", \"a\": \"Chuck Berry\"}, {\"f\": \"C’mon everybody d17c465256934d52818599bc582d1bd7.pdf\", \"t\": \"C’mon everybody\", \"a\": \"Eddy Cochran\"}, {\"f\": \"Dance on 6322d9afb94b4c98aa36d7ad53e3c8ed.pdf\", \"t\": \"Dance on\", \"a\": \"The Shadows\"}, {\"f\": \"Dancing Shoes f4f7b33d77db43179e3d662c2f32dff9.pdf\", \"t\": \"Dancing Shoes\", \"a\": \"Cliff and The Shadows\"}, {\"f\": \"Dark town strutters ball 9ffab4bc73524bc096bb771176c42c68.pdf\", \"t\": \"Dark town strutters ball\", \"a\": \"The Spotnicks/Jumping Jewels\"}, {\"f\": \"Dear one 134a3b920b8880d08cc8ece8cf10fa40.pdf\", \"t\": \"Dear one\", \"a\": \"Johnny Lion\"}, {\"f\": \"Do you wanna dance 2165ea1cb4344ee49d966690577427d2.pdf\", \"t\": \"Do you wanna dance\", \"a\": \"Cliff Richard\"}, {\"f\": \"Don’t be cruel 476ef33906e04bd3bfbfda98caa3fb29.pdf\", \"t\": \"Don’t be cruel\", \"a\": \"Elvis Presley\"}, {\"f\": \"Don’t cry daddy a892b7a004fa4fe6b510a739f09469d8.pdf\", \"t\": \"Don’t cry daddy\", \"a\": \"Elvis Presley\"}, {\"f\": \"Don’t wake me up f57cf374685543e3b971f9f62b9073bb.pdf\", \"t\": \"Don’t wake me up\", \"a\": \"Bo Walton\"}, {\"f\": \"Don’t you lie to me 2bca3b920b8880c6af03cebda5899d5d.pdf\", \"t\": \"Don’t you lie to me\", \"a\": \"Chuck Berry\"}, {\"f\": \"Down the line 254a3b920b88801d9995c68891f34a14.pdf\", \"t\": \"Down the line\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Drinkin’ Wine Spo-Dee-O-Dee 49b7e29e453b4883bf5c2b4b063842b2.pdf\", \"t\": \"Drinkin’ Wine Spo-Dee-O-Dee\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"End of the road 25fa3b920b888086b03bc485f63c4ef1.pdf\", \"t\": \"End of the road\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Every day 16aa3b920b8880c89217e0a4b36d80c3.pdf\", \"t\": \"Every day\", \"a\": \"Buddy Holly\"}, {\"f\": \"Everybody’s somebody’s fool 1b8a3b920b88804c8fc3c5bbbe297317.pdf\", \"t\": \"Everybody’s somebody’s fool\", \"a\": \"Connie Francis\"}, {\"f\": \"Everybody’s trying to be my baby 934e2698e499404b9fa09b3ec3c54078.pdf\", \"t\": \"Everybody’s trying to be my baby\", \"a\": \"George Harrison\"}, {\"f\": \"FBI 31733ac4c5b343e6ba1eb0a76273c898.pdf\", \"t\": \"FBI\", \"a\": \"The Shadows\"}, {\"f\": \"Flip Flop and Fly 34ca3b920b8880ddbf01eb856cd859db.pdf\", \"t\": \"Flip, Flop & Fly\", \"a\": \"The Blues Brothers\"}, {\"f\": \"Flying Saucer Rock ‘n Roll 25fa3b920b8880e8b914fa8d2bc207b0.pdf\", \"t\": \"Flying Saucer Rock ‘n Roll\", \"a\": \"Billy Lee Riley\"}, {\"f\": \"Folsom prison blues cc795af527d04a57a7fba74c06f987be.pdf\", \"t\": \"Folsom prison blues\", \"a\": \"Johnny Cash\"}, {\"f\": \"Foottapper 12ea3b920b888039a2d4eef8c9f16572.pdf\", \"t\": \"Foottapper\", \"a\": \"The Shadows\"}, {\"f\": \"Forty Days 065453708dac46698b045607c7208fff.pdf\", \"t\": \"Forty Days\", \"a\": \"Cliff Richard\"}, {\"f\": \"Good Golly Miss Molly 6cbaf5f0da1249e8836e8aa9c6f832a5.pdf\", \"t\": \"Good Golly Miss Molly\", \"a\": \"Little Richard\"}, {\"f\": \"Good Rockin’ Tonight 9093673427d14e9ebb23468fb24a6e78.pdf\", \"t\": \"Good Rockin’ Tonight\", \"a\": \"Elvis Presley\"}, {\"f\": \"Got a funny feeling ec6a8f51873d46d3a8850a59d4bb6fcd.pdf\", \"t\": \"Got a funny feeling\", \"a\": \"Cliff Richard\"}, {\"f\": \"Great balls of fire f3d198c3df0d467f8ea522a149e105e5.pdf\", \"t\": \"Great balls of fire\", \"a\": \"Jerry Lee Leweis\"}, {\"f\": \"Green Door 79da45e8e71243cfac2c4413654215d8.pdf\", \"t\": \"Green Door\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Guitar Boogie 2a0a3b920b8880c8bf4acc513b16046f.pdf\", \"t\": \"Guitar Boogie\", \"a\": \"Chuck Berry/The Explosion Rockets\"}, {\"f\": \"Guitar Boogie af0171f3b92040bfb78fc5a49b929c8f.pdf\", \"t\": \"Guitar Boogie\", \"a\": \"René and his Alligators\"}, {\"f\": \"Half a boy and half a man 380c738c78b0422386372ba0959a4adc.pdf\", \"t\": \"Half a boy and half a man\", \"a\": \"Nick Lowe\"}, {\"f\": \"Heartbeat fe0164d9b0b041c8b6024e96eeccaaa9.pdf\", \"t\": \"Heartbeat\", \"a\": \"Buddy Holly\"}, {\"f\": \"Heartbreak Hotel deb2b3a29b704cd5b8a18cad6d7f82a5.pdf\", \"t\": \"Heartbreak Hotel\", \"a\": \"Elvis Presley\"}, {\"f\": \"Hello Mary Lou cfd477b6e399451096a717817938f688.pdf\", \"t\": \"Hello Mary Lou\", \"a\": \"Ricky Nelson\"}, {\"f\": \"Here comes that feeling 1c7a3b920b88807386c4cb83d74ea7c6.pdf\", \"t\": \"Here comes that feeling\", \"a\": \"Brenda Lee\"}, {\"f\": \"Hey Mae 235ac3dc61c04f4085be48c3c8f3070a.pdf\", \"t\": \"Hey Mae\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Hey Porter be68d9fe1bdd447f8d48dd35e63f1b92.pdf\", \"t\": \"Hey Porter\", \"a\": \"Johnny Cash\"}, {\"f\": \"Hey Rosalie ea187facf021464996ea9685af2ce32f.pdf\", \"t\": \"Hey Rosalie\", \"a\": \"Micke Muster\"}, {\"f\": \"Highschool Confidential b84d29921fc144e497c8fedbce273c1d.pdf\", \"t\": \"Highschool Confidential\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"His Latest Flame 18497648abf54bf3b1f10edffc7f047c.pdf\", \"t\": \"His Latest Flame\", \"a\": \"Elvis Presley\"}, {\"f\": \"Honey Don’t 5f9e1f08ef774ab5af440d236d0f38da.pdf\", \"t\": \"Honey Don’t\", \"a\": \"Carl Perkins\"}, {\"f\": \"Honky Tonk e4f19cb168ad4f559945298623248c0e.pdf\", \"t\": \"Honky Tonk\", \"a\": \"The Ventures\"}, {\"f\": \"Hotdog e67eea50c7884c3c81e9dea5b56bdd1d.pdf\", \"t\": \"Hotdog\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Hound Dog 11d96773116b4180be1d50e50b340fae.pdf\", \"t\": \"Hound Dog\", \"a\": \"Elvis Presley\"}, {\"f\": \"Hurricane Rock 42b132e4304f48ecb76234effb336dbb.pdf\", \"t\": \"Hurricane Rock\", \"a\": \"Bart Strik\"}, {\"f\": \"Hurt 428489b574cd45e3af6f729821993fc0.pdf\", \"t\": \"Hurt\", \"a\": \"Elvis Presley\"}, {\"f\": \"I ain’t gonna be your low down dog ffece29b572346d1b23615ae69efdbcb.pdf\", \"t\": \"I ain’t gonna be your low down dog\", \"a\": \"Vince Everett\"}, {\"f\": \"I can’t stop loving you 44c9f8f0f10e453bbdf9c41e05e8405c.pdf\", \"t\": \"I can’t stop loving you\", \"a\": \"Elvis Presley\"}, {\"f\": \"I forgot to remember 4f1dc4ad093d4753ba9c3ffcbbeba68e.pdf\", \"t\": \"I forgot to remember\", \"a\": \"Chris Isaak\"}, {\"f\": \"I got Stung c2be1e34ebe84afe8a93a105c8585e28.pdf\", \"t\": \"I got Stung\", \"a\": \"Elvis Presley\"}, {\"f\": \"I got a feeling 647ea2df35204459982627be7b632a83.pdf\", \"t\": \"I got a feeling\", \"a\": \"Rickey Nelson\"}, {\"f\": \"I got my eyes on you 4dbf8a8a07c74f18b63b158f281f209f.pdf\", \"t\": \"I got my eyes on you\", \"a\": \"Matchbox\"}, {\"f\": \"I just can’t help believing 16fa3b920b88805f9f14ceb9faa138fb.pdf\", \"t\": \"I just can’t help believing\", \"a\": \"Elvis Presley\"}, {\"f\": \"I need your love tonight 1848091544114433adf1be1a4f1cd4e8.pdf\", \"t\": \"I need your love tonight\", \"a\": \"Elvis Presley\"}, {\"f\": \"I walk the line 348a3b920b8880489b00d02c5dceca7d.pdf\", \"t\": \"I walk the line\", \"a\": \"Johnny Cash\"}, {\"f\": \"In the ghetto 180a3b920b888074b5b1dea36803f9c5.pdf\", \"t\": \"In the ghetto\", \"a\": \"Elvis Presley\"}, {\"f\": \"In the mood 87130d6077b0474088cc0f60681dc177.pdf\", \"t\": \"In the mood\", \"a\": \"René and his Alligators\"}, {\"f\": \"In your arms a7a0660ab8a24492b9560f641b5c398e.pdf\", \"t\": \"In your arms\", \"a\": \"Elvis Presley\"}, {\"f\": \"It doesn’t matter anymore 16aa3b920b8880b7ac68faccb7bb15a6.pdf\", \"t\": \"It doesn’t matter anymore\", \"a\": \"Buddy Holly\"}, {\"f\": \"It’ll be me (Cody) 2a382b25281241318af2e4475056bdba.pdf\", \"t\": \"It’ll be me (Cody)\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"It’ll be me 52e2f13f05cb4fa4b3a8e675135edaa8.pdf\", \"t\": \"It’ll be me\", \"a\": \"Cliff & The Shadows\"}, {\"f\": \"It’s so easy to fall in love 84d7e8342d4448c8bc9307f5a5ff97cc.pdf\", \"t\": \"It’s so easy to fall in love\", \"a\": \"Buddy Holly\"}, {\"f\": \"I’ll Try 44c2dcf73ea04b4ab4af77dfd05562a7.pdf\", \"t\": \"I’ll Try\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"I’m coming home 091174a1a0184a1391db892cc8e39a76.pdf\", \"t\": \"I’m coming home\", \"a\": \"Elvis Presley\"}, {\"f\": \"I’m ready 9cdd5cd8d2354fbf8019e7a4d39beac2.pdf\", \"t\": \"I’m ready\", \"a\": \"Fats Domino\"}, {\"f\": \"I’m talking about you 2aea3b920b888081b200d12b45e8c472.pdf\", \"t\": \"I’m talking about you\", \"a\": \"Chuck Berry\"}, {\"f\": \"Jailhouse Rock 1db1db557c7b433fb7e55c59daf6aa82.pdf\", \"t\": \"Jailhouse Rock\", \"a\": \"Elvis Presley\"}, {\"f\": \"Jeannie, Jeannie, Jeannie b2c9883ca00d454eae3ba7d1aa6ca2dc.pdf\", \"t\": \"Jeannie, Jeannie, Jeannie\", \"a\": \"Eddie Cochran\"}, {\"f\": \"Johnny B Goode f3c2ee5476ee42b2a4b0e25e4273e68d.pdf\", \"t\": \"Johnny B. Goode\", \"a\": \"Chuck Berry\"}, {\"f\": \"Johnny Guitar dec26b8c892946689dc89fa9bed77d06.pdf\", \"t\": \"Johnny Guitar\", \"a\": \"The Spotnicks\"}, {\"f\": \"Jungle Rock 843220e6f56c4cbfab0cc6773af213ea.pdf\", \"t\": \"Jungle Rock\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Kon-tiki 20ea3b920b8880f7b441f55803371eaf.pdf\", \"t\": \"Kon-tiki\", \"a\": \"The Shadows\"}, {\"f\": \"La Comparsa 233e4e613f7844c3bd5c1da484200f95.pdf\", \"t\": \"La Comparsa\", \"a\": \"De Maskers\"}, {\"f\": \"Last Date e51f29c934304e949d31da8d5b81b1c7.pdf\", \"t\": \"Last Date\", \"a\": \"The Spotnicks\"}, {\"f\": \"Lawdy miss Clawdy 180a3b920b88808ba21cfc0c56b92ace.pdf\", \"t\": \"Lawdy miss Clawdy\", \"a\": \"Elvis Presley\"}, {\"f\": \"Let it rock 2bca3b920b8880929bb8e487435af0bf.pdf\", \"t\": \"Let it rock\", \"a\": \"Chuck Berry\"}, {\"f\": \"Let the four winds blow 6347fd974d72490e99d1937ff71f0314.pdf\", \"t\": \"Let the four winds blow\", \"a\": \"Fats Domino\"}, {\"f\": \"Let the teardrops fall 1c7a3b920b8880918471df5da2d3a245.pdf\", \"t\": \"Let the teardrops fall\", \"a\": \"Patsy Cline\"}, {\"f\": \"Let’s have a party 1dda3b920b8880e4808be83e3848a85a.pdf\", \"t\": \"Let’s have a party\", \"a\": \"Wanda Jackson\"}, {\"f\": \"Let’s jump the broomstick 1dda3b920b8880f1ae23cbe4e48a6e89.pdf\", \"t\": \"Let’s jump the broomstick\", \"a\": \"Brenda Lee\"}, {\"f\": \"Let’s talk about us 254a3b920b888085b64eed59a1a7a536.pdf\", \"t\": \"Let’s talk about us\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Lewis Boogie a68acb1f94bc4e2cb76f6dc107bc6245.pdf\", \"t\": \"Lewis Boogie\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Lipstick on your collar 1dda3b920b888022a884f41b0ff26d28.pdf\", \"t\": \"Lipstick on your collar\", \"a\": \"Connie Francis\"}, {\"f\": \"Little Queenie 2bca3b920b8880dda775c199f114aea5.pdf\", \"t\": \"Little Queenie\", \"a\": \"Chuck Berry\"}, {\"f\": \"Little Sister 8d2afca3923b43e6927c135d02827d77.pdf\", \"t\": \"Little Sister\", \"a\": \"Elvis Presley\"}, {\"f\": \"Long Long Ago 5b3930d1226d491a9a2ffc00f94cea05.pdf\", \"t\": \"Long Long Ago\", \"a\": \"The Explosions\"}, {\"f\": \"Long tall Sally 667971f76d734f2f89235b7c67093101.pdf\", \"t\": \"Long tall Sally\", \"a\": \"Gene Vincent\"}, {\"f\": \"Lover Please 13d4110c2ab94188844b8dc9bbccbb9b.pdf\", \"t\": \"Lover Please\", \"a\": \"Clyde McPhatter\"}, {\"f\": \"Lovesick Blues 1dda3b920b8880e8a21bd48fbe622246.pdf\", \"t\": \"Lovesick Blues\", \"a\": \"Patsy Lee\"}, {\"f\": \"Loving You 1c5e75ba8df34b1e8a560aa3e2ce3f33.pdf\", \"t\": \"Loving You\", \"a\": \"Elvis Presley\"}, {\"f\": \"Marie Marie 12e728e88f814bba98ad9fb0f41ce0a8.pdf\", \"t\": \"Marie Marie\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Matchbox b97a2ea8fce94b06ba0651f6295148bd.pdf\", \"t\": \"Matchbox\", \"a\": \"Carl Perkins\"}, {\"f\": \"Maybe Baby 16aa3b920b88804c9ac1c754403a85b0.pdf\", \"t\": \"Maybe Baby\", \"a\": \"Buddy Holly\"}, {\"f\": \"Mean Woman Blues e59d61ac487e4c3eb0b80e7373724207.pdf\", \"t\": \"Mean Woman Blues\", \"a\": \"Cliff Richard\"}, {\"f\": \"Milkshake Madamoiselle 25fa3b920b8880a69f04c3a3d0426eaf.pdf\", \"t\": \"Milkshake Madamoiselle\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Mona Lisa 38c939e83d72421294857087910a4270.pdf\", \"t\": \"Mona Lisa\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Moonshot 2a69f61734314e45a630b5da1c60bb8f.pdf\", \"t\": \"Moonshot\", \"a\": \"The Spotnicks\"}, {\"f\": \"Move It 818109a271254014992b3d6e0c0295e1.pdf\", \"t\": \"Move It\", \"a\": \"Cliff Richard\"}, {\"f\": \"My Babe 1cd77cca8c8e409499497a087f788eb9.pdf\", \"t\": \"My Babe\", \"a\": \"Elvis Presley\"}, {\"f\": \"My Bonnie 20ea3b920b8880eaa019c8ec4cb3a3a1.pdf\", \"t\": \"My Bonnie\", \"a\": \"Tony Sheridan & The Beatles\"}, {\"f\": \"Mystery Train 5a5a3c41690548988f0ed0b4d746f614.pdf\", \"t\": \"Mystery Train\", \"a\": \"Elvis Presley\"}, {\"f\": \"Nadine 2bca3b920b88808ba37bcc251b0b4157.pdf\", \"t\": \"Nadine\", \"a\": \"Chuck Berry\"}, {\"f\": \"Nine times out of ten ff16b8bdd1ec46a899bd84755d3019c8.pdf\", \"t\": \"Nine times out of ten\", \"a\": \"Cliff & The Shadows\"}, {\"f\": \"No particular place to go 8d80eaa4848242e1af30b2623096d390.pdf\", \"t\": \"No particular place to go\", \"a\": \"Chuck Berry\"}, {\"f\": \"Not fade away dccb68d2fea94e0ead9790d66183bcc1.pdf\", \"t\": \"Not fade away\", \"a\": \"Buddy Holly\"}, {\"f\": \"Nut Rocker 1aba3b920b8880da89b6fd636372fc94.pdf\", \"t\": \"Nut Rocker\", \"a\": \"B. Bumble & The Stingers\"}, {\"f\": \"Oh Boy 14503424a4824eaab1e516080f464401.pdf\", \"t\": \"Oh Boy\", \"a\": \"Buddy Holly\"}, {\"f\": \"Old black Joe d3e95ae3c7aa4d5798a5ef94d33ed1e4.pdf\", \"t\": \"Old black Joe\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Old time rock ‘n roll 1f1a3b920b88800e9fd6e157b9e9ddac.pdf\", \"t\": \"Old time rock ‘n roll\", \"a\": \"Patsy Lee\"}, {\"f\": \"On the Beach 19da3b920b888007873fc5749e0bf4f7.pdf\", \"t\": \"On the Beach\", \"a\": \"Cliff Richards & The Shadows\"}, {\"f\": \"Once 5fdf8a0403f64a5793693e0aa7a2a995.pdf\", \"t\": \"Once\", \"a\": \"Robbie Boekholt\"}, {\"f\": \"One Night dfc5dabc37ed4d6d8baddd57efb0777d.pdf\", \"t\": \"One Night\", \"a\": \"Elvis Presley\"}, {\"f\": \"One sided love affair 326b61ac3ea944ef8078e1381dd272a5.pdf\", \"t\": \"One sided love affair\", \"a\": \"Elvis Presley\"}, {\"f\": \"Oobie Doobie c1fb5941fc374717876c3e6692cc40e7.pdf\", \"t\": \"Oobie Doobie\", \"a\": \"Roy Orbison\"}, {\"f\": \"Paralyzed f86cf05eb713457c88ff73a2cb3495d2.pdf\", \"t\": \"Paralyzed\", \"a\": \"Elvis Presley\"}, {\"f\": \"Peggy Sue 736676327f2a4807bb103586cbaa7629.pdf\", \"t\": \"Peggy Sue\", \"a\": \"Buddy Holly\"}, {\"f\": \"Peggy Sue got married 16aa3b920b8880439a30dce015366984.pdf\", \"t\": \"Peggy Sue got married\", \"a\": \"Buddy Holly\"}, {\"f\": \"Please Don’t Tease 7fc553f83082419183284cf49d658141.pdf\", \"t\": \"Please Don’t Tease\", \"a\": \"Cliff Richards\"}, {\"f\": \"Please don’t touch 1aaa3b920b8880f1bebcee8459bc3a55.pdf\", \"t\": \"Please don’t touch\", \"a\": \"Matchbox\"}, {\"f\": \"Pretend edec6fee03f24eee83ad7f83884b44af.pdf\", \"t\": \"Pretend\", \"a\": \"Carl Mann\"}, {\"f\": \"Pretty Girl bd38792422644347906202bd70fba5b1.pdf\", \"t\": \"Pretty Girl\", \"a\": \"Eddie Cochran\"}, {\"f\": \"Proud Mary 180a3b920b8880e3b159f88916009616.pdf\", \"t\": \"Proud Mary\", \"a\": \"Elvis Presley\"}, {\"f\": \"Quartermaster’s Stores e1fd22a36646436f85d818ea861ab717.pdf\", \"t\": \"Quartermaster’s Stores\", \"a\": \"The Shadows\"}, {\"f\": \"Que Sera Sera 4e0691f6c3a34295b41d0199ddea5192.pdf\", \"t\": \"Que Sera Sera\", \"a\": \"The Buckaroos\"}, {\"f\": \"Rave On 6b844d889bd64443babbd9f7cd5f802f.pdf\", \"t\": \"Rave On\", \"a\": \"Buddy Holly\"}, {\"f\": \"Rebel Rouser cbee10cb0a2d4687aee79a2674d78565.pdf\", \"t\": \"Rebel Rouser\", \"a\": \"Duane Eddy\"}, {\"f\": \"Reconsider Baby 3d05ed9d52264edfb4983d92f9581136.pdf\", \"t\": \"Reconsider Baby\", \"a\": \"Elvis Presley\"}, {\"f\": \"Red Hot Navigator 2dca3b920b888032969ef3ff49b8a602.pdf\", \"t\": \"Red Hot Navigator\", \"a\": \"The Treble Spankers\"}, {\"f\": \"Reelin’ and rockin’ 2bca3b920b888095a06dd57cefc12f6e.pdf\", \"t\": \"Reelin’ and rockin’\", \"a\": \"Chuck Berry\"}, {\"f\": \"Return to sender 180a3b920b8880f99bdbc346a628eee4.pdf\", \"t\": \"Return to sender\", \"a\": \"Elvis Presley\"}, {\"f\": \"Reveille Rock b94f65bfd39a4d779ec3069e82807eb2.pdf\", \"t\": \"Reveille Rock\", \"a\": \"Johnny & the Hurricanes\"}, {\"f\": \"Right Now b398d3b9bfe8414f91a47a197aaf88e0.pdf\", \"t\": \"Right Now\", \"a\": \"Gene Vincent\"}, {\"f\": \"Ring of fire 20ea3b920b88809baf6df75561227b31.pdf\", \"t\": \"Ring of fire\", \"a\": \"Johnny Cash\"}, {\"f\": \"Rip it up 25ca3b920b888093b120cc31abde46ae.pdf\", \"t\": \"Rip it up\", \"a\": \"Little Richard\"}, {\"f\": \"Rock & Roll in Akercity 348a3b920b8880649adbc10a96969678.pdf\", \"t\": \"Rock & Roll in Akercity\", \"a\": \"Explosion Rockets\"}, {\"f\": \"Rock and roll music 2aea3b920b8880158103fa0ed5530fbb.pdf\", \"t\": \"Rock and roll music\", \"a\": \"Chuck Berry\"}, {\"f\": \"Rock ‘n Roll is King 819e77712a18413c847da4fbaff9a6a6.pdf\", \"t\": \"Rock ‘n Roll is King\", \"a\": \"Teen Cats\"}, {\"f\": \"Rockin’ My Life Away 129f0eac1508432ba6e1ff1c8232d0df.pdf\", \"t\": \"Rockin’ My Life Away\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Roll over Beethoven 300a3b920b88807aa8b7d5982c90ca22.pdf\", \"t\": \"Roll over Beethoven\", \"a\": \"Chuck Berry\"}, {\"f\": \"Round and Round 1e067e2c62344959b1d2570adc0c62cb.pdf\", \"t\": \"Round and Round\", \"a\": \"The Shadows\"}, {\"f\": \"Route 66 2a125a93b0ab40b7908a469a7f6d30c5.pdf\", \"t\": \"Route 66\", \"a\": \"The Rolling Stones / Chuck Berry\"}, {\"f\": \"Runaway 27ca3b920b888057a732c670a6ff2850.pdf\", \"t\": \"Runaway\", \"a\": \"Elvis Presley\"}, {\"f\": \"Sabre Dance 91d8c91fc74443adbce4639c7375a39f.pdf\", \"t\": \"Sabre Dance\", \"a\": \"The Jokers\"}, {\"f\": \"Sarie Marijs 66cc1c7eef304982b47b29696123bef1.pdf\", \"t\": \"Sarie Marijs\", \"a\": \"Willy and his Giants\"}, {\"f\": \"Save the last dance for me 755a738e53f74df5831df2caeac8a48e.pdf\", \"t\": \"Save the last dance for me\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Say mama 704e4bdd0bae44f3a8b9503cf2a4258c.pdf\", \"t\": \"Say mama\", \"a\": \"Gene Vincent\"}, {\"f\": \"Sea of Heartbreak 2812ece7a2024cd8bbd6d005ea0b6048.pdf\", \"t\": \"Sea of Heartbreak\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Shake, rattle and roll 80e6f9b53628455faa81f734a2a70e6e.pdf\", \"t\": \"Shake, rattle and roll\", \"a\": \"Elvis Presley\"}, {\"f\": \"Shakin’ all over 300a3b920b8880a79eb2d2759a64d3fe.pdf\", \"t\": \"Shakin’ all over\", \"a\": \"Johhny Kid & The Pirates\"}, {\"f\": \"She’s the one to blame 6079c42665b845dc95d6f7155045c5d8.pdf\", \"t\": \"She’s the one to blame\", \"a\": \"Crazy Cavan & The Rhythm Rockers\"}, {\"f\": \"Shindig 2a0a3b920b88804cb621d86f08d781b7.pdf\", \"t\": \"Shindig\", \"a\": \"The Shadows\"}, {\"f\": \"Sittin’ in the Balcony 310a3b920b8880e18e3afe417e004d98.pdf\", \"t\": \"Sittin’ in the Balcony\", \"a\": \"Eddie Cochran\"}, {\"f\": \"Steamroller Blues 180a3b920b88804da2e5ce9ea5f1f213.pdf\", \"t\": \"Steamroller Blues\", \"a\": \"Elvis Presley\"}, {\"f\": \"Stood up 1230d715690e4b9988f0ab48f11e1537.pdf\", \"t\": \"Stood up\", \"a\": \"Ricky Nelson\"}, {\"f\": \"Stupid Cupid 1f1a3b920b888045bff3cad104441557.pdf\", \"t\": \"Stupid Cupid\", \"a\": \"Connie Francis\"}, {\"f\": \"Such a night d8d36ae9c1704ce086c7d6f1928929cd.pdf\", \"t\": \"Such a night\", \"a\": \"Elvis Presley\"}, {\"f\": \"Summertime Blues 27ca3b920b888052b085db86c86be433.pdf\", \"t\": \"Summertime Blues\", \"a\": \"Eddie Cochran\"}, {\"f\": \"Suspicious minds f865db2e585c4f138d481fc8def4d06b.pdf\", \"t\": \"Suspicious minds\", \"a\": \"Elvis Presley\"}, {\"f\": \"Sweet Caroline 1d31d53af08349b3a2a148d1a12b3028.pdf\", \"t\": \"Sweet Caroline\", \"a\": \"Elvis Presley\"}, {\"f\": \"Sweet Little 16 4f57c56903344b03a95fe2019cca91f2.pdf\", \"t\": \"Sweet Little 16\", \"a\": \"Chuck Berry\"}, {\"f\": \"Sweet Nothings 1fca3b920b8880148b33ce98d8648724.pdf\", \"t\": \"Sweet Nothings\", \"a\": \"Brenda Lee\"}, {\"f\": \"Sweet Rockin’ Angel 862e361e8174402bb458977b4859b528.pdf\", \"t\": \"Sweet Rockin’ Angel\", \"a\": \"Micke Muster\"}, {\"f\": \"Sweet Sweet Girl 3b00ad63fdef42309038e01c545c8038.pdf\", \"t\": \"Sweet Sweet Girl\", \"a\": \"Don Gibson\"}, {\"f\": \"Take these chains 5eed52ab47bc4e34a87cc41a599921a0.pdf\", \"t\": \"Take these chains\", \"a\": \"Carl Mann\"}, {\"f\": \"Take your time 16aa3b920b8880689597e05da9bf462f.pdf\", \"t\": \"Take your time\", \"a\": \"Buddy Holly\"}, {\"f\": \"Tallahassee Lassie 1b8a3b920b8880a18bfdc6b6592a4d1a.pdf\", \"t\": \"Tallahassee Lassie\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Tear it up a5985911c49942a78b8bf51960ae3589.pdf\", \"t\": \"Tear it up\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Teddy Bear 87f95c3055f94549a8458d6e46633f6b.pdf\", \"t\": \"Teddy Bear\", \"a\": \"Elvis Presley\"}, {\"f\": \"Teenage Heaven ac21a5381732410e8bd6d250d249be45.pdf\", \"t\": \"Teenage Heaven\", \"a\": \"Eddie Cochran\"}, {\"f\": \"Tequila 182849083bca43d392ceca430470ff58.pdf\", \"t\": \"Tequila\", \"a\": \"The Ventures\"}, {\"f\": \"That’ll be the day a2951f30bfc94854b0a6cf3b57a86c47.pdf\", \"t\": \"That’ll be the day\", \"a\": \"Buddy Holly\"}, {\"f\": \"That’s allright Mama 20073afb25ba4782be0962e9a72f66ac.pdf\", \"t\": \"That’s allright Mama\", \"a\": \"Elvis Presley\"}, {\"f\": \"The Savage 9f16287a665c4743ad9e90715154c76e.pdf\", \"t\": \"The Savage\", \"a\": \"The Shadows\"}, {\"f\": \"The Stranger 20ea3b920b8880cb8e6ed9b8b324b324.pdf\", \"t\": \"The Stranger\", \"a\": \"The Shadows\"}, {\"f\": \"The old spinning wheel d0da0be4943c49beb980c5a14e01dd3a.pdf\", \"t\": \"The old spinning wheel\", \"a\": \"The Spotnicks\"}, {\"f\": \"Theme for young lovers 20f3defafa78435fa63a5254111a0869.pdf\", \"t\": \"Theme for young lovers\", \"a\": \"The Shadows\"}, {\"f\": \"These Boots are made for Walking 1f2a3b920b8880e2acd9c2da618fcb42.pdf\", \"t\": \"These Boots are made for Walking\", \"a\": \"Nancy Sinatra\"}, {\"f\": \"This Time 877167ccae074c72841599df347b38db.pdf\", \"t\": \"This Time\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Three steps to heaven 538e674ff4bf4c88bea8ad3582280fd6.pdf\", \"t\": \"Three steps to heaven\", \"a\": \"Eddie Cochran\"}, {\"f\": \"Till I Waltz Again With You f43c430a0bd34a39967c0eaf8d5a8018.pdf\", \"t\": \"Till I Waltz Again With You\", \"a\": \"Freddy Fingers Lee\"}, {\"f\": \"Time is tight 0b7afff3f0d04145ac2dca12585a0b29.pdf\", \"t\": \"Time is tight\", \"a\": \"Booker T. & The MG’s\"}, {\"f\": \"Treat me nice 26a1650c57994a4aa06003d4ec4b16f3.pdf\", \"t\": \"Treat me nice\", \"a\": \"Elvis Presley\"}, {\"f\": \"True love ways 16aa3b920b8880a691d1c8859c8b9438.pdf\", \"t\": \"True love ways\", \"a\": \"Buddy Holly\"}, {\"f\": \"Trying to get to you ef68b4c8c7f246f89c0cc70af0abc0c1.pdf\", \"t\": \"Trying to get to you\", \"a\": \"Elvis Presley\"}, {\"f\": \"Tutti Frutti 86c3bc450be4494d97b95e74714c0e9e.pdf\", \"t\": \"Tutti Frutti\", \"a\": \"Elvis Presley\"}, {\"f\": \"Twenty Flight Rock 980b9df2f8e548f9890c917e00a07b63.pdf\", \"t\": \"Twenty Flight Rock\", \"a\": \"Eddie Cochran\"}, {\"f\": \"Valley of tears 16aa3b920b888029a4e0c6c8130ec03c.pdf\", \"t\": \"Valley of tears\", \"a\": \"Buddy Holly\"}, {\"f\": \"Vilja oh Vilja 9d442e02c889426486891720de6ddb0a.pdf\", \"t\": \"Vilja oh Vilja\", \"a\": \"The Rocking Ghosts\"}, {\"f\": \"Viva Las Vegas f78cc49a8fa44fcba711339720608e60.pdf\", \"t\": \"Viva Las Vegas\", \"a\": \"Elvis Presley\"}, {\"f\": \"Walk don’t run 717fdbc8ab034ca3b568c1b74b75d5aa.pdf\", \"t\": \"Walk don’t run\", \"a\": \"The Ventures\"}, {\"f\": \"Walking after midnight 20ea3b920b8880a69f17d735d3281d42.pdf\", \"t\": \"Walking after midnight\", \"a\": \"Patsy Cline\"}, {\"f\": \"Walking back to happiness 20ea3b920b8880feb9abd518df219653.pdf\", \"t\": \"Walking back to happiness\", \"a\": \"Helen Shapiro\"}, {\"f\": \"Washmachine Boogie 1b8a3b920b8880a5a097f20646790437.pdf\", \"t\": \"Washmachine Boogie\", \"a\": \"Matchbox\"}, {\"f\": \"Way Down 180a3b920b888022806fc4631e94bcd5.pdf\", \"t\": \"Way Down\", \"a\": \"Elvis Presley\"}, {\"f\": \"We say Yeah 310a3b920b8880aa887ccdc5902734dc.pdf\", \"t\": \"We say Yeah\", \"a\": \"Cliff Richard\"}, {\"f\": \"We say yeah 8878eca962964fad8ca91fb057273da3.pdf\", \"t\": \"We say yeah\", \"a\": \"Cliff & The Shadows\"}, {\"f\": \"What a wonderful life 27ca3b920b888067b49df836930aed90.pdf\", \"t\": \"What a wonderful life\", \"a\": \"Elvis Presley\"}, {\"f\": \"What to do 16aa3b920b88800da42fed91b0df4527.pdf\", \"t\": \"What to do\", \"a\": \"Buddy Holly\"}, {\"f\": \"What’d I Say 5e3cf94b6c654490a9ff89a2a22ab81c.pdf\", \"t\": \"What’d I Say\", \"a\": \"Jerry Lee Lewis/Elvis\"}, {\"f\": \"When my blue moon turns to gold cd4873c6c00c4407b65c67e985f6c3f5.pdf\", \"t\": \"When my blue moon turns to gold\", \"a\": \"Elvis Presley\"}, {\"f\": \"Whole lotta shakin’ going on f9e668d6f25e49e682fcc1975fad21a7.pdf\", \"t\": \"Whole lotta shakin’ going on\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Wild One c7fd0181d8194b56b9f98f2953cb678a.pdf\", \"t\": \"Wild One\", \"a\": \"Jerry Lee Lewis\"}, {\"f\": \"Winter wonderland b868168aada14b95a306e840da04cbfa.pdf\", \"t\": \"Winter wonderland\", \"a\": \"Elvis Presley\"}, {\"f\": \"Wipe Out 4ac59de38aa64d8083c2cca0ca3cba11.pdf\", \"t\": \"Wipe Out\", \"a\": \"The Surfaris\"}, {\"f\": \"Without you 310a3b920b888098b179e78891dc2d36.pdf\", \"t\": \"Without you\", \"a\": \"Cliff Richard\"}, {\"f\": \"Wonderful land 3842ee70781f47c0a97739ba281fdbb1.pdf\", \"t\": \"Wonderful land\", \"a\": \"The Shadows\"}, {\"f\": \"Yellow Jacket 19da3b920b88802baef5da24c9e14740.pdf\", \"t\": \"Yellow Jacket\", \"a\": \"The Ventures\"}, {\"f\": \"You know what I mean 40048b7388c8455bab9fba9538702556.pdf\", \"t\": \"You know what I mean\", \"a\": \"Ricky Nelson\"}, {\"f\": \"You mostest girl 5649469eaaa04a7581143099b1ebfd83.pdf\", \"t\": \"You mostest girl\", \"a\": \"Shakin’ Stevens\"}, {\"f\": \"Your true love 8f25d44ad288432f84580edb690150be.pdf\", \"t\": \"Your true love\", \"a\": \"Chris Isaak\"}]";
+
+const SONGS = JSON.parse(SONGS_RAW).map((s, i) => ({
+  id: s.f,            // filename as id (unique)
+  filename: s.f,
+  title: s.t,
+  artist: s.a,
+  key: 's' + i
+}));
+
+const STORAGE_KEY = 'setlists_v1';
+const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+/* ============================================================================
+   CLOUD SYNC: vul hier je JSONBin credentials in voor automatische band-sync.
+   Wanneer ingevuld: iedereen die de app opent krijgt direct cloud-sync.
+   Leeg laten = handmatige sync (gebruikers stellen zelf in via ☁ SYNC).
+   ============================================================================ */
+const BAKED_SYNC_CONFIG = {
+  binId: '6a083432c0954111d830003e',
+  accessKey: '$2a$10$kU5KfnMwNG6YVhEksO4NKeBj2oq.UYjQmbnqqWLz/.gB1O8RB444m'
+};
+/* ========================================================================= */
+
+function getDefaultSyncConfig(){
+  const b = BAKED_SYNC_CONFIG;
+  if(b && b.binId && b.accessKey && b.binId.trim() && b.accessKey.trim()){
+    return {
+      binId: b.binId.trim(),
+      accessKey: b.accessKey.trim(),
+      enabled: true,
+      baked: true
+    };
+  }
+  return null;
+}
+
+/* ===== Helpers ===== */
+function uid(prefix='id'){ return prefix + '_' + Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-3); }
+function norm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[''`]/g,"'"); }
+function fmtDate(iso){
+  if(!iso) return '—';
+  try{
+    const d = new Date(iso + 'T00:00:00');
+    const dd = String(d.getDate()).padStart(2,'0');
+    const months = ['JAN','FEB','MRT','APR','MEI','JUN','JUL','AUG','SEP','OKT','NOV','DEC'];
+    return dd + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+  }catch(e){return iso;}
+}
+function fmtDateShort(iso){
+  if(!iso) return '';
+  try{
+    const d = new Date(iso + 'T00:00:00');
+    return String(d.getDate()).padStart(2,'0') + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + d.getFullYear();
+  }catch(e){return iso;}
+}
+function sanitizeForPdf(text){
+  // pdf-lib StandardFonts only support WinAnsi. Replace fancy chars; strip anything else.
+  if(!text) return '';
+  return text
+    .replace(/[\u2018\u2019\u201A\u201B]/g, "'")
+    .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+    .replace(/[\u2013\u2014\u2015]/g, '-')
+    .replace(/\u2026/g, '...')
+    .split('')
+    .map(c => c.charCodeAt(0) > 0xFF ? '?' : c)
+    .join('');
+}
+
+/* ===== Storage ===== */
+const CUSTOM_SONGS_KEY = 'custom_songs_v1';
+const SONG_OVERRIDES_KEY = 'song_overrides_v1';
+
+// One-time storage availability check. In Claude artifact preview the window.storage
+// API often throws "Invalid response format" — we detect this and either fall back
+// to localStorage (when self-hosted) or skip all storage ops silently.
+let storageTestPromise = null;
+let storageBackend = 'none'; // 'claude' | 'local' | 'none'
+
+function makeLocalStorageBackend(){
+  return {
+    get: async (key) => {
+      try{
+        const v = localStorage.getItem(key);
+        return v === null ? null : {key, value: v, shared: false};
+      }catch(e){ return null; }
+    },
+    set: async (key, value) => {
+      localStorage.setItem(key, String(value));
+      return {key, value: String(value), shared: false};
+    },
+    delete: async (key) => {
+      localStorage.removeItem(key);
+      return {key, deleted: true, shared: false};
+    },
+    list: async (prefix) => {
+      const keys = [];
+      for(let i=0; i<localStorage.length; i++){
+        const k = localStorage.key(i);
+        if(!prefix || (k && k.startsWith(prefix))) keys.push(k);
+      }
+      return {keys, prefix};
+    }
+  };
+}
+
+function testStorageOnce(){
+  if(storageTestPromise) return storageTestPromise;
+  storageTestPromise = (async () => {
+    // 1) Try Claude.ai window.storage (artifacts environment)
+    if(window.storage){
+      try{
+        const testKey = '__storage_probe_' + Date.now();
+        await window.storage.set(testKey, '1');
+        const r = await window.storage.get(testKey);
+        try{ await window.storage.delete(testKey); }catch(e){}
+        if(r && r.value === '1'){
+          storageBackend = 'claude';
+          return true;
+        }
+      }catch(e){ /* fall through */ }
+    }
+    // 2) Fall back to localStorage (self-hosted / outside Claude artifacts)
+    try{
+      if(typeof localStorage !== 'undefined'){
+        const testKey = '__storage_probe_local_' + Date.now();
+        localStorage.setItem(testKey, '1');
+        const v = localStorage.getItem(testKey);
+        localStorage.removeItem(testKey);
+        if(v === '1'){
+          window.storage = makeLocalStorageBackend();
+          storageBackend = 'local';
+          return true;
+        }
+      }
+    }catch(e){}
+    storageBackend = 'none';
+    return false;
+  })();
+  return storageTestPromise;
+}
+function getStorageBackend(){ return storageBackend; }
+
+async function loadSetlists(){
+  if(!await testStorageOnce()) return [];
+  try{
+    const res = await window.storage.get(STORAGE_KEY);
+    if(res && res.value){
+      const parsed = JSON.parse(res.value);
+      if(Array.isArray(parsed)) return parsed;
+    }
+  }catch(e){ /* silent */ }
+  return [];
+}
+let saveTimer = null;
+function saveSetlistsDebounced(setlists){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    if(!await testStorageOnce()) return;
+    try{ await window.storage.set(STORAGE_KEY, JSON.stringify(setlists)); }catch(e){}
+  }, 350);
+}
+
+async function loadCustomSongs(){
+  if(!await testStorageOnce()) return [];
+  try{
+    const res = await window.storage.get(CUSTOM_SONGS_KEY);
+    if(res && res.value){
+      const parsed = JSON.parse(res.value);
+      if(Array.isArray(parsed)) return parsed;
+    }
+  }catch(e){}
+  return [];
+}
+let customSaveTimer = null;
+function saveCustomSongsDebounced(songs){
+  clearTimeout(customSaveTimer);
+  customSaveTimer = setTimeout(async () => {
+    if(!await testStorageOnce()) return;
+    try{ await window.storage.set(CUSTOM_SONGS_KEY, JSON.stringify(songs)); }catch(e){}
+  }, 250);
+}
+async function saveCustomPdfBase64(id, base64){
+  if(!await testStorageOnce()) return;
+  try{ await window.storage.set('custom_pdf:' + id, base64); }catch(e){}
+}
+async function loadCustomPdfBytes(id){
+  if(!await testStorageOnce()) return null;
+  try{
+    const r = await window.storage.get('custom_pdf:' + id);
+    if(r && r.value){ return base64ToBytes(r.value); }
+  }catch(e){}
+  return null;
+}
+async function deleteCustomPdf(id){
+  if(!await testStorageOnce()) return;
+  try{ await window.storage.delete('custom_pdf:' + id); }catch(e){}
+}
+
+const EMPTY_OVERRIDES = {deleted: [], edits: {}};
+async function loadSongOverrides(){
+  if(!await testStorageOnce()) return EMPTY_OVERRIDES;
+  try{
+    const r = await window.storage.get(SONG_OVERRIDES_KEY);
+    if(r && r.value){
+      const p = JSON.parse(r.value);
+      if(p && Array.isArray(p.deleted) && p.edits && typeof p.edits === 'object') return p;
+    }
+  }catch(e){}
+  return EMPTY_OVERRIDES;
+}
+let overridesSaveTimer = null;
+function saveSongOverridesDebounced(overrides){
+  clearTimeout(overridesSaveTimer);
+  overridesSaveTimer = setTimeout(async () => {
+    if(!await testStorageOnce()) return;
+    try{ await window.storage.set(SONG_OVERRIDES_KEY, JSON.stringify(overrides)); }catch(e){}
+  }, 250);
+}
+
+function base64ToBytes(b64){
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for(let i=0; i<bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+function bytesToBase64(bytes){
+  let bin = '';
+  const chunk = 0x8000;
+  for(let i=0; i<bytes.length; i+=chunk){
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i+chunk));
+  }
+  return btoa(bin);
+}
+
+/* ===== Cloud Sync (JSONBin) ===== */
+const SYNC_CONFIG_KEY = 'sync_config_v1';
+const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b';
+const SYNC_SCHEMA_VERSION = 1;
+
+async function loadSyncConfig(){
+  if(!await testStorageOnce()) return null;
+  try{
+    const r = await window.storage.get(SYNC_CONFIG_KEY);
+    if(r && r.value){
+      const p = JSON.parse(r.value);
+      if(p && p.binId && p.accessKey) return p;
+    }
+  }catch(e){}
+  return null;
+}
+async function saveSyncConfig(cfg){
+  if(!await testStorageOnce()) return;
+  try{
+    if(cfg){
+      await window.storage.set(SYNC_CONFIG_KEY, JSON.stringify(cfg));
+    } else {
+      await window.storage.delete(SYNC_CONFIG_KEY);
+    }
+  }catch(e){}
+}
+
+async function pullFromJsonBin(binId, accessKey){
+  const url = JSONBIN_BASE + '/' + encodeURIComponent(binId) + '/latest';
+  const r = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'X-Access-Key': accessKey,
+      'X-Bin-Meta': 'false'
+    }
+  });
+  if(!r.ok){
+    let detail = '';
+    try{ const j = await r.json(); detail = j && j.message ? j.message : ''; }catch(e){}
+    throw new Error('Cloud lezen mislukt (HTTP ' + r.status + ')' + (detail ? ': ' + detail : ''));
+  }
+  return await r.json();
+}
+async function pushToJsonBin(binId, accessKey, data){
+  const url = JSONBIN_BASE + '/' + encodeURIComponent(binId);
+  const r = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Access-Key': accessKey
+    },
+    body: JSON.stringify(data)
+  });
+  if(!r.ok){
+    let detail = '';
+    try{ const j = await r.json(); detail = j && j.message ? j.message : ''; }catch(e){}
+    throw new Error('Cloud schrijven mislukt (HTTP ' + r.status + ')' + (detail ? ': ' + detail : ''));
+  }
+  return await r.json();
+}
+
+function makeSyncPayload(setlists, customSongs, songOverrides){
+  return {
+    v: SYNC_SCHEMA_VERSION,
+    updatedAt: Date.now(),
+    setlists: setlists || [],
+    customSongs: (customSongs || []).map(s => ({
+      id: s.id, filename: s.filename, title: s.title, artist: s.artist,
+      custom: true, hasPdf: s.hasPdf !== false, addedAt: s.addedAt
+    })),
+    songOverrides: songOverrides || {deleted: [], edits: {}}
+  };
+}
+function isValidPayload(p){
+  return p && typeof p === 'object' && p.v === SYNC_SCHEMA_VERSION &&
+    Array.isArray(p.setlists) && Array.isArray(p.customSongs) &&
+    p.songOverrides && Array.isArray(p.songOverrides.deleted);
+}
+function syncHash(payload){
+  // Quick crude hash for "did anything change" comparison
+  try{
+    const s = JSON.stringify({s: payload.setlists, c: payload.customSongs, o: payload.songOverrides});
+    let h = 0; for(let i=0; i<s.length; i++){ h = ((h<<5) - h + s.charCodeAt(i)) | 0; }
+    return h + ':' + s.length;
+  }catch(e){ return Math.random().toString(); }
+}
+
+/* ===== Setlist model ===== */
+function emptySetlist(){
+  const today = new Date().toISOString().slice(0,10);
+  return {
+    id: uid('sl'),
+    name: 'Nieuwe setlist',
+    bandName: 'The Explosion Rockets',
+    date: today,
+    location: '',
+    sets: [{ id: uid('set'), name: 'Set 1', songs: [] }],
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  };
+}
+
+function makeCustomSong({title, artist, hasPdf}){
+  const id = uid('cs');
+  return {
+    id: 'custom_' + id,
+    filename: '__custom_' + id + '.pdf',
+    title: title,
+    artist: artist,
+    custom: true,
+    hasPdf: hasPdf !== false,
+    addedAt: Date.now()
+  };
+}
+
+function isCustomFilename(fn){ return typeof fn === 'string' && fn.startsWith('__custom_'); }
+function customIdFromFilename(fn){
+  const m = /^__custom_(.+)\.pdf$/.exec(fn);
+  return m ? m[1] : null;
+}
+
+/* ===== Components ===== */
+
+function Header({view, setView, zipStatus, zipCount, onZipClick, hasActive, onBack, syncEnabled, syncState, onSyncClick}){
+  const zipClass = zipStatus === 'loaded' ? 'ok' : (zipStatus === 'loading' ? 'loading' : 'warn');
+  const zipText  = zipStatus === 'loaded' ? '✓ ZIP ('+zipCount+')'
+                 : zipStatus === 'loading' ? 'LADEN…'
+                 : 'ZIP LADEN';
+  let syncClass = 'sync-off', syncText = '☁ SYNC';
+  if(syncEnabled){
+    if(syncState === 'syncing'){ syncClass = 'sync-busy'; syncText = '⟳ SYNC'; }
+    else if(syncState === 'error'){ syncClass = 'sync-err'; syncText = '⚠ SYNC'; }
+    else { syncClass = 'sync-ok'; syncText = '✓ SYNC'; }
+  }
+  return (
+    <div className="hdr">
+      <div className="hdr-row">
+        <div className="hdr-mark">ER</div>
+        <div>
+          <div className="hdr-title">SETLIST MAKER</div>
+          <div className="hdr-sub">★ THE EXPLOSION ROCKETS ★</div>
+        </div>
+        <div style={{marginLeft:'auto', display:'flex', gap:6, flexShrink:0}}>
+          <button className={'hdr-zip ' + syncClass} onClick={onSyncClick}>{syncText}</button>
+          <button className={'hdr-zip ' + zipClass} onClick={onZipClick}>{zipText}</button>
+        </div>
+      </div>
+      {hasActive ? (
+        <div className="hdr-tabs">
+          <button className="hdr-tab active" onClick={onBack}>← TERUG NAAR SETLIJSTEN</button>
+        </div>
+      ) : (
+        <div className="hdr-tabs">
+          <button className={'hdr-tab' + (view==='setlists' ? ' active':'')} onClick={()=>setView('setlists')}>Setlijsten</button>
+          <button className={'hdr-tab' + (view==='library'  ? ' active':'')} onClick={()=>setView('library')}>Bibliotheek</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SongRow({song, number, selected, onClick, right}){
+  return (
+    <div className={'song-row' + (selected ? ' selected':'')} onClick={onClick}>
+      {number != null && <div className="song-num">{number}</div>}
+      <div className="song-info">
+        <div className="song-title">{song.title}</div>
+        <div className="song-artist">{song.artist}</div>
+      </div>
+      {right}
+    </div>
+  );
+}
+
+/* ===== Library View ===== */
+function LibraryView({songs, hiddenCount, hiddenSongs, onAddSong, onEditSong, onDeleteSong, onRestoreSong, onRestoreAll}){
+  const [q, setQ] = useState('');
+  const [artist, setArtist] = useState('');
+  const [showHidden, setShowHidden] = useState(false);
+  const artists = useMemo(()=>{
+    const map = new Map();
+    songs.forEach(s => map.set(s.artist, (map.get(s.artist)||0)+1));
+    return Array.from(map.entries()).sort((a,b)=> b[1]-a[1] || a[0].localeCompare(b[0]));
+  }, [songs]);
+  const filtered = useMemo(()=>{
+    const nq = norm(q);
+    return songs.filter(s => {
+      if(artist && s.artist !== artist) return false;
+      if(!nq) return true;
+      return norm(s.title).includes(nq) || norm(s.artist).includes(nq);
+    });
+  }, [q, artist, songs]);
+  const customCount = songs.filter(s => s.custom).length;
+  return (
+    <div className="view">
+      <h2>BIBLIOTHEEK</h2>
+      <div className="view-sub">
+        {songs.length} nummers · {artists.length} artiesten
+        {customCount > 0 && <span style={{color:'var(--ink-soft)'}}> · {customCount} eigen</span>}
+      </div>
+      <button className="btn btn-red btn-block" onClick={onAddSong}>+ NIEUW NUMMER TOEVOEGEN</button>
+      {hiddenCount > 0 && (
+        <div style={{marginTop:10, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'8px 10px', background:'var(--cream-shadow)', border:'1.5px dashed var(--ink)', borderRadius:2}}>
+          <span style={{fontFamily:'Bebas Neue, sans-serif', fontSize:13, letterSpacing:'0.08em', color:'var(--ink-soft)'}}>
+            {hiddenCount} VERBORGEN {hiddenCount===1?'NUMMER':'NUMMERS'}
+          </span>
+          <div style={{display:'flex', gap:6}}>
+            <button className="btn btn-sm" onClick={()=>setShowHidden(v=>!v)}>{showHidden?'VERBERG':'TOON'}</button>
+            <button className="btn btn-sm btn-red" onClick={onRestoreAll}>HERSTEL ALLES</button>
+          </div>
+        </div>
+      )}
+      {showHidden && hiddenCount > 0 && (
+        <div style={{marginTop:12}}>
+          <div className="view-sub" style={{marginTop:0}}>VERBORGEN NUMMERS</div>
+          {hiddenSongs.map(s => (
+            <div key={s.filename} className="song-row" style={{opacity:0.7}}>
+              <div className="song-info">
+                <div className="song-title">{s.title}</div>
+                <div className="song-artist">{s.artist}</div>
+              </div>
+              <div className="song-actions">
+                <button className="btn btn-sm" onClick={()=>onRestoreSong(s.filename)}>HERSTEL</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <div style={{height:14}} />
+      <input className="input" placeholder="Zoek nummer of artiest…" value={q} onChange={e=>setQ(e.target.value)} />
+      <div style={{height:10}} />
+      <div className="chip-row">
+        <button className={'chip' + (artist==='' ? ' active':'')} onClick={()=>setArtist('')}>Alle</button>
+        {artists.map(([a,c]) => (
+          <button key={a} className={'chip' + (artist===a ? ' active':'')} onClick={()=>setArtist(a===artist ? '' : a)}>
+            {a} <span style={{opacity:0.7}}>· {c}</span>
+          </button>
+        ))}
+      </div>
+      <div className="divider-stars">★ ★ ★</div>
+      <div>
+        {filtered.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-state-title">GEEN RESULTAAT</div>
+            <div>Probeer een ander zoekwoord.</div>
+          </div>
+        ) : (
+          filtered.map(s => (
+            <div key={s.id} className="song-row">
+              <div className="song-info">
+                <div className="song-title">
+                  {s.title}
+                  {s.custom && <span className="custom-badge">EIGEN</span>}
+                  {s.custom && s.hasPdf === false && <span className="no-pdf-tag">· GEEN PDF</span>}
+                  {s.edited && !s.custom && <span className="no-pdf-tag">· BEWERKT</span>}
+                </div>
+                <div className="song-artist">{s.artist}</div>
+              </div>
+              <div className="song-actions">
+                <button className="btn btn-sm btn-icon" title="Bewerken"
+                        onClick={()=>onEditSong(s)}>✎</button>
+                <button className="btn btn-sm btn-icon" title="Verwijderen"
+                        style={{color:'var(--red-dark)'}}
+                        onClick={()=>onDeleteSong(s)}>✕</button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ===== Setlists List View ===== */
+function SetlistsView({setlists, onOpen, onCreate, onDelete}){
+  return (
+    <div className="view">
+      <h2>SETLIJSTEN</h2>
+      <div className="view-sub">{setlists.length} {setlists.length === 1 ? 'setlist' : 'setlijsten'} opgeslagen</div>
+      <button className="btn btn-red btn-block" onClick={onCreate}>+ NIEUWE SETLIST</button>
+      <div className="divider-stars">★ ★ ★</div>
+      {setlists.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-state-title">NOG GEEN SETLIJSTEN</div>
+          <div>Tik op <b>NIEUWE SETLIST</b> om je eerste op te bouwen.</div>
+        </div>
+      ) : (
+        setlists
+          .slice()
+          .sort((a,b)=> (b.date||'').localeCompare(a.date||'') || b.updatedAt - a.updatedAt)
+          .map(sl => {
+            const total = sl.sets.reduce((n,s)=> n + s.songs.length, 0);
+            return (
+              <div key={sl.id} className="setlist-card" onClick={()=>onOpen(sl.id)}>
+                <div className="sl-name">{sl.name || 'Naamloze setlist'}</div>
+                <div className="sl-meta">
+                  {fmtDate(sl.date)} · {sl.location || 'GEEN LOCATIE'}
+                </div>
+                <div className="sl-stats">
+                  <span>🎵 {total} nummers</span>
+                  <span>📑 {sl.sets.length} {sl.sets.length===1?'set':'sets'}</span>
+                </div>
+                <div style={{position:'absolute', top:8, right:8}}>
+                  <button className="btn btn-sm btn-ghost" onClick={(e)=>{e.stopPropagation(); onDelete(sl.id);}}
+                          style={{color:'var(--red-dark)'}}>✕</button>
+                </div>
+              </div>
+            );
+          })
+      )}
+    </div>
+  );
+}
+
+/* ===== Song Picker Modal ===== */
+function SongPicker({songs, onClose, onConfirm, onAddSong, alreadyInSet}){
+  const [q, setQ] = useState('');
+  const [artist, setArtist] = useState('');
+  const [picked, setPicked] = useState([]);  // array of filenames in pick order
+  const artists = useMemo(()=>{
+    const map = new Map();
+    songs.forEach(s => map.set(s.artist, (map.get(s.artist)||0)+1));
+    return Array.from(map.entries()).sort((a,b)=> b[1]-a[1] || a[0].localeCompare(b[0]));
+  }, [songs]);
+  const filtered = useMemo(()=>{
+    const nq = norm(q);
+    return songs.filter(s => {
+      if(artist && s.artist !== artist) return false;
+      if(!nq) return true;
+      return norm(s.title).includes(nq) || norm(s.artist).includes(nq);
+    });
+  }, [q, artist, songs]);
+  function toggle(fn){
+    setPicked(p => p.includes(fn) ? p.filter(x => x !== fn) : [...p, fn]);
+  }
+  return (
+    <div className="modal-bg" onClick={onClose}>
+      <div className="modal" onClick={e=>e.stopPropagation()}>
+        <div className="modal-hdr">
+          <div className="modal-title">VOEG NUMMERS TOE</div>
+          <button className="btn btn-sm" onClick={onAddSong} title="Nieuw nummer">+ NIEUW</button>
+          <button className="btn btn-sm" onClick={onClose}>✕</button>
+        </div>
+        <div className="modal-body">
+          <input className="input" placeholder="Zoek nummer of artiest…" value={q} onChange={e=>setQ(e.target.value)} />
+          <div style={{height:10}} />
+          <div className="chip-row">
+            <button className={'chip' + (artist==='' ? ' active':'')} onClick={()=>setArtist('')}>Alle</button>
+            {artists.map(([a,c]) => (
+              <button key={a} className={'chip' + (artist===a ? ' active':'')} onClick={()=>setArtist(a===artist ? '' : a)}>{a}</button>
+            ))}
+          </div>
+          {filtered.map(s => {
+            const inSet = alreadyInSet.includes(s.filename);
+            const idx = picked.indexOf(s.filename);
+            const isPicked = idx >= 0;
+            return (
+              <div key={s.id}
+                   className={'song-row' + (isPicked ? ' selected' : '') + (inSet ? ' dim':'')}
+                   onClick={()=> { if(!inSet) toggle(s.filename); }}
+                   style={inSet ? {cursor:'not-allowed'} : {}}>
+                <div className="song-num">{isPicked ? (idx+1) : (inSet ? '✓' : '+')}</div>
+                <div className="song-info">
+                  <div className="song-title">
+                    {s.title}
+                    {s.custom && <span className="custom-badge">EIGEN</span>}
+                    {s.custom && s.hasPdf === false && <span className="no-pdf-tag">· GEEN PDF</span>}
+                  </div>
+                  <div className="song-artist">{s.artist}{inSet ? ' · al in set' : ''}</div>
+                </div>
+              </div>
+            );
+          })}
+          {filtered.length === 0 && (
+            <div className="empty-state"><div className="empty-state-title">GEEN RESULTAAT</div></div>
+          )}
+        </div>
+        <div className="modal-foot">
+          <button className="btn" style={{flex:1}} onClick={onClose}>ANNULEREN</button>
+          <button className="btn btn-red" style={{flex:2}} onClick={()=>onConfirm(picked)} disabled={picked.length===0}>
+            VOEG {picked.length} TOE
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ===== Sync Settings Modal ===== */
+function SyncSettingsModal({config, hasBakedDefault, status, onClose, onSave, onDisconnect, onPullNow, onPushNow, onReset, showToast}){
+  const isBaked = !!(config && config.baked);
+  const [binId, setBinId] = useState(config && !isBaked ? config.binId : '');
+  const [accessKey, setAccessKey] = useState(config && !isBaked ? config.accessKey : '');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showHelp, setShowHelp] = useState(!config && !hasBakedDefault);
+  const connected = !!config;
+
+  async function handleConnect(){
+    if(!binId.trim() || !accessKey.trim()){
+      setErr('Vul Bin ID en Access Key in.');
+      return;
+    }
+    setBusy(true); setErr('');
+    try{
+      await onSave({binId: binId.trim(), accessKey: accessKey.trim(), enabled: true});
+      setBusy(false);
+    }catch(e){
+      setErr(e.message || String(e));
+      setBusy(false);
+    }
+  }
+  function copyShareString(){
+    const bid = isBaked ? config.binId : binId.trim();
+    const key = isBaked ? config.accessKey : accessKey.trim();
+    if(!bid || !key) return;
+    const s = bid + '|' + key;
+    try{
+      navigator.clipboard.writeText(s);
+      showToast && showToast('Gekopieerd ✓', 1800);
+    }catch(e){
+      showToast && showToast('Kopiëren mislukt', 2200);
+    }
+  }
+  function pasteShareString(){
+    try{
+      navigator.clipboard.readText().then(txt => {
+        const m = (txt || '').split('|');
+        if(m.length === 2){
+          setBinId(m[0].trim());
+          setAccessKey(m[1].trim());
+          showToast && showToast('Geplakt ✓', 1600);
+        } else {
+          setErr('Plakbuffer heeft geen geldige sync-code (verwacht: BIN_ID|ACCESS_KEY)');
+        }
+      });
+    }catch(e){
+      setErr('Kon klembord niet lezen');
+    }
+  }
+  function fmtSyncTime(t){
+    if(!t) return 'nog niet';
+    const d = new Date(t);
+    const diff = (Date.now() - t) / 1000;
+    if(diff < 60) return 'zojuist';
+    if(diff < 3600) return Math.floor(diff/60) + ' min geleden';
+    if(diff < 86400) return Math.floor(diff/3600) + ' uur geleden';
+    return d.toLocaleDateString('nl-NL');
+  }
+  return (
+    <div className="modal-bg" onClick={busy ? undefined : onClose}>
+      <div className="modal" style={{height:'auto', maxHeight:'92vh'}} onClick={e=>e.stopPropagation()}>
+        <div className="modal-hdr">
+          <div className="modal-title">CLOUD SYNC</div>
+          <button className="btn btn-sm" onClick={onClose} disabled={busy}>✕</button>
+        </div>
+        <div className="modal-body">
+          {connected && (
+            <div className="card" style={{background: status.state==='error' ? '#FDE0DC' : '#E0F1E1', borderColor: status.state==='error' ? 'var(--red-dark)' : '#3A6B3F'}}>
+              <div className="f-poster" style={{fontSize:14, letterSpacing:'0.1em', color: status.state==='error' ? 'var(--red-deep)' : '#264D2A'}}>
+                {status.state === 'syncing' ? '⟳ SYNCHRONISEREN…' :
+                 status.state === 'error' ? '⚠ FOUT' :
+                 status.state === 'ok' ? (isBaked ? '✓ AUTOMATISCH VERBONDEN' : '✓ VERBONDEN') : '○ INACTIEF'}
+              </div>
+              <div style={{fontSize:12, marginTop:4, fontFamily:'Special Elite, monospace', color:'var(--ink-soft)'}}>
+                {isBaked ? 'Standaard band-cloud · ' : ''}Laatste sync: {fmtSyncTime(status.lastSyncAt)}
+              </div>
+              {status.error && (
+                <div className="danger-text" style={{fontSize:12, marginTop:6, lineHeight:1.4}}>{status.error}</div>
+              )}
+            </div>
+          )}
+          {!connected && hasBakedDefault && (
+            <div style={{padding:'10px 12px', background:'var(--cream-shadow)', border:'1.5px solid var(--ink)', borderRadius:2, marginBottom:12, fontSize:13, lineHeight:1.5}}>
+              Sync staat <b>uit</b> op dit apparaat. <button className="btn btn-sm" style={{marginLeft:6, verticalAlign:'middle'}} onClick={onReset}>↻ ZET WEER AAN</button>
+            </div>
+          )}
+          {isBaked && !showAdvanced && (
+            <div style={{fontSize:13, lineHeight:1.5, color:'var(--ink)', marginBottom:14}}>
+              Deze app is voorzien van een <b>vooringestelde cloud-sync</b>. Setlijsten, eigen nummers en wijzigingen worden automatisch tussen alle bandapparaten gedeeld.
+            </div>
+          )}
+          {(!isBaked || showAdvanced) && (
+            <>
+              <label className="field">
+                <span>BIN ID</span>
+                <input className="input" value={binId} onChange={e=>setBinId(e.target.value)}
+                       placeholder="bv. 6512abcdef0123456789abcd"
+                       autoCapitalize="off" autoCorrect="off" spellCheck="false" />
+              </label>
+              <label className="field">
+                <span>ACCESS KEY</span>
+                <input className="input" type="password" value={accessKey} onChange={e=>setAccessKey(e.target.value)}
+                       placeholder="$2a$10$..."
+                       autoCapitalize="off" autoCorrect="off" spellCheck="false" />
+              </label>
+              <div style={{display:'flex', gap:6, marginTop:-6, marginBottom:14}}>
+                <button className="btn btn-sm" onClick={copyShareString} disabled={!binId.trim() || !accessKey.trim()}>📋 KOPIEER CODE</button>
+                <button className="btn btn-sm" onClick={pasteShareString}>📥 PLAK CODE</button>
+              </div>
+            </>
+          )}
+          {err && <div className="danger-text" style={{marginBottom:10}}>{err}</div>}
+          {!connected && !hasBakedDefault && (
+            <div style={{padding:'10px 12px', background:'#FFE7B3', border:'1.5px solid var(--red-dark)', borderRadius:2, marginBottom:12, fontSize:12, color:'var(--ink)', lineHeight:1.5}}>
+              <b>⚠ Let op:</b> bij verbinden wordt je lokale data <b>vervangen</b> door wat er in de cloud staat. Is de cloud leeg, dan wordt je lokale data juist geüpload. Heb je waardevolle lokale setlijsten? Verbind eerst op één apparaat om de cloud te vullen, en pas dan op de andere apparaten.
+            </div>
+          )}
+          {!connected && !hasBakedDefault && (
+            <button className="btn btn-red btn-block" onClick={handleConnect} disabled={busy}>
+              {busy ? 'VERBINDEN…' : '☁ VERBIND & SYNC'}
+            </button>
+          )}
+          {!connected && hasBakedDefault && showAdvanced && (
+            <button className="btn btn-red btn-block" onClick={handleConnect} disabled={busy || !binId.trim() || !accessKey.trim()}>
+              {busy ? 'VERBINDEN…' : '☁ GEBRUIK EIGEN CREDENTIALS'}
+            </button>
+          )}
+          {connected && (
+            <div style={{display:'flex', flexDirection:'column', gap:8}}>
+              <div style={{display:'flex', gap:8}}>
+                <button className="btn" style={{flex:1}} onClick={onPullNow} disabled={status.state==='syncing'}>↓ PULL NU</button>
+                <button className="btn" style={{flex:1}} onClick={onPushNow} disabled={status.state==='syncing'}>↑ PUSH NU</button>
+              </div>
+              {isBaked && showAdvanced && binId.trim() && accessKey.trim() && (
+                <button className="btn btn-red" onClick={handleConnect} disabled={busy}>
+                  GEBRUIK EIGEN CREDENTIALS
+                </button>
+              )}
+              {!isBaked && hasBakedDefault && (
+                <button className="btn" onClick={onReset}>↻ TERUG NAAR STANDAARD</button>
+              )}
+              <button className="btn btn-red" onClick={onDisconnect}>VERBINDING VERBREKEN</button>
+            </div>
+          )}
+          {(connected && isBaked) && (
+            <button className="btn btn-ghost btn-block" style={{marginTop:14, color:'var(--ink-soft)', fontSize:12}}
+                    onClick={()=> setShowAdvanced(v => !v)}>
+              {showAdvanced ? '▾ VERBERG GEAVANCEERD' : '▸ GEAVANCEERD: EIGEN CREDENTIALS'}
+            </button>
+          )}
+          {!hasBakedDefault && (
+            <button className="btn btn-ghost btn-block" style={{marginTop:14, color:'var(--ink-soft)'}}
+                    onClick={()=> setShowHelp(v=>!v)}>
+              {showHelp ? '▾ VERBERG UITLEG' : '▸ HOE WERKT DIT?'}
+            </button>
+          )}
+          {showHelp && (
+            <div style={{fontSize:13, lineHeight:1.55, color:'var(--ink)', marginTop:8, padding:'12px 14px', background:'var(--cream-lite)', border:'1.5px solid var(--ink)', borderRadius:2}}>
+              <div className="f-poster" style={{fontSize:14, letterSpacing:'0.1em', color:'var(--red-dark)', marginBottom:8}}>EERSTE KEER OPZETTEN</div>
+              <ol style={{paddingLeft:20, margin:'0 0 10px 0'}}>
+                <li>Ga naar <b>jsonbin.io</b> en maak een gratis account aan</li>
+                <li>Klik op <b>Create Bin</b>. Plaats <code style={{background:'var(--cream-shadow)', padding:'1px 5px'}}>{`{}`}</code> als inhoud en klik <b>Create</b></li>
+                <li>Bovenaan zie je je <b>BIN ID</b> — kopieer hem</li>
+                <li>Ga naar <b>API Keys</b> in het menu → <b>Create Access Key</b> → vink <i>Read</i> én <i>Update</i> aan → kopieer de key</li>
+                <li>Plak beide hier en tik <b>Verbind &amp; Sync</b></li>
+              </ol>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ===== Confirm Modal ===== */
+function ConfirmModal({title, message, confirmLabel, cancelLabel, danger, onConfirm, onCancel}){
+  return (
+    <div className="modal-bg" onClick={onCancel} style={{alignItems:'center'}}>
+      <div className="modal" style={{height:'auto', maxHeight:'80vh', maxWidth:520, borderTopLeftRadius:8, borderTopRightRadius:8, margin:'auto', borderTop:'4px solid var(--red)'}} onClick={e=>e.stopPropagation()}>
+        <div className="modal-hdr">
+          <div className="modal-title">{title || 'BEVESTIG'}</div>
+        </div>
+        <div className="modal-body">
+          <div style={{whiteSpace:'pre-line', lineHeight:1.5, fontSize:15, color:'var(--ink)'}}>{message}</div>
+        </div>
+        <div className="modal-foot">
+          <button className="btn" style={{flex:1}} onClick={onCancel}>{cancelLabel || 'ANNULEREN'}</button>
+          <button className={'btn ' + (danger ? 'btn-red' : 'btn-ink')} style={{flex:2}} onClick={onConfirm}>{confirmLabel || 'OK'}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ===== Add/Edit Song Modal ===== */
+function AddSongModal({editing, onClose, onSave}){
+  const [title, setTitle] = useState(editing ? editing.title : '');
+  const [artist, setArtist] = useState(editing ? editing.artist : '');
+  const [pdfBytes, setPdfBytes] = useState(null);
+  const [pdfName, setPdfName] = useState(editing ? 'PDF al opgeslagen' : '');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const fileRef = useRef(null);
+
+  async function handleFile(file){
+    if(!file) return;
+    if(!/\.pdf$/i.test(file.name)){
+      setErr('Alleen PDF-bestanden zijn toegestaan.'); return;
+    }
+    if(file.size > 4 * 1024 * 1024){
+      setErr('PDF is groter dan 4MB. Verklein de PDF of voeg hem toe aan je Archief.zip.');
+      return;
+    }
+    try{
+      const ab = await file.arrayBuffer();
+      setPdfBytes(new Uint8Array(ab));
+      setPdfName(file.name);
+      setErr('');
+    }catch(e){
+      setErr('Kon bestand niet lezen: ' + (e.message||e));
+    }
+  }
+  async function save(){
+    if(!title.trim()){ setErr('Vul een titel in.'); return; }
+    if(!artist.trim()){ setErr('Vul een artiest in.'); return; }
+    setBusy(true);
+    setErr('');
+    try{
+      await onSave({
+        title: title.trim(),
+        artist: artist.trim(),
+        pdfBytes: pdfBytes,
+        editing: editing
+      });
+    }catch(e){
+      console.error(e);
+      setErr('Opslaan mislukt: ' + (e.message || e));
+      setBusy(false);
+    }
+  }
+  const isBuiltinEdit = editing && !editing.custom;
+  const hasExistingPdf = editing && editing.custom && editing.hasPdf !== false;
+  return (
+    <div className="modal-bg" onClick={busy ? undefined : onClose}>
+      <div className="modal" style={{height:'auto', maxHeight:'92vh'}} onClick={e=>e.stopPropagation()}>
+        <div className="modal-hdr">
+          <div className="modal-title">{editing ? 'NUMMER BEWERKEN' : 'NIEUW NUMMER'}</div>
+          <button className="btn btn-sm" onClick={onClose} disabled={busy}>✕</button>
+        </div>
+        <div className="modal-body">
+          <label className="field">
+            <span>TITEL</span>
+            <input className="input" value={title} onChange={e=>setTitle(e.target.value)}
+                   placeholder="Bijv. Heartbreak Hotel" />
+          </label>
+          <label className="field">
+            <span>ARTIEST</span>
+            <input className="input" value={artist} onChange={e=>setArtist(e.target.value)}
+                   placeholder="Bijv. Elvis Presley" />
+          </label>
+          {!isBuiltinEdit && (
+            <label className="field">
+              <span>PDF BLADMUZIEK (OPTIONEEL)</span>
+              <button className="btn btn-block" onClick={()=>fileRef.current && fileRef.current.click()}
+                      style={{textAlign:'left', justifyContent:'flex-start'}}>
+                📎 {pdfName || (hasExistingPdf ? 'PDF AL OPGESLAGEN — VERVANGEN…' : 'KIES PDF…')}
+              </button>
+              <input ref={fileRef} type="file" accept=".pdf,application/pdf" style={{display:'none'}}
+                     onChange={e=> e.target.files[0] && handleFile(e.target.files[0])} />
+            </label>
+          )}
+          {!isBuiltinEdit && (
+            <p style={{fontSize:12, color:'var(--muted)', marginTop:4, lineHeight:1.4}}>
+              Max 4MB per PDF. Geen PDF? Geen probleem — het nummer komt wel in de bibliotheek en op de printlijst. In de PDF mét bladmuziek wordt het overgeslagen.
+            </p>
+          )}
+          {isBuiltinEdit && (
+            <p style={{fontSize:12, color:'var(--muted)', marginTop:4, lineHeight:1.4}}>
+              De PDF van dit ingebouwde nummer komt uit de Archief.zip en kan hier niet vervangen worden. Wil je een andere bladmuziek? Verwijder dit nummer en voeg het opnieuw toe als eigen nummer met een eigen PDF.
+            </p>
+          )}
+          {err && <div className="danger-text" style={{marginTop:12}}>{err}</div>}
+        </div>
+        <div className="modal-foot">
+          <button className="btn" style={{flex:1}} onClick={onClose} disabled={busy}>ANNULEREN</button>
+          <button className="btn btn-red" style={{flex:2}} onClick={save} disabled={busy}>
+            {busy ? 'OPSLAAN…' : 'OPSLAAN'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ===== Setlist Editor View ===== */
+function EditorView({setlist, songs, onUpdate, onRequestFullPdf, onRequestTextPdf, onAddSong, generatingPdf, pdfProgress, pdfLabel, pdfResult, onDismissPdfResult, askConfirm, showToast}){
+  const [picker, setPicker] = useState(null); // setIndex or null
+  const resultRef = useRef(null);
+  useEffect(() => {
+    if(pdfResult && resultRef.current){
+      try{ resultRef.current.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
+    }
+  }, [pdfResult]);
+  function patch(p){ onUpdate({...setlist, ...p, updatedAt: Date.now()}); }
+  function patchSets(sets){ patch({sets}); }
+  function updateSet(i, change){
+    const sets = setlist.sets.slice();
+    sets[i] = {...sets[i], ...change};
+    patchSets(sets);
+  }
+  function addSet(){
+    const n = setlist.sets.length + 1;
+    patchSets([...setlist.sets, {id: uid('set'), name: 'Set '+n, songs: []}]);
+  }
+  async function removeSet(i){
+    if(setlist.sets.length === 1){
+      showToast('Een setlist moet minstens 1 set hebben');
+      return;
+    }
+    const ok = await askConfirm({
+      title: 'SET VERWIJDEREN',
+      message: 'Wil je "' + setlist.sets[i].name + '" verwijderen uit deze setlist?',
+      confirmLabel: 'VERWIJDEREN',
+      danger: true
+    });
+    if(!ok) return;
+    patchSets(setlist.sets.filter((_,j)=> j!==i));
+  }
+  function moveSong(setIdx, songIdx, dir){
+    const sets = setlist.sets.slice();
+    const songs = sets[setIdx].songs.slice();
+    const ni = songIdx + dir;
+    if(ni < 0 || ni >= songs.length) return;
+    [songs[songIdx], songs[ni]] = [songs[ni], songs[songIdx]];
+    sets[setIdx] = {...sets[setIdx], songs};
+    patchSets(sets);
+  }
+  function removeSong(setIdx, songIdx){
+    const sets = setlist.sets.slice();
+    const songs = sets[setIdx].songs.filter((_,j)=> j!==songIdx);
+    sets[setIdx] = {...sets[setIdx], songs};
+    patchSets(sets);
+  }
+  function addToSet(setIdx, filenames){
+    const sets = setlist.sets.slice();
+    sets[setIdx] = {...sets[setIdx], songs: [...sets[setIdx].songs, ...filenames]};
+    patchSets(sets);
+    setPicker(null);
+  }
+  const allFilenamesInSetlist = setlist.sets.flatMap(s=>s.songs);
+  const totalSongs = allFilenamesInSetlist.length;
+  return (
+    <div className="view">
+      <label className="field">
+        <span>NAAM SETLIST</span>
+        <input className="input" value={setlist.name} onChange={e=>patch({name: e.target.value})} placeholder="Bijv. Café De Roos, voorjaarsoptreden" />
+      </label>
+      <div className="input-row">
+        <label className="field" style={{flex:1, marginBottom:0}}>
+          <span>DATUM</span>
+          <input className="input" type="date" value={setlist.date} onChange={e=>patch({date: e.target.value})} />
+        </label>
+      </div>
+      <div style={{height:10}} />
+      <label className="field">
+        <span>LOCATIE</span>
+        <input className="input" value={setlist.location} onChange={e=>patch({location: e.target.value})} placeholder="Bijv. Café De Roos, Vlaardingen" />
+      </label>
+      <label className="field">
+        <span>BAND OP VOORBLAD</span>
+        <input className="input" value={setlist.bandName||''} onChange={e=>patch({bandName: e.target.value})} placeholder="The Explosion Rockets" />
+      </label>
+      <div className="divider-stars">★ SETS ★</div>
+      {setlist.sets.map((s, i) => (
+        <div className="setcard" key={s.id}>
+          <div className="setcard-hdr">
+            <input className="setcard-name-input" value={s.name} onChange={e=>updateSet(i, {name: e.target.value})} />
+            <span className="ticket-tag">{s.songs.length}</span>
+            <button className="btn btn-sm btn-icon" style={{background:'transparent', color:'var(--cream-lite)', borderColor:'var(--cream-lite)', boxShadow:'none'}}
+                    onClick={()=>removeSet(i)} title="Verwijder set">✕</button>
+          </div>
+          <div className="setcard-body">
+            {s.songs.length === 0 ? (
+              <div className="setcard-empty">NOG GEEN NUMMERS</div>
+            ) : s.songs.map((fn, j) => {
+              const song = songs.find(x => x.filename === fn);
+              if(!song){
+                return (
+                  <div key={fn+j} className="song-row">
+                    <div className="song-num">!</div>
+                    <div className="song-info"><div className="song-title">Onbekend nummer</div><div className="song-artist">{fn}</div></div>
+                    <button className="btn btn-sm btn-icon" onClick={()=>removeSong(i, j)}>✕</button>
+                  </div>
+                );
+              }
+              return (
+                <div key={fn+j} className="song-row">
+                  <div className="song-num">{j+1}</div>
+                  <div className="song-info">
+                    <div className="song-title">
+                      {song.title}
+                      {song.custom && <span className="custom-badge">EIGEN</span>}
+                      {song.custom && song.hasPdf === false && <span className="no-pdf-tag">· GEEN PDF</span>}
+                    </div>
+                    <div className="song-artist">{song.artist}</div>
+                  </div>
+                  <div className="song-actions">
+                    <button className="btn btn-sm btn-icon" onClick={()=>moveSong(i, j, -1)} disabled={j===0}>↑</button>
+                    <button className="btn btn-sm btn-icon" onClick={()=>moveSong(i, j, 1)} disabled={j===s.songs.length-1}>↓</button>
+                    <button className="btn btn-sm btn-icon" onClick={()=>removeSong(i, j)} style={{color:'var(--red-dark)'}}>✕</button>
+                  </div>
+                </div>
+              );
+            })}
+            <button className="btn btn-block" style={{marginTop:8}} onClick={()=>setPicker(i)}>+ NUMMERS TOEVOEGEN</button>
+          </div>
+        </div>
+      ))}
+      <button className="btn btn-block" onClick={addSet}>+ NIEUWE SET</button>
+      <div className="divider-stars">★ ★ ★</div>
+      <div style={{fontSize:12, color:'var(--muted)', textAlign:'center', marginBottom:8}}>
+        Totaal: {totalSongs} {totalSongs===1?'nummer':'nummers'} in {setlist.sets.length} {setlist.sets.length===1?'set':'sets'}
+      </div>
+      {generatingPdf && (
+        <div className="card">
+          <div className="f-poster" style={{fontSize:15, letterSpacing:'0.1em'}}>{pdfLabel || 'PDF SAMENSTELLEN…'}</div>
+          <div className="progress"><div className="progress-bar" style={{width: (pdfProgress*100).toFixed(0)+'%'}} /></div>
+        </div>
+      )}
+      {!generatingPdf && pdfResult && (
+        <div className="card pdf-result" ref={resultRef}>
+          <div style={{display:'flex', alignItems:'baseline', justifyContent:'space-between', gap:8}}>
+            <div className="f-display" style={{fontSize:20, color:'var(--red-dark)'}}>★ PDF GEREED ★</div>
+            <button className="btn btn-sm btn-ghost" style={{color:'var(--muted)'}}
+                    onClick={onDismissPdfResult} title="Verbergen">✕</button>
+          </div>
+          <div className="f-poster" style={{fontSize:13, letterSpacing:'0.1em', color:'var(--ink-soft)', marginTop:2}}>
+            {pdfResult.label}
+          </div>
+          <div style={{fontSize:12, color:'var(--muted)', margin:'6px 0 10px 0', wordBreak:'break-all', fontFamily:'Special Elite, monospace'}}>
+            {pdfResult.filename}
+          </div>
+          <iframe
+            src={pdfResult.dataUrl || pdfResult.url}
+            title={pdfResult.filename}
+            style={{
+              width:'100%', height:'58vh', minHeight:380,
+              border:'2px solid var(--ink)', background:'#fff', display:'block',
+              boxShadow:'3px 3px 0 var(--ink)'
+            }}
+          />
+          {canShareFiles() && (
+            <button className="btn btn-red btn-block" style={{marginTop:12}}
+                    onClick={()=> shareViaSystem(pdfResult, showToast)}>
+              📤 DELEN / OPSLAAN VIA DEELMENU
+            </button>
+          )}
+          <div style={{display:'flex', gap:8, marginTop:8}}>
+            <a className="btn" style={{flex:2, textDecoration:'none'}}
+               href={pdfResult.url} download={pdfResult.filename}>
+              📥 BEWAAR
+            </a>
+            <a className="btn" style={{flex:1, textDecoration:'none'}}
+               href={pdfResult.dataUrl || pdfResult.url} target="_blank" rel="noopener noreferrer">
+              ↗ OPEN
+            </a>
+          </div>
+          <p style={{fontSize:11, color:'var(--muted)', marginTop:10, lineHeight:1.45, marginBottom:0}}>
+            <b>Tip:</b> in de chat-preview lukt downloaden vaak niet — gebruik <b>📤 DELEN</b> op iOS/Android of <b>publiceer de app</b> (⋯ rechtsboven) voor volledig werkende downloads.
+          </p>
+        </div>
+      )}
+      {picker !== null && (
+        <SongPicker
+          songs={songs}
+          onClose={()=>setPicker(null)}
+          onConfirm={(fns)=>addToSet(picker, fns)}
+          onAddSong={onAddSong}
+          alreadyInSet={setlist.sets[picker].songs}
+        />
+      )}
+      <div style={{height:80}} />
+      <div className="action-bar">
+        <button className="btn" disabled={totalSongs===0 || generatingPdf} onClick={onRequestTextPdf}>
+          📋 LIJST
+        </button>
+        <button className="btn btn-red" disabled={totalSongs===0 || generatingPdf} onClick={onRequestFullPdf}>
+          📄 MET BLADMUZIEK
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ===== Zip Drop Modal ===== */
+function ZipDropModal({onClose, onLoaded, status, setStatus}){
+  const [over, setOver] = useState(false);
+  const [err, setErr] = useState('');
+  const [progress, setProgress] = useState(0);
+  const inputRef = useRef(null);
+
+  async function handleFile(file){
+    if(!file) return;
+    setErr('');
+    setStatus('loading');
+    try{
+      const JSZip = window.JSZip;
+      const ab = await file.arrayBuffer();
+      const zip = await JSZip.loadAsync(ab);
+      const pdfFiles = {};
+      const entries = Object.values(zip.files).filter(e => !e.dir && e.name.toLowerCase().endsWith('.pdf') && !e.name.includes('__MACOSX') && !e.name.split('/').pop().startsWith('._'));
+      let done = 0;
+      for(const e of entries){
+        const bytes = await e.async('uint8array');
+        // store under base name (matches SONGS filename)
+        const base = e.name.split('/').pop();
+        pdfFiles[base] = bytes;
+        done++;
+        if(done % 10 === 0) setProgress(done/entries.length);
+      }
+      setProgress(1);
+      onLoaded(pdfFiles);
+    }catch(e){
+      console.error(e);
+      setErr('Kon zip niet lezen: ' + (e.message || e));
+      setStatus('idle');
+    }
+  }
+  return (
+    <div className="modal-bg" onClick={onClose}>
+      <div className="modal" style={{height:'auto', maxHeight:'80vh'}} onClick={e=>e.stopPropagation()}>
+        <div className="modal-hdr">
+          <div className="modal-title">ZIP MET PDF'S LADEN</div>
+          <button className="btn btn-sm" onClick={onClose}>✕</button>
+        </div>
+        <div className="modal-body">
+          <p style={{marginTop:0}}>Sleep je <b>Archief.zip</b> hieronder (of tik om te kiezen). De zip blijft alleen in deze browsersessie — je setlijsten worden wel onthouden.</p>
+          <div
+            className={'zip-box' + (over ? ' over':'')}
+            onClick={()=>inputRef.current && inputRef.current.click()}
+            onDragOver={e=>{e.preventDefault(); setOver(true);}}
+            onDragLeave={()=>setOver(false)}
+            onDrop={e=>{e.preventDefault(); setOver(false); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);}}
+          >
+            <div className="zip-box-title">DROP HIER</div>
+            <div className="zip-box-sub">of tik om bestand te kiezen</div>
+            <input ref={inputRef} type="file" accept=".zip,application/zip" style={{display:'none'}}
+              onChange={e=> e.target.files[0] && handleFile(e.target.files[0])} />
+          </div>
+          {status === 'loading' && (
+            <div style={{marginTop:14}}>
+              <div className="f-poster">UITPAKKEN… {(progress*100).toFixed(0)}%</div>
+              <div className="progress"><div className="progress-bar" style={{width:(progress*100).toFixed(0)+'%'}} /></div>
+            </div>
+          )}
+          {err && <div className="danger-text" style={{marginTop:12}}>{err}</div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ===== PDF Generation ===== */
+async function ensureFontsLoaded(){
+  try{
+    await Promise.all([
+      document.fonts.load('120px "Alfa Slab One"'),
+      document.fonts.load('72px "Bebas Neue"'),
+      document.fonts.load('32px "Special Elite"'),
+      document.fonts.load('60px "Limelight"')
+    ]);
+    await document.fonts.ready;
+  }catch(e){}
+}
+
+const A4_W = 595;  // pdf points
+const A4_H = 842;
+const CANVAS_SCALE = 2.5; // ≈ 180 dpi
+const CW = Math.round(A4_W * CANVAS_SCALE);
+const CH = Math.round(A4_H * CANVAS_SCALE);
+
+function drawHalftoneDots(ctx, w, h, color, density){
+  ctx.fillStyle = color;
+  const step = density;
+  for(let y=0; y<h; y+=step){
+    for(let x=0; x<w; x+=step){
+      const r = step*0.18 + Math.random()*step*0.08;
+      ctx.beginPath();
+      ctx.arc(x + step*0.5, y + step*0.5, r, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+}
+
+function drawBorder(ctx, w, h){
+  ctx.save();
+  // Outer thick black border
+  ctx.strokeStyle = '#1A1612';
+  ctx.lineWidth = 22 * (CANVAS_SCALE/2.5);
+  ctx.strokeRect(28, 28, w-56, h-56);
+  // Inner red double border
+  ctx.strokeStyle = '#C2342A';
+  ctx.lineWidth = 6 * (CANVAS_SCALE/2.5);
+  ctx.strokeRect(58, 58, w-116, h-116);
+  ctx.strokeRect(74, 74, w-148, h-148);
+  ctx.restore();
+}
+
+function drawCornerStar(ctx, x, y, r, color){
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  for(let i=0;i<10;i++){
+    const ang = (i/10)*Math.PI*2 - Math.PI/2;
+    const rad = i%2===0 ? r : r*0.45;
+    const px = Math.cos(ang)*rad, py = Math.sin(ang)*rad;
+    if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function wrapText(ctx, text, x, y, maxW, lineH){
+  const words = (text||'').split(' ');
+  let line = '';
+  const lines = [];
+  for(const w of words){
+    const test = line ? line+' '+w : w;
+    if(ctx.measureText(test).width > maxW && line){
+      lines.push(line);
+      line = w;
+    } else {
+      line = test;
+    }
+  }
+  if(line) lines.push(line);
+  lines.forEach((ln, i) => ctx.fillText(ln, x, y + i*lineH));
+  return lines.length * lineH;
+}
+
+function drawCoverPage(setlist){
+  const c = document.createElement('canvas');
+  c.width = CW; c.height = CH;
+  const ctx = c.getContext('2d');
+  // Cream background
+  ctx.fillStyle = '#F4E8D0';
+  ctx.fillRect(0,0,CW,CH);
+  // Halftone wash
+  ctx.globalAlpha = 0.06;
+  drawHalftoneDots(ctx, CW, CH, '#1A1612', 28);
+  ctx.globalAlpha = 1;
+  // Borders
+  drawBorder(ctx, CW, CH);
+  // Corner stars
+  drawCornerStar(ctx, 120, 120, 36, '#C2342A');
+  drawCornerStar(ctx, CW-120, 120, 36, '#C2342A');
+  drawCornerStar(ctx, 120, CH-120, 36, '#C2342A');
+  drawCornerStar(ctx, CW-120, CH-120, 36, '#C2342A');
+  // Red ribbon at top with band name
+  const ribbonY = 200 * (CANVAS_SCALE/2.5);
+  const ribbonH = 130 * (CANVAS_SCALE/2.5);
+  ctx.fillStyle = '#C2342A';
+  ctx.fillRect(100, ribbonY, CW-200, ribbonH);
+  ctx.fillStyle = '#1A1612';
+  ctx.fillRect(100, ribbonY-10, CW-200, 8);
+  ctx.fillRect(100, ribbonY+ribbonH+2, CW-200, 8);
+  ctx.fillStyle = '#FFFAEC';
+  ctx.font = 'bold ' + Math.round(64*CANVAS_SCALE/2.5) + 'px "Bebas Neue"';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText((setlist.bandName || 'THE EXPLOSION ROCKETS').toUpperCase(), CW/2, ribbonY + ribbonH/2);
+  // "SETLIST" giant header
+  ctx.fillStyle = '#1A1612';
+  ctx.font = Math.round(220*CANVAS_SCALE/2.5) + 'px "Alfa Slab One"';
+  ctx.textBaseline = 'top';
+  const setlistY = ribbonY + ribbonH + 50;
+  // Drop-shadow effect
+  ctx.fillStyle = '#C2342A';
+  ctx.fillText('SETLIST', CW/2 + 8, setlistY + 8);
+  ctx.fillStyle = '#1A1612';
+  ctx.fillText('SETLIST', CW/2, setlistY);
+  // Subtitle: setlist.name
+  ctx.fillStyle = '#1A1612';
+  ctx.font = Math.round(38*CANVAS_SCALE/2.5) + 'px "Special Elite"';
+  const nameY = setlistY + Math.round(220*CANVAS_SCALE/2.5) + 30;
+  const nameH = wrapText(ctx, setlist.name || '', CW/2, nameY, CW-300, Math.round(48*CANVAS_SCALE/2.5));
+  // Stars divider
+  ctx.fillStyle = '#C2342A';
+  ctx.font = Math.round(40*CANVAS_SCALE/2.5) + 'px "Bebas Neue"';
+  const starY = nameY + nameH + 18;
+  ctx.fillText('★    ★    ★', CW/2, starY);
+  // Date + location
+  ctx.fillStyle = '#1A1612';
+  ctx.font = Math.round(48*CANVAS_SCALE/2.5) + 'px "Bebas Neue"';
+  const dateY = starY + Math.round(70*CANVAS_SCALE/2.5);
+  ctx.fillText(fmtDate(setlist.date), CW/2, dateY);
+  if(setlist.location){
+    ctx.font = Math.round(34*CANVAS_SCALE/2.5) + 'px "Bebas Neue"';
+    wrapText(ctx, setlist.location.toUpperCase(), CW/2, dateY + Math.round(60*CANVAS_SCALE/2.5), CW-300, Math.round(42*CANVAS_SCALE/2.5));
+  }
+  // Bottom signature
+  ctx.fillStyle = '#8C2820';
+  ctx.font = Math.round(22*CANVAS_SCALE/2.5) + 'px "Special Elite"';
+  ctx.fillText('— ROCK ★ N ★ ROLL —', CW/2, CH - 175);
+  ctx.fillStyle = '#1A1612';
+  ctx.font = Math.round(16*CANVAS_SCALE/2.5) + 'px "Bebas Neue"';
+  const totalSongs = setlist.sets.reduce((n,s)=>n+s.songs.length,0);
+  ctx.fillText(setlist.sets.length + ' SETS · ' + totalSongs + ' NUMMERS', CW/2, CH - 140);
+  return c;
+}
+
+function drawSetDividerPage(setlist, set, setIndex, totalSets){
+  const c = document.createElement('canvas');
+  c.width = CW; c.height = CH;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#F4E8D0';
+  ctx.fillRect(0,0,CW,CH);
+  ctx.globalAlpha = 0.05;
+  drawHalftoneDots(ctx, CW, CH, '#1A1612', 26);
+  ctx.globalAlpha = 1;
+  // Diagonal red stripes top + bottom
+  ctx.save();
+  ctx.translate(CW/2, 200);
+  ctx.rotate(-0.04);
+  ctx.fillStyle = '#C2342A';
+  ctx.fillRect(-CW, -28, 2*CW, 56);
+  ctx.fillStyle = '#1A1612';
+  ctx.fillRect(-CW, -38, 2*CW, 8);
+  ctx.fillRect(-CW, 30, 2*CW, 8);
+  ctx.restore();
+  // SET number — massive
+  ctx.fillStyle = '#1A1612';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = Math.round(160*CANVAS_SCALE/2.5) + 'px "Bebas Neue"';
+  ctx.fillText('SET ' + (setIndex+1), CW/2, CH*0.42);
+  ctx.font = Math.round(380*CANVAS_SCALE/2.5) + 'px "Alfa Slab One"';
+  // huge numeral with red offset
+  ctx.fillStyle = '#C2342A';
+  ctx.fillText(String(setIndex+1), CW/2 + 14, CH*0.58 + 14);
+  ctx.fillStyle = '#1A1612';
+  ctx.fillText(String(setIndex+1), CW/2, CH*0.58);
+  // Set name (if differs from default)
+  const defaultName = 'Set ' + (setIndex+1);
+  if(set.name && set.name !== defaultName){
+    ctx.fillStyle = '#1A1612';
+    ctx.font = Math.round(40*CANVAS_SCALE/2.5) + 'px "Special Elite"';
+    wrapText(ctx, '"'+set.name+'"', CW/2, CH*0.78, CW-300, Math.round(52*CANVAS_SCALE/2.5));
+  }
+  // Footer: setlist + date
+  ctx.save();
+  ctx.translate(CW/2, CH-200);
+  ctx.fillStyle = '#1A1612';
+  ctx.font = Math.round(20*CANVAS_SCALE/2.5) + 'px "Bebas Neue"';
+  ctx.fillText((setlist.bandName||'').toUpperCase() + ' · ' + fmtDate(setlist.date), 0, 0);
+  if(setlist.location){
+    ctx.font = Math.round(18*CANVAS_SCALE/2.5) + 'px "Bebas Neue"';
+    ctx.fillStyle = '#8C2820';
+    wrapText(ctx, setlist.location.toUpperCase(), 0, 30, CW-200, 28);
+  }
+  ctx.restore();
+  ctx.fillStyle = '#C2342A';
+  ctx.font = Math.round(28*CANVAS_SCALE/2.5) + 'px "Bebas Neue"';
+  ctx.fillText(set.songs.length + ' NUMMERS · SET ' + (setIndex+1) + ' VAN ' + totalSets, CW/2, CH-120);
+  // Side stars
+  drawCornerStar(ctx, 130, CH/2, 26, '#C2342A');
+  drawCornerStar(ctx, CW-130, CH/2, 26, '#C2342A');
+  return c;
+}
+
+async function canvasToPngBytes(canvas){
+  const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.88));
+  const buf = await blob.arrayBuffer();
+  return new Uint8Array(buf);
+}
+
+async function generateTextListPdf(setlist, allSongs){
+  const PDFLib = window.PDFLib;
+  const out = await PDFLib.PDFDocument.create();
+  const helv     = await out.embedFont(PDFLib.StandardFonts.Helvetica);
+  const helvB    = await out.embedFont(PDFLib.StandardFonts.HelveticaBold);
+  const helvI    = await out.embedFont(PDFLib.StandardFonts.HelveticaOblique);
+
+  const PAGE_W = 595, PAGE_H = 842;
+  const MX_L = 50, MX_R = 50;
+  const MY_T = 50, MY_B = 40;
+  const LINE_H = 32;          // chosen so ~20 songs fit per page with larger titles
+  const SONGS_PER_PAGE = 20;
+
+  const cBlack = PDFLib.rgb(0, 0, 0);
+  const cRed   = PDFLib.rgb(0.76, 0.20, 0.16);
+  const cInk   = PDFLib.rgb(0.23, 0.20, 0.16);
+  const cMute  = PDFLib.rgb(0.48, 0.43, 0.36);
+
+  function fitText(text, maxW, font, size){
+    if(font.widthOfTextAtSize(text, size) <= maxW) return text;
+    const ell = '...';
+    let lo=0, hi=text.length;
+    while(lo<hi){
+      const mid = (lo+hi+1)>>1;
+      if(font.widthOfTextAtSize(text.slice(0,mid)+ell, size) <= maxW) lo=mid;
+      else hi=mid-1;
+    }
+    return text.slice(0, lo) + ell;
+  }
+  function drawHeader(page, set, setIdx, totalSets, pageIdx, pagesInSet){
+    const topY = PAGE_H - MY_T;
+    // Band name (left)
+    const band = sanitizeForPdf((setlist.bandName || 'The Explosion Rockets').toUpperCase());
+    page.drawText(band, { x: MX_L, y: topY, size: 14, font: helvB, color: cBlack });
+    // Set info (right)
+    const setLabel = 'SET ' + (setIdx+1) + ' / ' + totalSets;
+    const slW = helvB.widthOfTextAtSize(setLabel, 14);
+    page.drawText(setLabel, { x: PAGE_W - MX_R - slW, y: topY, size: 14, font: helvB, color: cRed });
+    // Subtitle line
+    const subY = topY - 14;
+    const subParts = [];
+    if(setlist.date)     subParts.push(sanitizeForPdf(fmtDate(setlist.date)));
+    if(setlist.location) subParts.push(sanitizeForPdf(setlist.location));
+    if(subParts.length){
+      page.drawText(subParts.join('  ·  '),
+        { x: MX_L, y: subY, size: 9, font: helv, color: cInk });
+    }
+    if(pagesInSet > 1){
+      const pg = 'pagina ' + (pageIdx+1) + ' / ' + pagesInSet;
+      const pgW = helv.widthOfTextAtSize(pg, 9);
+      page.drawText(pg, { x: PAGE_W - MX_R - pgW, y: subY, size: 9, font: helv, color: cMute });
+    }
+    // Divider line
+    page.drawLine({
+      start: { x: MX_L, y: subY - 10 },
+      end:   { x: PAGE_W - MX_R, y: subY - 10 },
+      thickness: 1, color: cBlack
+    });
+    // Setlist + set name (first page of set only)
+    let nextY = subY - 28;
+    if(pageIdx === 0){
+      const slName = sanitizeForPdf(setlist.name || '');
+      if(slName){
+        page.drawText(slName, { x: MX_L, y: nextY, size: 11, font: helvI, color: cInk });
+        nextY -= 18;
+      }
+      const defName = 'Set ' + (setIdx+1);
+      if(set.name && set.name !== defName){
+        const sn = sanitizeForPdf('"' + set.name + '"');
+        page.drawText(sn, { x: MX_L, y: nextY, size: 11, font: helvI, color: cMute });
+        nextY -= 18;
+      }
+    }
+    return nextY;
+  }
+
+  for(let setIdx=0; setIdx<setlist.sets.length; setIdx++){
+    const set = setlist.sets[setIdx];
+    const songs = set.songs;
+    const pagesInSet = Math.max(1, Math.ceil(songs.length / SONGS_PER_PAGE));
+    for(let pageIdx=0; pageIdx<pagesInSet; pageIdx++){
+      const page = out.addPage([PAGE_W, PAGE_H]);
+      let y = drawHeader(page, set, setIdx, setlist.sets.length, pageIdx, pagesInSet);
+      // Numbered list
+      const startSong = pageIdx * SONGS_PER_PAGE;
+      const endSong = Math.min(songs.length, startSong + SONGS_PER_PAGE);
+      for(let i=startSong; i<endSong; i++){
+        const fn = songs[i];
+        const song = allSongs.find(x => x.filename === fn);
+        const title  = sanitizeForPdf(song ? song.title : '(onbekend)').toUpperCase();
+        const artist = sanitizeForPdf(song ? song.artist : fn);
+        // Number column: right-aligned at x=80
+        const numStr = (i+1) + '.';
+        const numW = helv.widthOfTextAtSize(numStr, 11);
+        page.drawText(numStr, { x: 80 - numW, y: y, size: 11, font: helv, color: cMute });
+        // Artist column: right-aligned at right margin, max width 180
+        const artistFit = fitText(artist, 180, helv, 11);
+        const artistW = helv.widthOfTextAtSize(artistFit, 11);
+        page.drawText(artistFit, { x: PAGE_W - MX_R - artistW, y: y, size: 11, font: helv, color: cInk });
+        // Title column: between number and artist, bold, ALL CAPS, larger for stage readability
+        const titleMaxX = PAGE_W - MX_R - artistW - 16;
+        const titleMaxW = titleMaxX - 90;
+        const titleFit = fitText(title, titleMaxW, helvB, 17);
+        page.drawText(titleFit, { x: 90, y: y, size: 17, font: helvB, color: cBlack });
+        y -= LINE_H;
+      }
+      // Footer
+      if(pageIdx === pagesInSet-1){
+        const foot = '— ' + songs.length + (songs.length===1 ? ' nummer —' : ' nummers —');
+        const footW = helvI.widthOfTextAtSize(foot, 9);
+        page.drawText(foot, { x: (PAGE_W - footW)/2, y: MY_B, size: 9, font: helvI, color: cMute });
+      }
+    }
+  }
+  return await out.save();
+}
+
+async function generateCombinedPdf(setlist, zipFiles, allSongs, onProgress){
+  await ensureFontsLoaded();
+  const PDFLib = window.PDFLib;
+  const out = await PDFLib.PDFDocument.create();
+  // === Cover ===
+  onProgress && onProgress(0.05, 'Voorblad tekenen…');
+  const coverCanvas = drawCoverPage(setlist);
+  const coverBytes = await canvasToPngBytes(coverCanvas);
+  const coverImg = await out.embedJpg(coverBytes);
+  const coverPage = out.addPage([A4_W, A4_H]);
+  coverPage.drawImage(coverImg, {x:0,y:0,width:A4_W,height:A4_H});
+
+  const totalSteps = setlist.sets.reduce((n,s)=> n + s.songs.length + 1, 0);
+  let done = 0;
+  // === Sets ===
+  for(let i=0; i<setlist.sets.length; i++){
+    const set = setlist.sets[i];
+    onProgress && onProgress(0.05 + 0.9*(done/totalSteps), 'Tussenblad set ' + (i+1) + '…');
+    const divCanvas = drawSetDividerPage(setlist, set, i, setlist.sets.length);
+    const divBytes = await canvasToPngBytes(divCanvas);
+    const divImg = await out.embedJpg(divBytes);
+    const divPage = out.addPage([A4_W, A4_H]);
+    divPage.drawImage(divImg, {x:0,y:0,width:A4_W,height:A4_H});
+    done++;
+    for(const fn of set.songs){
+      onProgress && onProgress(0.05 + 0.9*(done/totalSteps), 'Voeg toe: ' + fn);
+      const song = allSongs.find(x => x.filename === fn);
+      // Custom songs flagged as no-PDF: skip silently
+      if(song && song.custom && song.hasPdf === false){
+        done++;
+        continue;
+      }
+      let bytes = zipFiles[fn];
+      // Custom songs: try loading from persistent storage if not in session
+      if(!bytes && isCustomFilename(fn)){
+        const cid = customIdFromFilename(fn);
+        if(cid){
+          bytes = await loadCustomPdfBytes(cid);
+          if(bytes) zipFiles[fn] = bytes; // cache for the rest of this session
+        }
+      }
+      if(!bytes){
+        console.warn('Missing PDF:', fn);
+        const label = song ? (song.title + ' — ' + song.artist) : fn;
+        const ph = out.addPage([A4_W, A4_H]);
+        ph.drawText('ONTBREEKT: ' + label, {x:60, y:A4_H/2, size:14});
+        done++;
+        continue;
+      }
+      try{
+        const src = await PDFLib.PDFDocument.load(bytes, {ignoreEncryption:true});
+        const pages = await out.copyPages(src, src.getPageIndices());
+        pages.forEach(p => out.addPage(p));
+      }catch(e){
+        console.error('Failed to embed', fn, e);
+        const ph = out.addPage([A4_W, A4_H]);
+        ph.drawText('Fout bij laden: ' + fn, {x:60, y:A4_H/2, size:14});
+      }
+      done++;
+    }
+  }
+  onProgress && onProgress(0.97, 'PDF opslaan…');
+  const bytes = await out.save();
+  onProgress && onProgress(1.0, 'Klaar');
+  return bytes;
+}
+
+function safeFilename(s){
+  return (s||'setlist').replace(/[^a-zA-Z0-9 \-_\.]/g,'').replace(/\s+/g,'_').slice(0,80);
+}
+function bytesToBlobUrl(bytes){
+  const blob = new Blob([bytes], {type:'application/pdf'});
+  return URL.createObjectURL(blob);
+}
+async function bytesToDataUrlAsync(bytes){
+  return new Promise((resolve, reject) => {
+    const blob = new Blob([bytes], {type:'application/pdf'});
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(r.error || new Error('FileReader error'));
+    r.readAsDataURL(blob);
+  });
+}
+function tryAutoDownload(url, filename){
+  // Best-effort: works on most desktop browsers, often silently fails on iOS/sandboxed iframes.
+  // The persistent result card below remains the reliable path.
+  try{
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.rel = 'noopener';
+    document.body.appendChild(a); a.click();
+    setTimeout(()=> a.remove(), 600);
+  }catch(e){ /* ignore */ }
+}
+
+function canShareFiles(){
+  try{
+    if(typeof navigator === 'undefined' || !navigator.canShare) return false;
+    const probe = new File([new Uint8Array([0x25,0x50,0x44,0x46])], 'probe.pdf', {type:'application/pdf'});
+    return navigator.canShare({files: [probe]});
+  }catch(e){ return false; }
+}
+async function shareViaSystem(pdfResult, showToast){
+  if(!pdfResult || !pdfResult.bytes){
+    showToast && showToast('Geen PDF om te delen', 2500);
+    return;
+  }
+  try{
+    const file = new File([pdfResult.bytes], pdfResult.filename, {type:'application/pdf'});
+    if(navigator.canShare && navigator.canShare({files: [file]})){
+      await navigator.share({files: [file], title: pdfResult.filename});
+    } else if(navigator.share){
+      await navigator.share({title: pdfResult.filename, url: pdfResult.url});
+    } else {
+      showToast && showToast('Delen niet beschikbaar in deze browser', 3000);
+    }
+  }catch(e){
+    if(e.name === 'AbortError') return; // user cancelled
+    console.error('share failed', e);
+    showToast && showToast('Delen mislukt: ' + (e.message || e), 3500);
+  }
+}
+
+/* ===== Main App ===== */
+function App(){
+  const [view, setView] = useState('setlists');
+  const [setlists, setSetlists] = useState([]);
+  const [activeId, setActiveId] = useState(null);
+  const [zipFiles, setZipFiles] = useState({});  // session
+  const [zipStatus, setZipStatus] = useState('idle'); // idle | loading | loaded
+  const [showZip, setShowZip] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [pendingPdf, setPendingPdf] = useState(false);  // we want to generate as soon as zip is loaded
+  const [generating, setGenerating] = useState(false);
+  const [pdfProgress, setPdfProgress] = useState(0);
+  const [pdfLabel, setPdfLabel] = useState('');
+  const [loaded, setLoaded] = useState(false);
+  const [customSongs, setCustomSongs] = useState([]);
+  const [songOverrides, setSongOverrides] = useState(EMPTY_OVERRIDES);
+  const [addSongModal, setAddSongModal] = useState(null); // null | {editing?: song}
+  const [confirmDialog, setConfirmDialog] = useState(null);
+  const [pdfResult, setPdfResult] = useState(null);       // null | {url, dataUrl, bytes, filename, label}
+  const [storageAvailable, setStorageAvailable] = useState(null); // null = unknown, true | false
+  const [storageType, setStorageType] = useState('none'); // 'claude' | 'local' | 'none'
+  const [syncConfig, setSyncConfig] = useState(null); // null | {binId, accessKey, enabled}
+  const [syncStatus, setSyncStatus] = useState({state:'idle', lastSyncAt:null, error:null});
+  const [showSyncModal, setShowSyncModal] = useState(false);
+  const pdfResultRef = useRef(null);
+  const applyingPullRef = useRef(false);
+  const lastSyncedHashRef = useRef(null);
+  const initialPullDoneRef = useRef(false);
+
+  const allSongs = useMemo(() => {
+    const builtin = SONGS.map(s => {
+      const edit = songOverrides.edits && songOverrides.edits[s.filename];
+      const deleted = (songOverrides.deleted || []).includes(s.filename);
+      return {
+        ...s,
+        title: (edit && edit.title) || s.title,
+        artist: (edit && edit.artist) || s.artist,
+        edited: !!edit,
+        deleted
+      };
+    });
+    return builtin.concat(customSongs);
+  }, [customSongs, songOverrides]);
+
+  // Visible: filter out deleted built-ins for library/picker
+  const visibleSongs = useMemo(() => allSongs.filter(s => !s.deleted), [allSongs]);
+  const hiddenCount = (songOverrides.deleted || []).length;
+
+  function askConfirm({title, message, confirmLabel, cancelLabel, danger}){
+    return new Promise(resolve => {
+      setConfirmDialog({
+        title, message, confirmLabel, cancelLabel, danger,
+        onConfirm: () => { setConfirmDialog(null); resolve(true); },
+        onCancel:  () => { setConfirmDialog(null); resolve(false); }
+      });
+    });
+  }
+
+  function setPdfResultAndCleanup(next){
+    if(pdfResultRef.current && pdfResultRef.current.url){
+      try{ URL.revokeObjectURL(pdfResultRef.current.url); }catch(e){}
+    }
+    pdfResultRef.current = next;
+    setPdfResult(next);
+  }
+  // Clear PDF result when switching setlists or closing editor
+  useEffect(() => {
+    setPdfResultAndCleanup(null);
+  }, [activeId]);
+
+  // Load setlists + custom songs + overrides + sync config once, after storage probe
+  useEffect(()=>{
+    (async () => {
+      const works = await testStorageOnce();
+      setStorageAvailable(works);
+      setStorageType(getStorageBackend());
+      if(works){
+        const [sl, cs, ov, sc] = await Promise.all([
+          loadSetlists(), loadCustomSongs(), loadSongOverrides(), loadSyncConfig()
+        ]);
+        setSetlists(sl);
+        setCustomSongs(cs);
+        setSongOverrides(ov);
+        // Determine effective sync config:
+        // 1) explicit user opt-out → no sync
+        // 2) user custom credentials → use those
+        // 3) baked default (if filled in) → use that
+        // 4) nothing → no sync
+        if(sc && sc.disabled){
+          setSyncConfig(null);
+        } else if(sc && sc.binId && sc.accessKey){
+          setSyncConfig(sc);
+        } else {
+          const baked = getDefaultSyncConfig();
+          if(baked) setSyncConfig(baked);
+        }
+      } else {
+        // No storage = no persisted opt-out check; still apply baked if present
+        const baked = getDefaultSyncConfig();
+        if(baked) setSyncConfig(baked);
+      }
+      setLoaded(true);
+    })();
+  }, []);
+  // Save on change
+  useEffect(()=>{
+    if(loaded) saveSetlistsDebounced(setlists);
+  }, [setlists, loaded]);
+  useEffect(()=>{
+    if(loaded) saveCustomSongsDebounced(customSongs);
+  }, [customSongs, loaded]);
+  useEffect(()=>{
+    if(loaded) saveSongOverridesDebounced(songOverrides);
+  }, [songOverrides, loaded]);
+
+  function showToast(msg, ms=2400){
+    setToast(msg);
+    setTimeout(()=> setToast(t => t === msg ? null : t), ms);
+  }
+
+  /* ===== Sync handlers ===== */
+  async function doPullAndApply(silent){
+    if(!syncConfig || !syncConfig.binId) return;
+    setSyncStatus(s => ({...s, state:'syncing', error:null}));
+    try{
+      const data = await pullFromJsonBin(syncConfig.binId, syncConfig.accessKey);
+      // If bin doesn't contain our v=1 payload yet (empty, placeholder, or wrong schema)
+      // treat as uninitialized and push local data so the bin gets seeded.
+      if(!isValidPayload(data)){
+        setSyncStatus({state:'ok', lastSyncAt: Date.now(), error:null});
+        lastSyncedHashRef.current = null;
+        setTimeout(() => doPush(true), 400);
+        if(!silent) showToast('Cloud nog niet geïnitialiseerd — lokale data wordt geüpload', 2400);
+        return;
+      }
+      applyingPullRef.current = true;
+      setSetlists(data.setlists);
+      setCustomSongs(data.customSongs);
+      setSongOverrides(data.songOverrides);
+      lastSyncedHashRef.current = syncHash(data);
+      // Reset apply-flag after React commits
+      setTimeout(() => { applyingPullRef.current = false; }, 50);
+      setSyncStatus({state:'ok', lastSyncAt: Date.now(), error:null});
+      if(!silent) showToast('Cloud opgehaald ✓', 1800);
+    }catch(e){
+      console.error('Pull failed', e);
+      setSyncStatus({state:'error', lastSyncAt: syncStatus.lastSyncAt, error: e.message || String(e)});
+      if(!silent) showToast('Pull mislukt: ' + (e.message || e), 3500);
+    }
+  }
+  async function doPush(silent){
+    if(!syncConfig || !syncConfig.binId) return;
+    if(applyingPullRef.current) return;
+    const payload = makeSyncPayload(setlists, customSongs, songOverrides);
+    const h = syncHash(payload);
+    if(h === lastSyncedHashRef.current && silent) return; // nothing to push
+    setSyncStatus(s => ({...s, state:'syncing', error:null}));
+    try{
+      await pushToJsonBin(syncConfig.binId, syncConfig.accessKey, payload);
+      lastSyncedHashRef.current = h;
+      setSyncStatus({state:'ok', lastSyncAt: Date.now(), error:null});
+      if(!silent) showToast('Naar cloud verzonden ✓', 1800);
+    }catch(e){
+      console.error('Push failed', e);
+      setSyncStatus({state:'error', lastSyncAt: syncStatus.lastSyncAt, error: e.message || String(e)});
+      if(!silent) showToast('Push mislukt: ' + (e.message || e), 3500);
+    }
+  }
+  async function handleSyncConfigSave(newCfg){
+    setSyncConfig(newCfg);
+    await saveSyncConfig(newCfg);
+    initialPullDoneRef.current = false; // trigger a fresh pull
+    lastSyncedHashRef.current = null;
+    // doPullAndApply triggers via effect below once state settles
+  }
+  async function handleSyncDisconnect(){
+    const ok = await askConfirm({
+      title: 'SYNC VERBREKEN',
+      message: 'Cloud-verbinding verbreken op dit apparaat? Je lokale data blijft staan en sync staat uit totdat je hem zelf weer aanzet.',
+      confirmLabel: 'VERBREKEN',
+      danger: true
+    });
+    if(!ok) return;
+    setSyncConfig(null);
+    // Save opt-out so baked default doesn't re-activate on next load
+    await saveSyncConfig({disabled: true});
+    setSyncStatus({state:'idle', lastSyncAt:null, error:null});
+    initialPullDoneRef.current = false;
+    lastSyncedHashRef.current = null;
+    setShowSyncModal(false);
+    showToast('Cloud-sync uit', 1800);
+  }
+  async function handleResetToDefault(){
+    const baked = getDefaultSyncConfig();
+    if(!baked){
+      showToast('Geen standaard-cloud ingesteld', 2400);
+      return;
+    }
+    setSyncConfig(baked);
+    await saveSyncConfig(null); // clear user override → falls back to baked
+    initialPullDoneRef.current = false;
+    lastSyncedHashRef.current = null;
+    showToast('Teruggezet naar standaard-cloud', 1800);
+  }
+
+  // Auto-pull once on load (or when config changes)
+  useEffect(() => {
+    if(!loaded || !syncConfig || !syncConfig.enabled) return;
+    if(initialPullDoneRef.current) return;
+    initialPullDoneRef.current = true;
+    doPullAndApply(true);
+  }, [loaded, syncConfig && syncConfig.binId, syncConfig && syncConfig.accessKey, syncConfig && syncConfig.enabled]);
+
+  // Auto-push debounced after data changes
+  useEffect(() => {
+    if(!loaded || !syncConfig || !syncConfig.enabled) return;
+    if(applyingPullRef.current) return;
+    if(!initialPullDoneRef.current) return; // wait until first pull settled
+    const t = setTimeout(() => doPush(true), 2500);
+    return () => clearTimeout(t);
+  }, [setlists, customSongs, songOverrides]);
+
+  function createSetlist(){
+    const sl = emptySetlist();
+    setSetlists(prev => [sl, ...prev]);
+    setActiveId(sl.id);
+  }
+  async function deleteSetlist(id){
+    const sl = setlists.find(x => x.id === id);
+    const ok = await askConfirm({
+      title: 'SETLIST VERWIJDEREN',
+      message: 'Wil je "' + (sl && sl.name || 'deze setlist') + '" definitief verwijderen?',
+      confirmLabel: 'VERWIJDEREN',
+      danger: true
+    });
+    if(!ok) return;
+    setSetlists(prev => prev.filter(s => s.id !== id));
+    if(activeId === id) setActiveId(null);
+    showToast('Setlist verwijderd');
+  }
+  function updateSetlist(updated){
+    setSetlists(prev => prev.map(s => s.id === updated.id ? updated : s));
+  }
+  async function saveCustomSong({title, artist, pdfBytes, editing}){
+    if(editing && !editing.custom){
+      // Editing a built-in song: only update title/artist via overrides
+      setSongOverrides(prev => ({
+        ...prev,
+        edits: {
+          ...prev.edits,
+          [editing.filename]: {title, artist}
+        }
+      }));
+      setAddSongModal(null);
+      showToast('Nummer bijgewerkt ✓');
+      return;
+    }
+    if(editing){
+      // Update custom song; optionally replace PDF
+      const updated = {...editing, title, artist};
+      if(pdfBytes){
+        updated.hasPdf = true;
+        const id = customIdFromFilename(editing.filename);
+        await saveCustomPdfBase64(id, bytesToBase64(pdfBytes));
+        setZipFiles(prev => ({...prev, [editing.filename]: pdfBytes}));
+      }
+      setCustomSongs(prev => prev.map(s => s.id === editing.id ? updated : s));
+      setAddSongModal(null);
+      showToast('Nummer bijgewerkt ✓');
+    } else {
+      const song = makeCustomSong({title, artist, hasPdf: !!pdfBytes});
+      if(pdfBytes){
+        const id = customIdFromFilename(song.filename);
+        await saveCustomPdfBase64(id, bytesToBase64(pdfBytes));
+        setZipFiles(prev => ({...prev, [song.filename]: pdfBytes}));
+      }
+      setCustomSongs(prev => [song, ...prev]);
+      setAddSongModal(null);
+      showToast(pdfBytes ? 'Nummer toegevoegd ✓' : 'Nummer toegevoegd (zonder PDF) ✓');
+    }
+  }
+  async function deleteSong(song){
+    const ok = await askConfirm({
+      title: 'NUMMER VERWIJDEREN',
+      message: 'Wil je "' + song.title + '" verwijderen uit de bibliotheek?\n\nBestaande setlijsten die dit nummer gebruiken laten het dan als "Onbekend nummer" zien — je kunt het later herstellen.',
+      confirmLabel: 'VERWIJDEREN',
+      danger: true
+    });
+    if(!ok) return;
+    if(song.custom){
+      const id = customIdFromFilename(song.filename);
+      setCustomSongs(prev => prev.filter(s => s.id !== song.id));
+      if(id) await deleteCustomPdf(id);
+      setZipFiles(prev => {
+        const c = {...prev};
+        delete c[song.filename];
+        return c;
+      });
+    } else {
+      setSongOverrides(prev => ({
+        ...prev,
+        deleted: prev.deleted.filter(f => f !== song.filename).concat([song.filename])
+      }));
+    }
+    showToast('Verwijderd ✓');
+  }
+  function restoreSong(filename){
+    setSongOverrides(prev => ({
+      ...prev,
+      deleted: prev.deleted.filter(f => f !== filename)
+    }));
+    showToast('Hersteld ✓');
+  }
+  async function restoreAllHidden(){
+    if((songOverrides.deleted || []).length === 0) return;
+    const ok = await askConfirm({
+      title: 'ALLES HERSTELLEN',
+      message: 'Alle ' + songOverrides.deleted.length + ' verwijderde ingebouwde nummers terugzetten?',
+      confirmLabel: 'HERSTEL ALLES'
+    });
+    if(!ok) return;
+    setSongOverrides(prev => ({...prev, deleted: []}));
+    showToast('Alles hersteld ✓');
+  }
+  function handleZipLoaded(files){
+    setZipFiles(prev => ({...prev, ...files}));  // keep custom songs already loaded
+    setZipStatus('loaded');
+    setShowZip(false);
+    const found = Object.keys(files).length;
+    showToast('Zip geladen: ' + found + ' PDF\'s', 1800);
+    // If we were waiting to generate PDF, kick it off
+    if(pendingPdf){
+      setPendingPdf(false);
+      setTimeout(()=> doGenerate({...zipFiles, ...files}), 200);
+    }
+  }
+  function setlistNeedsZip(setlist){
+    // Only true if at least one song in setlist isn't a custom song (i.e., comes from the archive zip)
+    for(const set of setlist.sets){
+      for(const fn of set.songs){
+        if(!isCustomFilename(fn)) return true;
+      }
+    }
+    return false;
+  }
+  function requestFullPdf(){
+    const active = setlists.find(s => s.id === activeId);
+    if(!active) return;
+    const needsZip = setlistNeedsZip(active);
+    if(needsZip && (zipStatus !== 'loaded' || Object.keys(zipFiles).length === 0)){
+      setPendingPdf(true);
+      setShowZip(true);
+      return;
+    }
+    doGenerate(zipFiles);
+  }
+  async function requestTextPdf(){
+    const active = setlists.find(s => s.id === activeId);
+    if(!active) return;
+    setGenerating(true);
+    setPdfLabel('PRINTLIJST MAKEN…');
+    setPdfProgress(0.3);
+    try{
+      await new Promise(r => setTimeout(r, 30));
+      const bytes = await generateTextListPdf(active, allSongs);
+      setPdfProgress(1);
+      const fn = safeFilename(active.name) + '_' + (active.date||'') + '_lijst.pdf';
+      const url = bytesToBlobUrl(bytes);
+      let dataUrl = null;
+      try{ dataUrl = await bytesToDataUrlAsync(bytes); }catch(e){}
+      setPdfResultAndCleanup({url, dataUrl, bytes, filename: fn, label: 'PRINTLIJST'});
+      tryAutoDownload(url, fn);
+      showToast('Printlijst gereed ✓', 2200);
+    }catch(e){
+      console.error(e);
+      showToast('Fout: ' + (e.message || e), 4500);
+    }finally{
+      setGenerating(false);
+      setPdfProgress(0);
+      setPdfLabel('');
+    }
+  }
+  async function doGenerate(files){
+    const active = setlists.find(s => s.id === activeId);
+    if(!active) return;
+    setGenerating(true);
+    setPdfLabel('PDF MET BLADMUZIEK SAMENSTELLEN…');
+    setPdfProgress(0);
+    try{
+      const bytes = await generateCombinedPdf(active, files, allSongs, (p, msg) => {
+        setPdfProgress(p);
+      });
+      const fn = safeFilename(active.name) + '_' + (active.date||'') + '.pdf';
+      const url = bytesToBlobUrl(bytes);
+      let dataUrl = null;
+      try{ dataUrl = await bytesToDataUrlAsync(bytes); }catch(e){}
+      setPdfResultAndCleanup({url, dataUrl, bytes, filename: fn, label: 'PDF MET BLADMUZIEK'});
+      tryAutoDownload(url, fn);
+      showToast('PDF gereed ✓', 2200);
+    }catch(e){
+      console.error(e);
+      showToast('Fout: ' + (e.message || e), 4500);
+    }finally{
+      setGenerating(false);
+      setPdfProgress(0);
+      setPdfLabel('');
+    }
+  }
+
+  const active = activeId ? setlists.find(s => s.id === activeId) : null;
+  const zipCount = Object.keys(zipFiles).length;
+
+  return (
+    <div className="app">
+      <Header
+        view={view} setView={(v)=>{setView(v); setActiveId(null);}}
+        zipStatus={zipStatus} zipCount={zipCount}
+        onZipClick={()=> setShowZip(true)}
+        hasActive={!!active}
+        onBack={()=> setActiveId(null)}
+        syncEnabled={!!(syncConfig && syncConfig.enabled)}
+        syncState={syncStatus.state}
+        onSyncClick={()=> setShowSyncModal(true)}
+      />
+      {storageAvailable === false && (
+        <div className="preview-warning">
+          <div className="preview-warning-title">⚠ OPSLAG NIET BESCHIKBAAR</div>
+          <div className="preview-warning-text">
+            Setlijsten worden niet bewaard tussen sessies. Open de app in een normale browser (geen privé-modus) of host hem op een eigen URL.
+          </div>
+        </div>
+      )}
+      {active ? (
+        <EditorView
+          setlist={active}
+          songs={allSongs}
+          onUpdate={updateSetlist}
+          onRequestFullPdf={requestFullPdf}
+          onRequestTextPdf={requestTextPdf}
+          onAddSong={()=> setAddSongModal({editing: null})}
+          generatingPdf={generating}
+          pdfProgress={pdfProgress}
+          pdfLabel={pdfLabel}
+          pdfResult={pdfResult}
+          onDismissPdfResult={()=> setPdfResultAndCleanup(null)}
+          askConfirm={askConfirm}
+          showToast={showToast}
+        />
+      ) : view === 'setlists' ? (
+        <SetlistsView
+          setlists={setlists}
+          onOpen={setActiveId}
+          onCreate={createSetlist}
+          onDelete={deleteSetlist}
+        />
+      ) : (
+        <LibraryView
+          songs={visibleSongs}
+          hiddenCount={hiddenCount}
+          hiddenSongs={allSongs.filter(s => s.deleted)}
+          onAddSong={()=> setAddSongModal({editing: null})}
+          onEditSong={(song)=> setAddSongModal({editing: song})}
+          onDeleteSong={deleteSong}
+          onRestoreSong={restoreSong}
+          onRestoreAll={restoreAllHidden}
+        />
+      )}
+      {showZip && (
+        <ZipDropModal
+          status={zipStatus}
+          setStatus={setZipStatus}
+          onClose={()=>{ setShowZip(false); setPendingPdf(false); if(zipStatus==='loading') setZipStatus('idle'); }}
+          onLoaded={handleZipLoaded}
+        />
+      )}
+      {addSongModal && (
+        <AddSongModal
+          editing={addSongModal.editing}
+          onClose={()=> setAddSongModal(null)}
+          onSave={saveCustomSong}
+        />
+      )}
+      {confirmDialog && (
+        <ConfirmModal {...confirmDialog} />
+      )}
+      {showSyncModal && (
+        <SyncSettingsModal
+          config={syncConfig}
+          hasBakedDefault={!!getDefaultSyncConfig()}
+          status={syncStatus}
+          onClose={()=> setShowSyncModal(false)}
+          onSave={handleSyncConfigSave}
+          onDisconnect={handleSyncDisconnect}
+          onReset={handleResetToDefault}
+          onPullNow={()=> doPullAndApply(false)}
+          onPushNow={()=> doPush(false)}
+          showToast={showToast}
+        />
+      )}
+      {toast && <div className="toast">{toast}</div>}
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
