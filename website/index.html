@@ -110,10 +110,21 @@
 
   /* ============ HERO ============ */
   .hero{position:relative; min-height:100vh; min-height:100svh; display:flex; align-items:center; overflow:hidden;}
-  #burst{position:absolute; inset:0; width:100%; height:100%; z-index:1;}
+  .hero-photo{
+    position:absolute; inset:0; z-index:0; background-size:cover; background-position:center 30%;
+    filter:contrast(1.05) saturate(.85) brightness(.55);
+  }
+  .hero-veil{
+    position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:
+      linear-gradient(180deg, rgba(21,17,13,.55) 0%, rgba(21,17,13,.30) 40%, rgba(21,17,13,.85) 100%),
+      radial-gradient(ellipse 60% 60% at 30% 45%, transparent 0%, rgba(21,17,13,.6) 100%);
+    mix-blend-mode:multiply;
+  }
+  #burst{position:absolute; inset:0; width:100%; height:100%; z-index:2;}
   .hero-spot{
     position:absolute; top:-30%; left:50%; transform:translateX(-50%);
-    width:120vw; height:120vh; z-index:1; pointer-events:none;
+    width:120vw; height:120vh; z-index:2; pointer-events:none;
     background:radial-gradient(ellipse 40% 55% at 50% 35%, rgba(232,162,60,.22), rgba(216,53,42,.10) 38%, transparent 70%);
     animation:spot 9s ease-in-out infinite alternate;
   }
@@ -183,9 +194,12 @@
       linear-gradient(160deg, #2a1f15, #120d09);
     display:grid; place-items:center; overflow:hidden;
   }
-  .band-photo .silhouette{font-size:clamp(60px,12vw,120px); filter:drop-shadow(0 6px 14px rgba(0,0,0,.6)); opacity:.9;}
-  .band-photo .ph-label{position:absolute; bottom:12px; left:12px; right:12px; font-family:'Bebas Neue',sans-serif;
-    letter-spacing:.18em; font-size:12px; color:var(--paper-dim); text-align:center;}
+  .band-photo img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    filter:contrast(1.06) saturate(.82) brightness(.92); mix-blend-mode:luminosity;}
+  .band-photo::after{content:''; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(180deg, rgba(216,53,42,.18), transparent 45%, rgba(21,17,13,.7));}
+  .band-photo .ph-label{position:absolute; z-index:2; bottom:12px; left:12px; right:12px; font-family:'Bebas Neue',sans-serif;
+    letter-spacing:.18em; font-size:12px; color:var(--paper-2); text-align:center; text-shadow:0 1px 4px rgba(0,0,0,.8);}
   .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:46px;}
   .stat{
     background:var(--paper); color:var(--ink); border:2px solid var(--ink); box-shadow:5px 5px 0 var(--ink);
@@ -316,6 +330,32 @@
   .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease;}
   .reveal.in{opacity:1; transform:none;}
 
+  /* ============ VIDEO ============ */
+  .video{background:linear-gradient(180deg, var(--ground-2), var(--ground));}
+  .video-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .vcard{
+    position:relative; aspect-ratio:16/9; padding:0; cursor:pointer; overflow:hidden;
+    border:2px solid var(--ink); background:var(--ink); box-shadow:6px 6px 0 var(--red-deep);
+    transition:transform .15s, box-shadow .15s;
+  }
+  .vcard:hover{transform:translate(-2px,-2px); box-shadow:9px 9px 0 var(--red-deep);}
+  .vcard img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    filter:contrast(1.05) saturate(.85) brightness(.8); transition:filter .2s, transform .3s;}
+  .vcard:hover img{filter:contrast(1.08) saturate(1) brightness(.95); transform:scale(1.04);}
+  .vcard .vplay{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;
+    width:62px; height:62px; border-radius:50%; display:grid; place-items:center;
+    background:var(--red); color:var(--paper-2); border:3px solid var(--paper-2);
+    font-size:24px; box-shadow:0 4px 16px rgba(0,0,0,.5); padding-left:4px;
+  }
+  .vcard:hover .vplay{background:var(--red-deep);}
+  .vcard .vtitle{
+    position:absolute; z-index:2; left:0; right:0; bottom:0; padding:24px 14px 12px;
+    font-family:'Bebas Neue',sans-serif; letter-spacing:.08em; font-size:16px; color:var(--paper-2);
+    text-align:left; background:linear-gradient(transparent, rgba(21,17,13,.92)); text-shadow:0 1px 4px rgba(0,0,0,.8);
+  }
+  .vcard iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+
   /* ============ RESPONSIVE ============ */
   @media(max-width:860px){
     .nav-links{position:fixed; inset:64px 0 auto 0; flex-direction:column; gap:0; background:rgba(21,17,13,.98);
@@ -326,6 +366,7 @@
     .nav-cta{display:none;}
     .band-grid,.listen-grid{grid-template-columns:1fr; gap:30px;}
     .members-grid{grid-template-columns:1fr 1fr;}
+    .video-grid{grid-template-columns:1fr 1fr;}
     .orig-grid{grid-template-columns:1fr 1fr;}
     .stats{grid-template-columns:1fr 1fr;}
     .song-list{columns:1;}
@@ -335,7 +376,7 @@
     .anniv-date{padding:14px;}
   }
   @media(max-width:480px){
-    .members-grid,.orig-grid{grid-template-columns:1fr;}
+    .members-grid,.orig-grid,.video-grid{grid-template-columns:1fr;}
   }
   @media(prefers-reduced-motion:reduce){
     *{animation:none !important; scroll-behavior:auto;}
@@ -354,6 +395,7 @@
   <div class="nav-links" id="navLinks">
     <a href="#band" data-i18n="nav_band">De Band</a>
     <a href="#members" data-i18n="nav_members">De Mannen</a>
+    <a href="#video" data-i18n="nav_video">Video</a>
     <a href="#shows" data-i18n="nav_shows">Shows</a>
     <a href="#repertoire" data-i18n="nav_rep">Repertoire</a>
     <a href="#listen" data-i18n="nav_listen">Luisteren</a>
@@ -365,6 +407,8 @@
 
 <!-- ============ HERO ============ -->
 <header class="hero" id="top">
+  <div class="hero-photo" id="heroPhoto"></div>
+  <div class="hero-veil"></div>
   <canvas id="burst"></canvas>
   <div class="hero-spot"></div>
   <div class="hero-inner">
@@ -409,7 +453,7 @@
         </div>
       </div>
       <div class="band-photo reveal">
-        <div class="silhouette">🎸</div>
+        <img id="bandPhoto" alt="The Explosion Rockets live op het podium" loading="lazy" />
         <div class="ph-label">THE EXPLOSION ROCKETS · LIVE</div>
       </div>
     </div>
@@ -422,6 +466,17 @@
     <span class="eyebrow" data-i18n="mem_eye">The Line-Up</span>
     <h2 class="section-title" data-i18n="mem_title">De Mannen</h2>
     <div class="members-grid" id="membersGrid"></div>
+  </div>
+</section>
+
+<!-- ============ VIDEO ============ -->
+<section class="section video" id="video">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="video_eye">Watch Live</span>
+    <h2 class="section-title" data-i18n="video_title">Bekijk ze live</h2>
+    <p style="max-width:640px; opacity:.9; margin:0 0 28px;" data-i18n="video_intro">Veertig jaar podiumdier, gevangen op video — van de jubileumshow tot het Elvis Festival in Bad Nauheim. Klik en draai 'm hard.</p>
+    <div class="video-grid reveal" id="videoGrid"></div>
+    <p style="margin-top:18px;"><a class="btn btn-ghost" href="https://www.youtube.com/user/TheExplosionRockets" target="_blank" rel="noopener">▶ Meer op YouTube</a></p>
   </div>
 </section>
 
@@ -547,6 +602,20 @@ var SHOWS = [
   {dd:'08', mm:'NOV', venue:'40 Years Anniversary Show', city:'DeAvenue · Breda', flag:'🎉', hl:true}
 ];
 
+/* Officiële YouTube-video's (youtube.com/user/TheExplosionRockets) */
+var VIDEOS = [
+  {id:'VYpoGYxb6hw', title:'40th Anniversary Show'},
+  {id:'j76BaMPWigw', title:'The Explosion Rockets · LIVE'},
+  {id:'nKgPm0Ko43c', title:'Baby I Don’t Care · Elvis Festival'},
+  {id:'NAnAQ7SNl1Q', title:'Washmachine Boogie'},
+  {id:'BQfe-YXQRUo', title:'Rock Around The Jukebox · 2019'},
+  {id:'OzgQt55Gan8', title:'Andy Tielman Award · 2014'}
+];
+/* still die als achtergrond/portret dient */
+var HERO_VID = 'j76BaMPWigw';
+var BAND_VID = 'BQfe-YXQRUo';
+function ytThumb(id,q){ return 'https://i.ytimg.com/vi/'+id+'/'+(q||'hqdefault')+'.jpg'; }
+
 /* Repertoire (selectie uit de Setlist Maker-catalogus) */
 var SONGS = [
 ["A Fool such as I","Elvis Presley"],["A little less conversation","Elvis Presley"],["Ain’t that a shame","Fats Domino"],["Ain’t that loving you baby","Elvis Presley"],["Ajoen Ajoen","Willy & His Giants"],["Al Capone","The Javelins"],["All shook up","Elvis Presley"],["Always on my mind","Elvis Presley"],["Amapola","The Spotnicks"],["Apache","The Shadows"],["Around and Around","The Rolling Stones"],["Baby I don’t care","Buddy Holly"],["Baby Sittin’","The Explosion Rockets"],["Baby let’s play house","Elvis Presley"],["Back in the USA","Chuck Berry"],["Because they’re young","Duane Eddy"],["Big Boss Man","Elvis Presley"],["Blue Christmas","Shakin’ Stevens"],["Blue Suede Shoes","Carl Perkins / Elvis Presley"],["Blue Swinging Mama","The Explosion Rockets"],["Blue moon of Kentucky","Elvis Presley"],["Blueberry Hill","Fats Domino"],["Bo Diddley","Buddy Holly"],["Boppin’ the Blues","Carl Perkins"],["Bossa Nova Baby","Elvis Presley"],["Breathless","Jerry Lee Lewis"],["Bring it on home to me","Sam Cooke"],["Brown Eyed handsome man","Buddy Holly"],["Brush those tears","The Explosion Rockets"],["Bulldog","The Ventures"],["Burning Love","Elvis Presley"],["Can’t help fallin’ in love","Elvis Presley"],["Carol","Chuck Berry"],["Crazy Arms","Jerry Lee Lewis"],["C’mon everybody","Eddy Cochran"],["Dance on","The Shadows"],["Do you wanna dance","Cliff Richard"],["Don’t be cruel","Elvis Presley"],["Don’t cry daddy","Elvis Presley"],["Down the line","Jerry Lee Lewis"],["Drinkin’ Wine Spo-Dee-O-Dee","Jerry Lee Lewis"],["Every day","Buddy Holly"],["Everybody’s trying to be my baby","George Harrison"],["FBI","The Shadows"],["Flip, Flop & Fly","The Blues Brothers"],["Flying Saucer Rock ‘n Roll","Billy Lee Riley"],["Folsom prison blues","Johnny Cash"],["Good Golly Miss Molly","Little Richard"],["Good Rockin’ Tonight","Elvis Presley"],["Great balls of fire","Jerry Lee Lewis"],["Green Door","Shakin’ Stevens"],["Guitar Boogie","The Explosion Rockets"],["Heartbeat","Buddy Holly"],["Heartbreak Hotel","Elvis Presley"],["Hello Mary Lou","Ricky Nelson"],["Highschool Confidential","Jerry Lee Lewis"],["His Latest Flame","Elvis Presley"],["Honey Don’t","Carl Perkins"],["Honky Tonk","The Ventures"],["Hound Dog","Elvis Presley"],["Hurt","Elvis Presley"],["I can’t stop loving you","Elvis Presley"],["I got Stung","Elvis Presley"],["I just can’t help believing","Elvis Presley"],["I walk the line","Johnny Cash"],["In the ghetto","Elvis Presley"],["In the mood","René and his Alligators"],["It doesn’t matter anymore","Buddy Holly"],["Jailhouse Rock","Elvis Presley"],["Jeannie, Jeannie, Jeannie","Eddie Cochran"],["Johnny B. Goode","Chuck Berry"],["Jungle Rock","Shakin’ Stevens"],["Kon-tiki","The Shadows"],["Last Date","The Spotnicks"],["Lawdy miss Clawdy","Elvis Presley"],["Let it rock","Chuck Berry"],["Let’s have a party","Wanda Jackson"],["Lewis Boogie","Jerry Lee Lewis"],["Little Queenie","Chuck Berry"],["Little Sister","Elvis Presley"],["Long tall Sally","Gene Vincent"],["Loving You","Elvis Presley"],["Marie Marie","Shakin’ Stevens"],["Matchbox","Carl Perkins"],["Maybe Baby","Buddy Holly"],["Mean Woman Blues","Cliff Richard"],["Move It","Cliff Richard"],["My Babe","Elvis Presley"],["Mystery Train","Elvis Presley"],["Nadine","Chuck Berry"],["No particular place to go","Chuck Berry"],["Not fade away","Buddy Holly"],["Nut Rocker","B. Bumble & The Stingers"],["Oh Boy","Buddy Holly"],["One Night","Elvis Presley"],["Oobie Doobie","Roy Orbison"],["Paralyzed","Elvis Presley"],["Peggy Sue","Buddy Holly"],["Please Don’t Tease","Cliff Richard"],["Proud Mary","Elvis Presley"],["Que Sera Sera","The Buckaroos"],["Rave On","Buddy Holly"],["Rebel Rouser","Duane Eddy"],["Reelin’ and rockin’","Chuck Berry"],["Return to sender","Elvis Presley"],["Ring of fire","Johnny Cash"],["Rip it up","Little Richard"],["Rock & Roll in Akercity","The Explosion Rockets"],["Rock and roll music","Chuck Berry"],["Rockin’ My Life Away","Jerry Lee Lewis"],["Roll over Beethoven","Chuck Berry"],["Route 66","The Rolling Stones / Chuck Berry"],["Runaway","Elvis Presley"],["Save the last dance for me","Jerry Lee Lewis"],["Say mama","Gene Vincent"],["Shake, rattle and roll","Elvis Presley"],["Shakin’ all over","Johnny Kidd & The Pirates"],["Sittin’ in the Balcony","Eddie Cochran"],["Summertime Blues","Eddie Cochran"],["Suspicious minds","Elvis Presley"],["Sweet Caroline","Elvis Presley"],["Sweet Little 16","Chuck Berry"],["Sweet Nothings","Brenda Lee"],["Teddy Bear","Elvis Presley"],["Teenage Heaven","Eddie Cochran"],["Tequila","The Ventures"],["That’ll be the day","Buddy Holly"],["That’s allright Mama","Elvis Presley"],["These Boots are made for Walking","Nancy Sinatra"],["Three steps to heaven","Eddie Cochran"],["True love ways","Buddy Holly"],["Tutti Frutti","Elvis Presley"],["Twenty Flight Rock","Eddie Cochran"],["Viva Las Vegas","Elvis Presley"],["Walk don’t run","The Ventures"],["Walking after midnight","Patsy Cline"],["Way Down","Elvis Presley"],["We say Yeah","Cliff Richard"],["What’d I Say","Jerry Lee Lewis / Elvis"],["Whole lotta shakin’ going on","Jerry Lee Lewis"],["Wild One","Jerry Lee Lewis"],["Wipe Out","The Surfaris"],["Wonderful land","The Shadows"]
@@ -557,6 +626,9 @@ var OWN = {"The Explosion Rockets":1};
 var I18N = {
   nav_band:["De Band","The Band"], nav_members:["De Mannen","The Line-Up"], nav_shows:["Shows","Shows"],
   nav_rep:["Repertoire","Setlist"], nav_listen:["Luisteren","Listen"], nav_book:["Boek de band","Book us"],
+  nav_video:["Video","Video"],
+  video_eye:["Watch Live","Watch Live"], video_title:["Bekijk ze live","See them live"],
+  video_intro:["Veertig jaar podiumdier, gevangen op video — van de jubileumshow tot het Elvis Festival in Bad Nauheim. Klik en draai 'm hard.","Forty years of stage animal, caught on video — from the anniversary show to the Elvis Festival in Bad Nauheim. Hit play, turn it up."],
   hero_est2:["Nederlands rock-'n-roll","Dutch rock 'n roll"],
   hero_sub:["Eén van de langst spelende rock-'n-roll-acts van Nederland. Onvervalste rockabilly, een vleugje humor en een show die het podium — en de zaal — laat ontploffen.","One of the longest-running rock 'n roll acts in the Netherlands. Pure rockabilly, a dose of humour and a show that blows the stage — and the room — sky high."],
   hero_cta1:["Bekijk de shows","See the shows"], hero_cta2:["▶ Luister nu","▶ Listen now"],
@@ -650,6 +722,44 @@ function renderSongs(filter){
   document.getElementById('songCount').textContent=shown+(lang?' songs':' nummers');
 }
 
+/* ---------- VIDEO (click-to-play facade) ---------- */
+function renderVideos(){
+  var g=document.getElementById('videoGrid'); g.innerHTML='';
+  VIDEOS.forEach(function(v){
+    var b=document.createElement('button'); b.className='vcard'; b.type='button';
+    b.setAttribute('aria-label','Speel video: '+v.title);
+    var img=new Image(); img.loading='lazy'; img.alt=v.title; img.src=ytThumb(v.id,'maxresdefault');
+    img.onerror=function(){ this.onerror=null; this.src=ytThumb(v.id,'hqdefault'); };
+    b.appendChild(img);
+    var play=document.createElement('span'); play.className='vplay'; play.textContent='▶'; b.appendChild(play);
+    var t=document.createElement('span'); t.className='vtitle'; t.textContent=v.title; b.appendChild(t);
+    b.addEventListener('click',function(){
+      var f=document.createElement('iframe');
+      f.src='https://www.youtube-nocookie.com/embed/'+v.id+'?autoplay=1&rel=0';
+      f.title=v.title; f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen=true;
+      b.innerHTML=''; b.appendChild(f);
+    });
+    g.appendChild(b);
+  });
+}
+
+/* ---------- PHOTOS (YouTube stills) ---------- */
+function setupPhotos(){
+  var hero=document.getElementById('heroPhoto');
+  if(hero){
+    var hi=new Image();
+    hi.onload=function(){ hero.style.backgroundImage='url("'+hi.src+'")'; };
+    hi.onerror=function(){ hero.style.backgroundImage='url("'+ytThumb(HERO_VID,'hqdefault')+'")'; };
+    hi.src=ytThumb(HERO_VID,'maxresdefault');
+  }
+  var bp=document.getElementById('bandPhoto');
+  if(bp){
+    bp.src=ytThumb(BAND_VID,'maxresdefault');
+    bp.onerror=function(){ this.onerror=null; this.src=ytThumb(BAND_VID,'hqdefault'); };
+  }
+}
+
 /* ---------- REVEAL ---------- */
 var io;
 function observeReveal(){
@@ -713,7 +823,7 @@ function initNav(){
 
 /* ---------- INIT ---------- */
 document.getElementById('year').textContent=new Date().getFullYear();
-renderMembers(); renderShows(); renderArtists(); renderSongs('');
+renderMembers(); renderShows(); renderVideos(); renderArtists(); renderSongs(''); setupPhotos();
 document.getElementById('songSearch').addEventListener('input',function(e){ renderSongs(e.target.value); });
 (function(){ var mt=document.getElementById('marqueeTrack'); if(mt) mt.innerHTML+=mt.innerHTML; })();
 initNav(); applyLang(); observeReveal(); heroBurst();
