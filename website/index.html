@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#15110D" />
+<title>The Explosion Rockets · 40 jaar rock 'n roll</title>
+<meta name="description" content="The Explosion Rockets — Nederlands rock-'n-roll & rockabilly sinds 1959. Winnaar Andy Tielman Award, hoofdact op het Elvis Festival Bad Nauheim. 40 jaar live op het podium." />
+<meta property="og:title" content="The Explosion Rockets · 40 jaar rock 'n roll" />
+<meta property="og:description" content="Nederlands rock-'n-roll & rockabilly sinds 1959. 200+ nummers, één onvervalste explosieve show." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23D8352A' stroke='%23F4E8D0' stroke-width='3'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' font-weight='700' fill='%23F4E8D0' text-anchor='middle'%3EER%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Bebas+Neue&family=Special+Elite&family=Kaushan+Script&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ground:    #15110D;
+    --ground-2:  #221A12;
+    --paper:     #F4E8D0;
+    --paper-2:   #FFFAEC;
+    --paper-dim: #C9B98F;
+    --red:       #D8352A;
+    --red-deep:  #8C2820;
+    --amber:     #E8A23C;
+    --ink:       #15110D;
+    --muted:     #9A8763;
+    --maxw:      1140px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--ground); color:var(--paper);
+    font-family:'Special Elite','Courier New',monospace;
+    line-height:1.6; overflow-x:hidden;
+  }
+  /* grain + vignette overlay across whole page */
+  body::after{
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:50;
+    background-image:
+      radial-gradient(circle at 50% 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay; opacity:.7;
+  }
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  ::selection{background:var(--red); color:var(--paper-2);}
+
+  .f-display{font-family:'Alfa Slab One',Georgia,serif; font-weight:400; letter-spacing:.005em;}
+  .f-poster{font-family:'Bebas Neue',Impact,sans-serif; letter-spacing:.06em;}
+  .f-script{font-family:'Kaushan Script',cursive;}
+  .f-type{font-family:'Special Elite',monospace;}
+
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 22px;}
+
+  /* eyebrow label */
+  .eyebrow{
+    font-family:'Bebas Neue',sans-serif; font-size:clamp(13px,2.4vw,16px);
+    letter-spacing:.32em; color:var(--amber); text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:12px; margin:0 0 14px;
+  }
+  .eyebrow::before{content:''; width:34px; height:2px; background:var(--red);}
+
+  .section{position:relative; padding:clamp(64px,9vw,120px) 0; z-index:10;}
+  .section-title{
+    font-family:'Alfa Slab One',serif; line-height:.96;
+    font-size:clamp(34px,6.2vw,72px); margin:0 0 8px; color:var(--paper-2);
+    text-shadow:3px 3px 0 var(--red-deep);
+  }
+
+  /* ============ NAV ============ */
+  .nav{
+    position:fixed; top:0; left:0; right:0; z-index:40;
+    display:flex; align-items:center; gap:14px;
+    padding:12px 22px; background:rgba(21,17,13,0);
+    border-bottom:1px solid transparent; transition:background .3s, border-color .3s, padding .3s;
+  }
+  .nav.scrolled{background:rgba(21,17,13,.92); border-bottom-color:rgba(216,53,42,.5); padding:9px 22px;
+    backdrop-filter:blur(8px);}
+  .brand{display:flex; align-items:center; gap:11px; text-decoration:none; margin-right:auto;}
+  .brand-mark{
+    width:42px; height:42px; flex:none; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--red) 0%, var(--red-deep) 70%, #4a130d 100%);
+    border:2px solid var(--paper); display:grid; place-items:center;
+    font-family:'Alfa Slab One',serif; color:var(--paper-2); font-size:17px;
+    box-shadow:0 0 0 2px var(--ink), 0 3px 0 var(--red-deep); transform:rotate(-7deg);
+  }
+  .brand-txt b{font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.1em; display:block; line-height:1; color:var(--paper-2);}
+  .brand-txt span{font-family:'Bebas Neue',sans-serif; font-size:10px; letter-spacing:.34em; color:var(--amber);}
+  .nav-links{display:flex; gap:4px; align-items:center;}
+  .nav-links a{
+    font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:.13em;
+    text-decoration:none; color:var(--paper); opacity:.78; padding:8px 11px; border-radius:3px;
+    transition:opacity .15s, color .15s;
+  }
+  .nav-links a:hover{opacity:1; color:var(--amber);}
+  .nav-cta{
+    font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:.12em;
+    background:var(--red); color:var(--paper-2); padding:9px 16px; border:2px solid var(--ink);
+    box-shadow:3px 3px 0 var(--ink); text-decoration:none;
+  }
+  .nav-cta:hover{background:var(--red-deep);}
+  .lang{
+    font-family:'Bebas Neue',sans-serif; font-size:14px; letter-spacing:.1em;
+    background:transparent; color:var(--paper); border:1.5px solid var(--paper-dim);
+    border-radius:99px; padding:6px 10px; cursor:pointer; white-space:nowrap;
+  }
+  .lang b{color:var(--amber);}
+  .nav-toggle{display:none; background:none; border:none; color:var(--paper); font-size:26px; cursor:pointer; padding:4px 8px;}
+
+  /* ============ HERO ============ */
+  .hero{position:relative; min-height:100vh; min-height:100svh; display:flex; align-items:center; overflow:hidden;}
+  #burst{position:absolute; inset:0; width:100%; height:100%; z-index:1;}
+  .hero-spot{
+    position:absolute; top:-30%; left:50%; transform:translateX(-50%);
+    width:120vw; height:120vh; z-index:1; pointer-events:none;
+    background:radial-gradient(ellipse 40% 55% at 50% 35%, rgba(232,162,60,.22), rgba(216,53,42,.10) 38%, transparent 70%);
+    animation:spot 9s ease-in-out infinite alternate;
+  }
+  @keyframes spot{from{transform:translateX(-58%) rotate(-4deg);} to{transform:translateX(-42%) rotate(4deg);}}
+  .hero-inner{position:relative; z-index:5; width:100%; max-width:var(--maxw); margin:0 auto; padding:120px 22px 70px;}
+  .hero-est{
+    font-family:'Bebas Neue',sans-serif; font-size:clamp(13px,2.6vw,17px);
+    letter-spacing:.42em; color:var(--paper); text-transform:uppercase; margin:0 0 18px;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  .hero-est .dot{width:7px; height:7px; background:var(--red); border-radius:50%;}
+  .hero h1{
+    font-family:'Alfa Slab One',serif; margin:0; color:var(--paper-2);
+    font-size:clamp(48px,12.5vw,170px); line-height:.82; letter-spacing:-.01em;
+    text-shadow:5px 5px 0 var(--red-deep), 9px 9px 0 rgba(0,0,0,.4);
+  }
+  .hero h1 .ex{color:var(--red); display:block;}
+  .hero h1 .ro{color:var(--paper-2); display:block;}
+  .hero-script{
+    font-family:'Kaushan Script',cursive; color:var(--amber);
+    font-size:clamp(26px,6vw,58px); transform:rotate(-3deg);
+    margin:6px 0 0 4px; text-shadow:2px 2px 0 rgba(0,0,0,.5);
+  }
+  .hero-sub{
+    max-width:620px; font-size:clamp(15px,2.2vw,18px); color:var(--paper);
+    margin:26px 0 30px; opacity:.92;
+  }
+  .hero-cta{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    font-family:'Bebas Neue',sans-serif; font-size:clamp(16px,2.4vw,19px); letter-spacing:.1em;
+    padding:14px 26px; border:2px solid var(--ink); cursor:pointer; text-decoration:none;
+    display:inline-flex; align-items:center; gap:10px; box-shadow:5px 5px 0 var(--ink);
+    transition:transform .08s, box-shadow .08s;
+  }
+  .btn:active{transform:translate(3px,3px); box-shadow:2px 2px 0 var(--ink);}
+  .btn-red{background:var(--red); color:var(--paper-2);}
+  .btn-red:hover{background:var(--red-deep);}
+  .btn-cream{background:var(--paper); color:var(--ink);}
+  .btn-cream:hover{background:var(--paper-2);}
+  .btn-ghost{background:transparent; color:var(--paper); border-color:var(--paper-dim); box-shadow:none;}
+  .btn-ghost:hover{border-color:var(--amber); color:var(--amber);}
+  .scroll-hint{position:absolute; bottom:22px; left:50%; transform:translateX(-50%); z-index:5;
+    font-family:'Bebas Neue',sans-serif; letter-spacing:.3em; font-size:12px; color:var(--paper-dim); animation:bob 1.8s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translate(-50%,0);} 50%{transform:translate(-50%,7px);}}
+
+  /* ============ MARQUEE ============ */
+  .marquee{
+    background:var(--red); color:var(--paper-2); border-top:3px solid var(--ink); border-bottom:3px solid var(--ink);
+    overflow:hidden; white-space:nowrap; position:relative; z-index:10; padding:11px 0;
+  }
+  .marquee-track{display:inline-flex; gap:0; animation:scroll 32s linear infinite; will-change:transform;}
+  .marquee:hover .marquee-track{animation-play-state:paused;}
+  .marquee span{font-family:'Bebas Neue',sans-serif; font-size:21px; letter-spacing:.16em; padding:0 26px;}
+  .marquee span::after{content:'★'; margin-left:26px; color:var(--ink);}
+  @keyframes scroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+
+  /* ============ BAND / BIO ============ */
+  .band{background:linear-gradient(180deg, var(--ground) 0%, var(--ground-2) 100%);}
+  .band-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:48px; align-items:center;}
+  .band p{font-size:clamp(15px,1.9vw,17px); color:var(--paper); opacity:.9; margin:0 0 16px;}
+  .band p .hl{color:var(--amber);}
+  .band-photo{
+    position:relative; aspect-ratio:3/4; border:3px solid var(--ink); box-shadow:10px 10px 0 var(--red-deep);
+    background:
+      repeating-linear-gradient(135deg, rgba(0,0,0,.16) 0 2px, transparent 2px 7px),
+      radial-gradient(ellipse 70% 50% at 50% 28%, rgba(232,162,60,.35), transparent 60%),
+      linear-gradient(160deg, #2a1f15, #120d09);
+    display:grid; place-items:center; overflow:hidden;
+  }
+  .band-photo .silhouette{font-size:clamp(60px,12vw,120px); filter:drop-shadow(0 6px 14px rgba(0,0,0,.6)); opacity:.9;}
+  .band-photo .ph-label{position:absolute; bottom:12px; left:12px; right:12px; font-family:'Bebas Neue',sans-serif;
+    letter-spacing:.18em; font-size:12px; color:var(--paper-dim); text-align:center;}
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:46px;}
+  .stat{
+    background:var(--paper); color:var(--ink); border:2px solid var(--ink); box-shadow:5px 5px 0 var(--ink);
+    padding:18px 12px; text-align:center;
+  }
+  .stat b{font-family:'Alfa Slab One',serif; font-size:clamp(26px,4.5vw,40px); display:block; line-height:1; color:var(--red-deep);}
+  .stat span{font-family:'Bebas Neue',sans-serif; letter-spacing:.14em; font-size:13px; color:var(--ink); opacity:.8;}
+
+  /* ============ MEMBERS ============ */
+  .members-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .member{
+    background:var(--paper); color:var(--ink); border:2px solid var(--ink); box-shadow:6px 6px 0 var(--red-deep);
+    position:relative; overflow:hidden; transition:transform .15s, box-shadow .15s;
+  }
+  .member:hover{transform:translate(-2px,-2px); box-shadow:9px 9px 0 var(--red-deep);}
+  .member::before{content:''; display:block; height:9px; background:repeating-linear-gradient(45deg, var(--red) 0 9px, var(--ink) 9px 18px);}
+  .member-face{
+    aspect-ratio:1/1; display:grid; place-items:center; font-size:64px;
+    background:radial-gradient(ellipse at 50% 30%, rgba(216,53,42,.18), transparent 65%), #ece0c4;
+    border-bottom:2px solid var(--ink);
+  }
+  .member-body{padding:16px 16px 20px;}
+  .member-body h3{font-family:'Alfa Slab One',serif; font-size:21px; margin:0 0 4px; color:var(--ink);}
+  .member-role{font-family:'Bebas Neue',sans-serif; letter-spacing:.16em; font-size:14px; color:var(--red-deep);}
+  .member-no{position:absolute; top:16px; right:14px; font-family:'Bebas Neue',sans-serif; font-size:13px;
+    letter-spacing:.1em; color:var(--paper-2); background:var(--ink); padding:2px 8px;}
+
+  /* ============ ANNIVERSARY ============ */
+  .anniv{
+    position:relative; overflow:hidden;
+    background:
+      radial-gradient(circle at 50% 40%, rgba(232,162,60,.16), transparent 55%),
+      linear-gradient(180deg, var(--ground-2), var(--ground));
+    border-top:3px solid var(--red); border-bottom:3px solid var(--red);
+  }
+  .anniv-inner{text-align:center; position:relative; z-index:5;}
+  .anniv .big40{
+    font-family:'Alfa Slab One',serif; font-size:clamp(90px,26vw,300px); line-height:.8; color:var(--red);
+    text-shadow:6px 6px 0 var(--ink), 0 0 60px rgba(216,53,42,.5); margin:0;
+  }
+  .anniv .big40 .yrs{display:block; font-family:'Kaushan Script',cursive; font-size:clamp(28px,7vw,76px); color:var(--amber); text-shadow:2px 2px 0 var(--ink); margin-top:-.1em;}
+  .anniv-show{
+    display:inline-grid; grid-auto-flow:column; gap:0; margin-top:34px;
+    background:var(--paper); color:var(--ink); border:3px solid var(--ink); box-shadow:8px 8px 0 var(--red-deep);
+    text-align:left; max-width:100%;
+  }
+  .anniv-date{background:var(--ink); color:var(--paper-2); padding:22px 24px; display:grid; place-items:center; text-align:center;}
+  .anniv-date .d{font-family:'Alfa Slab One',serif; font-size:46px; line-height:.9;}
+  .anniv-date .m{font-family:'Bebas Neue',sans-serif; letter-spacing:.24em; font-size:16px; color:var(--amber);}
+  .anniv-meta{padding:20px 26px; display:flex; flex-direction:column; justify-content:center; gap:4px;}
+  .anniv-meta b{font-family:'Alfa Slab One',serif; font-size:clamp(20px,3vw,28px);}
+  .anniv-meta span{font-family:'Bebas Neue',sans-serif; letter-spacing:.12em; color:var(--red-deep); font-size:15px;}
+
+  /* ============ SHOWS ============ */
+  .shows-list{display:flex; flex-direction:column; gap:0; border:2px solid var(--paper-dim);}
+  .show-row{
+    display:grid; grid-template-columns:120px 1fr auto; align-items:center; gap:20px;
+    padding:18px 22px; border-bottom:1px solid rgba(201,185,143,.25); transition:background .15s;
+  }
+  .show-row:last-child{border-bottom:none;}
+  .show-row:hover{background:rgba(216,53,42,.08);}
+  .show-date{text-align:center;}
+  .show-date .dd{font-family:'Alfa Slab One',serif; font-size:30px; line-height:.9; color:var(--amber);}
+  .show-date .mm{font-family:'Bebas Neue',sans-serif; letter-spacing:.2em; font-size:13px; color:var(--paper-dim);}
+  .show-info b{font-family:'Bebas Neue',sans-serif; font-size:clamp(18px,2.6vw,24px); letter-spacing:.06em; color:var(--paper-2); display:block;}
+  .show-info span{font-family:'Special Elite',monospace; font-size:14px; color:var(--paper-dim);}
+  .show-info .flag{margin-left:8px;}
+  .show-cta{font-family:'Bebas Neue',sans-serif; letter-spacing:.12em; font-size:15px; color:var(--ink);
+    background:var(--amber); border:2px solid var(--ink); padding:8px 16px; text-decoration:none; white-space:nowrap; box-shadow:3px 3px 0 var(--ink);}
+  .show-cta:hover{background:var(--paper-2);}
+  .show-note{font-family:'Bebas Neue',sans-serif; letter-spacing:.1em; color:var(--muted); font-size:14px; margin-top:16px;}
+
+  /* ============ REPERTOIRE ============ */
+  .repertoire{background:linear-gradient(180deg, var(--ground), var(--ground-2));}
+  .orig-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 14px;}
+  .orig{
+    background:var(--ink); border:2px solid var(--red); padding:18px 16px; box-shadow:5px 5px 0 var(--red-deep);
+  }
+  .orig .tag{font-family:'Bebas Neue',sans-serif; letter-spacing:.18em; color:var(--amber); font-size:12px;}
+  .orig b{font-family:'Alfa Slab One',serif; font-size:18px; color:var(--paper-2); display:block; margin-top:6px; line-height:1.1;}
+  .artist-cloud{display:flex; flex-wrap:wrap; gap:8px; margin:22px 0 30px;}
+  .artist-chip{font-family:'Bebas Neue',sans-serif; letter-spacing:.1em; font-size:15px; color:var(--paper);
+    border:1.5px solid var(--paper-dim); border-radius:99px; padding:6px 14px;}
+  .artist-chip b{color:var(--amber); margin-left:6px; font-size:13px;}
+  .jukebox{background:var(--paper); color:var(--ink); border:3px solid var(--ink); box-shadow:8px 8px 0 var(--red-deep);}
+  .jukebox-hdr{display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:16px 18px; background:var(--ink); color:var(--paper-2); border-bottom:3px solid var(--red);}
+  .jukebox-hdr b{font-family:'Alfa Slab One',serif; font-size:20px; margin-right:auto;}
+  .song-search{font-family:'Special Elite',monospace; font-size:15px; padding:9px 12px; border:2px solid var(--paper-2);
+    background:var(--ground-2); color:var(--paper-2); min-width:200px;}
+  .song-search::placeholder{color:var(--paper-dim);}
+  .song-count{font-family:'Bebas Neue',sans-serif; letter-spacing:.12em; color:var(--amber); font-size:15px;}
+  .song-scroll{max-height:430px; overflow-y:auto; padding:6px 0;}
+  .song-scroll::-webkit-scrollbar{width:10px;}
+  .song-scroll::-webkit-scrollbar-thumb{background:var(--red); border:2px solid var(--paper);}
+  .song-list{columns:2; column-gap:0;}
+  .song-item{break-inside:avoid; display:flex; align-items:baseline; gap:10px; padding:7px 18px; border-bottom:1px dotted rgba(21,17,13,.18);}
+  .song-item .st{font-family:'Special Elite',monospace; font-weight:bold; font-size:14px;}
+  .song-item .sa{font-family:'Bebas Neue',sans-serif; letter-spacing:.06em; font-size:12px; color:var(--red-deep); margin-left:auto; white-space:nowrap; opacity:.85;}
+  .song-item.own{background:rgba(216,53,42,.1);}
+  .song-item.own .st::after{content:'★'; color:var(--red); margin-left:6px;}
+
+  /* ============ LISTEN ============ */
+  .listen{background:var(--ground-2);}
+  .listen-grid{display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center;}
+  .listen p{font-size:16px; color:var(--paper); opacity:.9;}
+  .listen-links{display:flex; gap:12px; flex-wrap:wrap; margin-top:20px;}
+  .spotify-embed{border:3px solid var(--ink); box-shadow:8px 8px 0 var(--red-deep); border-radius:14px; overflow:hidden; background:var(--ink);}
+
+  /* ============ BOOKING / FOOTER ============ */
+  .booking{
+    text-align:center;
+    background:radial-gradient(circle at 50% 0%, rgba(216,53,42,.18), transparent 60%), var(--ground);
+  }
+  .booking h2{font-family:'Alfa Slab One',serif; font-size:clamp(32px,6vw,64px); color:var(--paper-2); margin:0 0 10px; text-shadow:3px 3px 0 var(--red-deep);}
+  .booking p{max-width:560px; margin:0 auto 28px; color:var(--paper); opacity:.9;}
+  .booking-cta{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+  footer{background:var(--ink); border-top:3px solid var(--red); padding:42px 0 30px; position:relative; z-index:10;}
+  .foot-grid{display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap;}
+  .foot-brand{font-family:'Alfa Slab One',serif; font-size:22px; color:var(--paper-2);}
+  .foot-brand span{font-family:'Kaushan Script',cursive; color:var(--amber); font-size:18px;}
+  .foot-social{display:flex; gap:10px; flex-wrap:wrap;}
+  .foot-social a{font-family:'Bebas Neue',sans-serif; letter-spacing:.1em; font-size:14px; color:var(--paper);
+    border:1.5px solid var(--paper-dim); padding:7px 13px; text-decoration:none;}
+  .foot-social a:hover{border-color:var(--amber); color:var(--amber);}
+  .foot-fine{font-family:'Bebas Neue',sans-serif; letter-spacing:.12em; color:var(--muted); font-size:13px; margin-top:24px; text-align:center;}
+
+  /* reveal on scroll */
+  .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:none;}
+
+  /* ============ RESPONSIVE ============ */
+  @media(max-width:860px){
+    .nav-links{position:fixed; inset:64px 0 auto 0; flex-direction:column; gap:0; background:rgba(21,17,13,.98);
+      border-bottom:2px solid var(--red); padding:8px 0; display:none;}
+    .nav-links.open{display:flex;}
+    .nav-links a{padding:14px 22px; opacity:.95; border-bottom:1px solid rgba(255,255,255,.06);}
+    .nav-toggle{display:block;}
+    .nav-cta{display:none;}
+    .band-grid,.listen-grid{grid-template-columns:1fr; gap:30px;}
+    .members-grid{grid-template-columns:1fr 1fr;}
+    .orig-grid{grid-template-columns:1fr 1fr;}
+    .stats{grid-template-columns:1fr 1fr;}
+    .song-list{columns:1;}
+    .show-row{grid-template-columns:70px 1fr; gap:14px;}
+    .show-cta{grid-column:2; justify-self:start; margin-top:4px;}
+    .anniv-show{grid-auto-flow:row;}
+    .anniv-date{padding:14px;}
+  }
+  @media(max-width:480px){
+    .members-grid,.orig-grid{grid-template-columns:1fr;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none !important; scroll-behavior:auto;}
+    .reveal{opacity:1; transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <a class="brand" href="#top">
+    <span class="brand-mark">ER</span>
+    <span class="brand-txt"><b>EXPLOSION ROCKETS</b><span>SINCE 1985</span></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#band" data-i18n="nav_band">De Band</a>
+    <a href="#members" data-i18n="nav_members">De Mannen</a>
+    <a href="#shows" data-i18n="nav_shows">Shows</a>
+    <a href="#repertoire" data-i18n="nav_rep">Repertoire</a>
+    <a href="#listen" data-i18n="nav_listen">Luisteren</a>
+  </div>
+  <button class="lang" id="langBtn" aria-label="Taal wisselen"><b>NL</b> / EN</button>
+  <a class="nav-cta" href="#booking" data-i18n="nav_book">Boek de band</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <canvas id="burst"></canvas>
+  <div class="hero-spot"></div>
+  <div class="hero-inner">
+    <p class="hero-est">
+      <span class="dot"></span> EST. 1959 · VUGHT, HOLLAND
+      <span class="dot"></span> <span data-i18n="hero_est2">Nederlands rock-'n-roll</span>
+    </p>
+    <h1><span class="ex">EXPLOSION</span><span class="ro">ROCKETS</span></h1>
+    <p class="hero-script" data-i18n="hero_script">veertig jaar rock 'n roll</p>
+    <p class="hero-sub" data-i18n="hero_sub">Eén van de langst spelende rock-'n-roll-acts van Nederland. Onvervalste rockabilly, een vleugje humor en een show die het podium — en de zaal — laat ontploffen.</p>
+    <div class="hero-cta">
+      <a class="btn btn-red" href="#shows" data-i18n="hero_cta1">Bekijk de shows</a>
+      <a class="btn btn-ghost" href="#listen" data-i18n="hero_cta2">▶ Luister nu</a>
+    </div>
+  </div>
+  <div class="scroll-hint">SCROLL ↓</div>
+</header>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack">
+    <span>ANDY TIELMAN AWARD 2014</span><span>ELVIS FESTIVAL BAD NAUHEIM</span><span>200+ NUMMERS</span>
+    <span>ROCKABILLY · ROCK 'N ROLL</span><span>SINDS 1959</span><span>LIVE OP HET PODIUM</span>
+  </div>
+</div>
+
+<!-- ============ BAND / BIO ============ -->
+<section class="section band" id="band">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="band_eye">The Band</span>
+    <div class="band-grid">
+      <div class="reveal">
+        <h2 class="section-title" data-i18n="band_title">Veertig jaar<br>knetterende<br>rock 'n roll</h2>
+        <p data-i18n="band_p1">Het begon in <span class="hl">1959</span> in Vught, toen een stel jonge muzikanten zich verzamelde onder de naam The Jet Black Robbers. Begin jaren '80 viel de band even stil — tot de herstart in <span class="hl">1985</span>. Sindsdien staan The Explosion Rockets onafgebroken op de planken en horen ze bij de langst spelende rock-'n-roll-acts van het land.</p>
+        <p data-i18n="band_p2">In <span class="hl">2014</span> kreeg de band de <span class="hl">Andy Tielman Award</span> voor hun bijzondere bijdrage aan de rock-'n-roll-cultuur. In 2023 én 2024 waren ze hoofdact op het beroemde <span class="hl">Elvis Festival in Bad Nauheim</span>, waar duizenden bezoekers de zweet van de muren dansten.</p>
+        <p data-i18n="band_p3">Ze deelden het podium met namen als <span class="hl">Peter Koelewijn, Chris Montez, The Blue Diamonds</span> en Elvis-gitarist <span class="hl">James Burton</span>. Hun rauwe, rockende stijl met de nodige dosis humor maakt elk Rockets-concert een feest.</p>
+        <div class="stats">
+          <div class="stat reveal"><b>40</b><span data-i18n="stat_years">jaar op het podium</span></div>
+          <div class="stat reveal"><b>200+</b><span data-i18n="stat_songs">nummers in repertoire</span></div>
+          <div class="stat reveal"><b>6</b><span data-i18n="stat_men">muzikanten</span></div>
+          <div class="stat reveal"><b>'14</b><span data-i18n="stat_award">Andy Tielman Award</span></div>
+        </div>
+      </div>
+      <div class="band-photo reveal">
+        <div class="silhouette">🎸</div>
+        <div class="ph-label">THE EXPLOSION ROCKETS · LIVE</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEMBERS ============ -->
+<section class="section" id="members">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="mem_eye">The Line-Up</span>
+    <h2 class="section-title" data-i18n="mem_title">De Mannen</h2>
+    <div class="members-grid" id="membersGrid"></div>
+  </div>
+</section>
+
+<!-- ============ ANNIVERSARY ============ -->
+<section class="section anniv" id="anniv">
+  <div class="wrap anniv-inner reveal">
+    <span class="eyebrow" style="justify-content:center" data-i18n="anniv_eye">The Anniversary Show</span>
+    <p class="big40">40<span class="yrs">jaar rock 'n roll</span></p>
+    <div class="anniv-show">
+      <div class="anniv-date"><span class="d">08</span><span class="m">NOV</span></div>
+      <div class="anniv-meta">
+        <b>40 Years Anniversary Show</b>
+        <span>DEAVENUE · BREDA · TWEE VERDIEPINGEN, ÉÉN GROOT FEEST</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOWS ============ -->
+<section class="section" id="shows">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="shows_eye">On Tour</span>
+    <h2 class="section-title" data-i18n="shows_title">Shows & Tour</h2>
+    <div class="shows-list reveal" id="showsList"></div>
+    <p class="show-note" data-i18n="shows_note">★ Data uit het jubileumjaar — kijk op de socials voor de actuele agenda.</p>
+  </div>
+</section>
+
+<!-- ============ REPERTOIRE ============ -->
+<section class="section repertoire" id="repertoire">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="rep_eye">The Jukebox</span>
+    <h2 class="section-title" data-i18n="rep_title">200+ nummers,<br>nul stilstand</h2>
+    <p style="max-width:640px; opacity:.9; margin:0 0 26px;" data-i18n="rep_intro">Van Elvis tot Chuck Berry, van Buddy Holly tot Jerry Lee Lewis — plus een handvol eigen rockers. Dit is de motor onder elke show.</p>
+
+    <p style="font-family:'Bebas Neue',sans-serif; letter-spacing:.2em; color:var(--amber); font-size:15px; margin:0 0 4px;" data-i18n="rep_own">EIGEN WERK</p>
+    <div class="orig-grid reveal">
+      <div class="orig"><span class="tag">ORIGINAL</span><b>Baby Sittin'</b></div>
+      <div class="orig"><span class="tag">ORIGINAL</span><b>Blue Swinging Mama</b></div>
+      <div class="orig"><span class="tag">ORIGINAL</span><b>Brush Those Tears</b></div>
+      <div class="orig"><span class="tag">ORIGINAL</span><b>Rock &amp; Roll in Akercity</b></div>
+    </div>
+
+    <div class="artist-cloud reveal" id="artistCloud"></div>
+
+    <div class="jukebox reveal">
+      <div class="jukebox-hdr">
+        <b>🎵 Repertoirelijst</b>
+        <input class="song-search" id="songSearch" type="search" placeholder="Zoek nummer of artiest…" aria-label="Zoek in repertoire" />
+        <span class="song-count" id="songCount"></span>
+      </div>
+      <div class="song-scroll"><div class="song-list" id="songList"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LISTEN ============ -->
+<section class="section listen" id="listen">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="listen_eye">Press Play</span>
+    <div class="listen-grid">
+      <div class="reveal">
+        <h2 class="section-title" data-i18n="listen_title">Luister<br>mee</h2>
+        <p data-i18n="listen_p">Maandelijks luisteren ruim 2.200 mensen naar The Explosion Rockets op Spotify. Zet 'm op, draai 'm hard.</p>
+        <div class="listen-links">
+          <a class="btn btn-red" href="https://open.spotify.com/artist/50oIPfD4YcZc5xCzvMYBVZ" target="_blank" rel="noopener">Spotify</a>
+          <a class="btn btn-cream" href="https://www.last.fm/music/The+Explosion+Rockets" target="_blank" rel="noopener">Last.fm</a>
+          <a class="btn btn-ghost" href="https://www.facebook.com/groups/explosionrockets/" target="_blank" rel="noopener">Facebook</a>
+        </div>
+      </div>
+      <div class="spotify-embed reveal">
+        <iframe style="border-radius:12px; display:block;" src="https://open.spotify.com/embed/artist/50oIPfD4YcZc5xCzvMYBVZ?utm_source=generator&theme=0" width="100%" height="380" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="The Explosion Rockets op Spotify"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOOKING ============ -->
+<section class="section booking" id="booking">
+  <div class="wrap reveal">
+    <span class="eyebrow" style="justify-content:center" data-i18n="book_eye">Book The Band</span>
+    <h2 data-i18n="book_title">Laat het ontploffen<br>op jouw podium</h2>
+    <p data-i18n="book_p">Festival, rock-'n-roll-weekend of besloten feest? The Explosion Rockets brengen veertig jaar podiumervaring mee — en een dansvloer die niet meer stilstaat.</p>
+    <div class="booking-cta">
+      <a class="btn btn-red" href="mailto:info@explosionrockets.com" data-i18n="book_cta1">✉ Boekingsaanvraag</a>
+      <a class="btn btn-cream" href="https://explosionrockets.com" target="_blank" rel="noopener" data-i18n="book_cta2">Officiële website</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">THE EXPLOSION ROCKETS <span>est. 1959</span></div>
+      <div class="foot-social">
+        <a href="https://open.spotify.com/artist/50oIPfD4YcZc5xCzvMYBVZ" target="_blank" rel="noopener">SPOTIFY</a>
+        <a href="https://www.facebook.com/groups/explosionrockets/" target="_blank" rel="noopener">FACEBOOK</a>
+        <a href="https://www.last.fm/music/The+Explosion+Rockets" target="_blank" rel="noopener">LAST.FM</a>
+        <a href="https://explosionrockets.com" target="_blank" rel="noopener">WEBSITE</a>
+      </div>
+    </div>
+    <p class="foot-fine">© <span id="year"></span> THE EXPLOSION ROCKETS · ROCK 'N ROLL SINCE 1959 · MADE WITH 🔥 IN HOLLAND</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- DATA ---------- */
+var MEMBERS = [
+  {name:'Ruud Kuijpers',   role:'Zang',                  role_en:'Lead Vocals',            icon:'🎤'},
+  {name:'Joost Roest',     role:'Leadgitaar',            role_en:'Lead Guitar',            icon:'🎸'},
+  {name:'Menno Kuijpers',  role:'Slaggitaar & Zang',     role_en:'Rhythm Guitar & Vocals', icon:'🎸'},
+  {name:'Frans van Esch',  role:'Drums & Zang',          role_en:'Drums & Vocals',         icon:'🥁'},
+  {name:'Amse de Jong',    role:'Piano',                 role_en:'Piano',                  icon:'🎹'},
+  {name:'Teun Duijghuisen',role:'Contrabas',             role_en:'Upright Bass',           icon:'🎻'}
+];
+
+var SHOWS = [
+  {dd:'25', mm:'MEI', venue:'Het Tolhuys aan de Zaan', city:'Zaandam', flag:'🇳🇱'},
+  {dd:'05', mm:'JUL', venue:'Tiliander',               city:'Oisterwijk', flag:'🇳🇱'},
+  {dd:'31', mm:'AUG', venue:'Akercity Rock ’n Roll Weekend', city:'Akersloot', flag:'🇳🇱'},
+  {dd:'18', mm:'OKT', venue:'Swindon Rock ’n Roll Club', city:'Swindon · UK Tour', flag:'🇬🇧'},
+  {dd:'08', mm:'NOV', venue:'40 Years Anniversary Show', city:'DeAvenue · Breda', flag:'🎉', hl:true}
+];
+
+/* Repertoire (selectie uit de Setlist Maker-catalogus) */
+var SONGS = [
+["A Fool such as I","Elvis Presley"],["A little less conversation","Elvis Presley"],["Ain’t that a shame","Fats Domino"],["Ain’t that loving you baby","Elvis Presley"],["Ajoen Ajoen","Willy & His Giants"],["Al Capone","The Javelins"],["All shook up","Elvis Presley"],["Always on my mind","Elvis Presley"],["Amapola","The Spotnicks"],["Apache","The Shadows"],["Around and Around","The Rolling Stones"],["Baby I don’t care","Buddy Holly"],["Baby Sittin’","The Explosion Rockets"],["Baby let’s play house","Elvis Presley"],["Back in the USA","Chuck Berry"],["Because they’re young","Duane Eddy"],["Big Boss Man","Elvis Presley"],["Blue Christmas","Shakin’ Stevens"],["Blue Suede Shoes","Carl Perkins / Elvis Presley"],["Blue Swinging Mama","The Explosion Rockets"],["Blue moon of Kentucky","Elvis Presley"],["Blueberry Hill","Fats Domino"],["Bo Diddley","Buddy Holly"],["Boppin’ the Blues","Carl Perkins"],["Bossa Nova Baby","Elvis Presley"],["Breathless","Jerry Lee Lewis"],["Bring it on home to me","Sam Cooke"],["Brown Eyed handsome man","Buddy Holly"],["Brush those tears","The Explosion Rockets"],["Bulldog","The Ventures"],["Burning Love","Elvis Presley"],["Can’t help fallin’ in love","Elvis Presley"],["Carol","Chuck Berry"],["Crazy Arms","Jerry Lee Lewis"],["C’mon everybody","Eddy Cochran"],["Dance on","The Shadows"],["Do you wanna dance","Cliff Richard"],["Don’t be cruel","Elvis Presley"],["Don’t cry daddy","Elvis Presley"],["Down the line","Jerry Lee Lewis"],["Drinkin’ Wine Spo-Dee-O-Dee","Jerry Lee Lewis"],["Every day","Buddy Holly"],["Everybody’s trying to be my baby","George Harrison"],["FBI","The Shadows"],["Flip, Flop & Fly","The Blues Brothers"],["Flying Saucer Rock ‘n Roll","Billy Lee Riley"],["Folsom prison blues","Johnny Cash"],["Good Golly Miss Molly","Little Richard"],["Good Rockin’ Tonight","Elvis Presley"],["Great balls of fire","Jerry Lee Lewis"],["Green Door","Shakin’ Stevens"],["Guitar Boogie","The Explosion Rockets"],["Heartbeat","Buddy Holly"],["Heartbreak Hotel","Elvis Presley"],["Hello Mary Lou","Ricky Nelson"],["Highschool Confidential","Jerry Lee Lewis"],["His Latest Flame","Elvis Presley"],["Honey Don’t","Carl Perkins"],["Honky Tonk","The Ventures"],["Hound Dog","Elvis Presley"],["Hurt","Elvis Presley"],["I can’t stop loving you","Elvis Presley"],["I got Stung","Elvis Presley"],["I just can’t help believing","Elvis Presley"],["I walk the line","Johnny Cash"],["In the ghetto","Elvis Presley"],["In the mood","René and his Alligators"],["It doesn’t matter anymore","Buddy Holly"],["Jailhouse Rock","Elvis Presley"],["Jeannie, Jeannie, Jeannie","Eddie Cochran"],["Johnny B. Goode","Chuck Berry"],["Jungle Rock","Shakin’ Stevens"],["Kon-tiki","The Shadows"],["Last Date","The Spotnicks"],["Lawdy miss Clawdy","Elvis Presley"],["Let it rock","Chuck Berry"],["Let’s have a party","Wanda Jackson"],["Lewis Boogie","Jerry Lee Lewis"],["Little Queenie","Chuck Berry"],["Little Sister","Elvis Presley"],["Long tall Sally","Gene Vincent"],["Loving You","Elvis Presley"],["Marie Marie","Shakin’ Stevens"],["Matchbox","Carl Perkins"],["Maybe Baby","Buddy Holly"],["Mean Woman Blues","Cliff Richard"],["Move It","Cliff Richard"],["My Babe","Elvis Presley"],["Mystery Train","Elvis Presley"],["Nadine","Chuck Berry"],["No particular place to go","Chuck Berry"],["Not fade away","Buddy Holly"],["Nut Rocker","B. Bumble & The Stingers"],["Oh Boy","Buddy Holly"],["One Night","Elvis Presley"],["Oobie Doobie","Roy Orbison"],["Paralyzed","Elvis Presley"],["Peggy Sue","Buddy Holly"],["Please Don’t Tease","Cliff Richard"],["Proud Mary","Elvis Presley"],["Que Sera Sera","The Buckaroos"],["Rave On","Buddy Holly"],["Rebel Rouser","Duane Eddy"],["Reelin’ and rockin’","Chuck Berry"],["Return to sender","Elvis Presley"],["Ring of fire","Johnny Cash"],["Rip it up","Little Richard"],["Rock & Roll in Akercity","The Explosion Rockets"],["Rock and roll music","Chuck Berry"],["Rockin’ My Life Away","Jerry Lee Lewis"],["Roll over Beethoven","Chuck Berry"],["Route 66","The Rolling Stones / Chuck Berry"],["Runaway","Elvis Presley"],["Save the last dance for me","Jerry Lee Lewis"],["Say mama","Gene Vincent"],["Shake, rattle and roll","Elvis Presley"],["Shakin’ all over","Johnny Kidd & The Pirates"],["Sittin’ in the Balcony","Eddie Cochran"],["Summertime Blues","Eddie Cochran"],["Suspicious minds","Elvis Presley"],["Sweet Caroline","Elvis Presley"],["Sweet Little 16","Chuck Berry"],["Sweet Nothings","Brenda Lee"],["Teddy Bear","Elvis Presley"],["Teenage Heaven","Eddie Cochran"],["Tequila","The Ventures"],["That’ll be the day","Buddy Holly"],["That’s allright Mama","Elvis Presley"],["These Boots are made for Walking","Nancy Sinatra"],["Three steps to heaven","Eddie Cochran"],["True love ways","Buddy Holly"],["Tutti Frutti","Elvis Presley"],["Twenty Flight Rock","Eddie Cochran"],["Viva Las Vegas","Elvis Presley"],["Walk don’t run","The Ventures"],["Walking after midnight","Patsy Cline"],["Way Down","Elvis Presley"],["We say Yeah","Cliff Richard"],["What’d I Say","Jerry Lee Lewis / Elvis"],["Whole lotta shakin’ going on","Jerry Lee Lewis"],["Wild One","Jerry Lee Lewis"],["Wipe Out","The Surfaris"],["Wonderful land","The Shadows"]
+];
+var OWN = {"The Explosion Rockets":1};
+
+/* ---------- i18n ---------- */
+var I18N = {
+  nav_band:["De Band","The Band"], nav_members:["De Mannen","The Line-Up"], nav_shows:["Shows","Shows"],
+  nav_rep:["Repertoire","Setlist"], nav_listen:["Luisteren","Listen"], nav_book:["Boek de band","Book us"],
+  hero_est2:["Nederlands rock-'n-roll","Dutch rock 'n roll"],
+  hero_sub:["Eén van de langst spelende rock-'n-roll-acts van Nederland. Onvervalste rockabilly, een vleugje humor en een show die het podium — en de zaal — laat ontploffen.","One of the longest-running rock 'n roll acts in the Netherlands. Pure rockabilly, a dose of humour and a show that blows the stage — and the room — sky high."],
+  hero_cta1:["Bekijk de shows","See the shows"], hero_cta2:["▶ Luister nu","▶ Listen now"],
+  hero_script:["veertig jaar rock 'n roll","forty years of rock 'n roll"],
+  band_eye:["The Band","The Band"],
+  band_title:["Veertig jaar<br>knetterende<br>rock 'n roll","Forty years<br>of explosive<br>rock 'n roll"],
+  band_p1:["Het begon in <span class='hl'>1959</span> in Vught, toen een stel jonge muzikanten zich verzamelde onder de naam The Jet Black Robbers. Begin jaren '80 viel de band even stil — tot de herstart in <span class='hl'>1985</span>. Sindsdien staan The Explosion Rockets onafgebroken op de planken en horen ze bij de langst spelende rock-'n-roll-acts van het land.","It started in <span class='hl'>1959</span> in Vught, when a handful of young musicians joined forces as The Jet Black Robbers. The band paused in the early '80s — until the 1985 reboot. Since then The Explosion Rockets have played non-stop and rank among the country's longest-running rock 'n roll acts."],
+  band_p2:["In <span class='hl'>2014</span> kreeg de band de <span class='hl'>Andy Tielman Award</span> voor hun bijzondere bijdrage aan de rock-'n-roll-cultuur. In 2023 én 2024 waren ze hoofdact op het beroemde <span class='hl'>Elvis Festival in Bad Nauheim</span>, waar duizenden bezoekers de zweet van de muren dansten.","In <span class='hl'>2014</span> they received the <span class='hl'>Andy Tielman Award</span> for their special contribution to rock 'n roll culture. In both 2023 and 2024 they were a main act at the famous <span class='hl'>Elvis Festival in Bad Nauheim</span>, where thousands danced until they dripped."],
+  band_p3:["Ze deelden het podium met namen als <span class='hl'>Peter Koelewijn, Chris Montez, The Blue Diamonds</span> en Elvis-gitarist <span class='hl'>James Burton</span>. Hun rauwe, rockende stijl met de nodige dosis humor maakt elk Rockets-concert een feest.","They've shared the stage with <span class='hl'>Peter Koelewijn, Chris Montez, The Blue Diamonds</span> and Elvis guitarist <span class='hl'>James Burton</span>. Their raw, rocking style and a healthy dose of humour make every Rockets show a party."],
+  stat_years:["jaar op het podium","years on stage"], stat_songs:["nummers in repertoire","songs in the set"],
+  stat_men:["muzikanten","musicians"], stat_award:["Andy Tielman Award","Andy Tielman Award"],
+  mem_eye:["The Line-Up","The Line-Up"], mem_title:["De Mannen","The Men"],
+  anniv_eye:["The Anniversary Show","The Anniversary Show"],
+  shows_eye:["On Tour","On Tour"], shows_title:["Shows & Tour","Shows & Tour"],
+  shows_note:["★ Data uit het jubileumjaar — kijk op de socials voor de actuele agenda.","★ Dates from the anniversary year — check socials for the latest agenda."],
+  rep_eye:["The Jukebox","The Jukebox"],
+  rep_title:["200+ nummers,<br>nul stilstand","200+ songs,<br>zero standing still"],
+  rep_intro:["Van Elvis tot Chuck Berry, van Buddy Holly tot Jerry Lee Lewis — plus een handvol eigen rockers. Dit is de motor onder elke show.","From Elvis to Chuck Berry, Buddy Holly to Jerry Lee Lewis — plus a handful of originals. This is the engine under every show."],
+  rep_own:["EIGEN WERK","ORIGINALS"],
+  listen_eye:["Press Play","Press Play"], listen_title:["Luister<br>mee","Press<br>play"],
+  listen_p:["Maandelijks luisteren ruim 2.200 mensen naar The Explosion Rockets op Spotify. Zet 'm op, draai 'm hard.","Over 2,200 people listen to The Explosion Rockets on Spotify every month. Turn it up, play it loud."],
+  book_eye:["Book The Band","Book The Band"],
+  book_title:["Laat het ontploffen<br>op jouw podium","Light the fuse<br>on your stage"],
+  book_p:["Festival, rock-'n-roll-weekend of besloten feest? The Explosion Rockets brengen veertig jaar podiumervaring mee — en een dansvloer die niet meer stilstaat.","Festival, rock 'n roll weekend or private party? The Explosion Rockets bring forty years of stage experience — and a dance floor that won't sit down."],
+  book_cta1:["✉ Boekingsaanvraag","✉ Booking request"], book_cta2:["Officiële website","Official website"]
+};
+var lang = 0; /* 0 = NL, 1 = EN */
+
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n');
+    if(I18N[k]) el.innerHTML = I18N[k][lang];
+  });
+  document.documentElement.lang = lang ? 'en' : 'nl';
+  document.getElementById('langBtn').innerHTML = lang ? 'NL / <b>EN</b>' : '<b>NL</b> / EN';
+  renderMembers();
+  document.getElementById('songSearch').placeholder = lang ? 'Search song or artist…' : 'Zoek nummer of artiest…';
+}
+
+/* ---------- RENDER ---------- */
+function renderMembers(){
+  var g = document.getElementById('membersGrid'); g.innerHTML='';
+  MEMBERS.forEach(function(m,i){
+    var d = document.createElement('div'); d.className='member reveal';
+    d.innerHTML = '<span class="member-no">'+String(i+1).padStart(2,'0')+'</span>'+
+      '<div class="member-face">'+m.icon+'</div>'+
+      '<div class="member-body"><h3>'+m.name+'</h3>'+
+      '<div class="member-role">'+(lang? m.role_en : m.role)+'</div></div>';
+    g.appendChild(d);
+  });
+  observeReveal();
+}
+
+function renderShows(){
+  var l = document.getElementById('showsList'); l.innerHTML='';
+  SHOWS.forEach(function(s){
+    var r = document.createElement('div'); r.className='show-row';
+    r.innerHTML = '<div class="show-date"><div class="dd" style="'+(s.hl?'color:var(--red)':'')+'">'+s.dd+'</div><div class="mm">'+s.mm+'</div></div>'+
+      '<div class="show-info"><b>'+s.venue+'</b><span>'+s.city+'<span class="flag">'+s.flag+'</span></span></div>'+
+      '<a class="show-cta" href="#booking">'+(s.hl?'JUBILEUM':'INFO')+'</a>';
+    l.appendChild(r);
+  });
+}
+
+function renderArtists(){
+  var counts={};
+  SONGS.forEach(function(s){
+    s[1].split(/\s*\/\s*/).forEach(function(a){ counts[a]=(counts[a]||0)+1; });
+  });
+  var arr=Object.keys(counts).map(function(a){return [a,counts[a]];})
+    .sort(function(x,y){return y[1]-x[1];}).slice(0,12);
+  var c=document.getElementById('artistCloud'); c.innerHTML='';
+  arr.forEach(function(a){
+    var s=document.createElement('span'); s.className='artist-chip';
+    s.innerHTML=a[0]+'<b>'+a[1]+'</b>'; c.appendChild(s);
+  });
+}
+
+function renderSongs(filter){
+  filter=(filter||'').toLowerCase();
+  var list=document.getElementById('songList'); list.innerHTML='';
+  var shown=0;
+  SONGS.slice().sort(function(a,b){return a[0].localeCompare(b[0]);}).forEach(function(s){
+    if(filter && (s[0]+' '+s[1]).toLowerCase().indexOf(filter)===-1) return;
+    shown++;
+    var own=OWN[s[1]];
+    var d=document.createElement('div'); d.className='song-item'+(own?' own':'');
+    d.innerHTML='<span class="st">'+s[0]+'</span><span class="sa">'+s[1]+'</span>';
+    list.appendChild(d);
+  });
+  document.getElementById('songCount').textContent=shown+(lang?' songs':' nummers');
+}
+
+/* ---------- REVEAL ---------- */
+var io;
+function observeReveal(){
+  if(!io){
+    io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+    },{threshold:.12});
+  }
+  document.querySelectorAll('.reveal:not(.in)').forEach(function(el){io.observe(el);});
+}
+
+/* ---------- HERO CANVAS: starburst + halftone ---------- */
+function heroBurst(){
+  var c=document.getElementById('burst'), ctx=c.getContext('2d');
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var w,h,cx,cy,t=0;
+  function size(){ w=c.width=c.offsetWidth*devicePixelRatio; h=c.height=c.offsetHeight*devicePixelRatio;
+    cx=w*0.5; cy=h*0.40; }
+  size(); window.addEventListener('resize',size);
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    // rotating sunburst rays
+    var rays=44, R=Math.max(w,h);
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(t*0.02);
+    for(var i=0;i<rays;i++){
+      ctx.rotate((Math.PI*2)/rays);
+      ctx.beginPath(); ctx.moveTo(0,0);
+      ctx.lineTo(R, R*0.045); ctx.lineTo(R,-R*0.045); ctx.closePath();
+      ctx.fillStyle = (i%2===0)?'rgba(216,53,42,0.05)':'rgba(232,162,60,0.035)';
+      ctx.fill();
+    }
+    ctx.restore();
+    // halftone dots expanding outward
+    var ringN=7;
+    for(var r=0;r<ringN;r++){
+      var prog=((t*0.6 + r*40)%(280))/280;
+      var rad=prog*Math.max(w,h)*0.62;
+      var dots=Math.floor(10+prog*46);
+      var alpha=(1-prog)*0.28;
+      for(var d=0;d<dots;d++){
+        var ang=(Math.PI*2/dots)*d + r;
+        var x=cx+Math.cos(ang)*rad, y=cy+Math.sin(ang)*rad;
+        var dr=(1-prog)*5*devicePixelRatio+1;
+        ctx.beginPath(); ctx.arc(x,y,dr,0,Math.PI*2);
+        ctx.fillStyle='rgba(244,232,208,'+alpha+')'; ctx.fill();
+      }
+    }
+    if(!reduce){ t+=1; requestAnimationFrame(draw); }
+  }
+  draw();
+}
+
+/* ---------- NAV ---------- */
+function initNav(){
+  var nav=document.getElementById('nav'), links=document.getElementById('navLinks');
+  window.addEventListener('scroll',function(){ nav.classList.toggle('scrolled', window.scrollY>40); });
+  document.getElementById('navToggle').addEventListener('click',function(){ links.classList.toggle('open'); });
+  links.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ links.classList.remove('open'); }); });
+  document.getElementById('langBtn').addEventListener('click',function(){ lang=lang?0:1; applyLang(); renderSongs(document.getElementById('songSearch').value); });
+}
+
+/* ---------- INIT ---------- */
+document.getElementById('year').textContent=new Date().getFullYear();
+renderMembers(); renderShows(); renderArtists(); renderSongs('');
+document.getElementById('songSearch').addEventListener('input',function(e){ renderSongs(e.target.value); });
+(function(){ var mt=document.getElementById('marqueeTrack'); if(mt) mt.innerHTML+=mt.innerHTML; })();
+initNav(); applyLang(); observeReveal(); heroBurst();
+</script>
+</body>
+</html>
