@@ -127,6 +127,26 @@
   .inst:hover{transform:translateY(-5px) rotate(-1deg); box-shadow:7px 8px 0 var(--red);}
   .inst img{width:100%; aspect-ratio:1/1; object-fit:cover; display:block;}
 
+  /* history */
+  .hist-intro{font-size:clamp(15px,1.9vw,18px); margin:0 0 24px; max-width:760px;}
+  .timeline{display:flex; flex-direction:column;}
+  .tl{display:grid; grid-template-columns:84px 1fr; gap:18px; padding-bottom:18px; position:relative;}
+  .tl::before{content:''; position:absolute; left:41px; top:6px; bottom:-4px; width:3px; background:rgba(22,19,15,.16);}
+  .tl:last-child::before{display:none;}
+  .tl-year{font-family:'Bangers',sans-serif; font-size:18px; color:var(--paper-2); background:var(--red); border:3px solid var(--ink);
+    box-shadow:3px 3px 0 var(--ink); padding:7px 4px; text-align:center; align-self:start; transform:rotate(-2deg); line-height:1;}
+  .tl-body h4{font-family:'Archivo Black',sans-serif; font-style:italic; font-size:16px; margin:1px 0 4px; color:var(--ink);}
+  .tl-body p{font-size:14px; margin:0; opacity:.9;}
+  .history-full{margin-top:26px; border-top:3px dashed rgba(22,19,15,.25); padding-top:16px;}
+  .history-full summary{font-family:'Bangers',sans-serif; font-size:24px; color:var(--red-2); cursor:pointer; list-style:none; display:inline-flex; align-items:center; gap:8px;}
+  .history-full summary::-webkit-details-marker{display:none;}
+  .history-full summary::after{content:'▾'; font-size:16px;}
+  .history-full[open] summary::after{content:'▴';}
+  .history-text{margin-top:12px; max-width:820px;}
+  .history-text h4{font-family:'Archivo Black',sans-serif; font-style:italic; color:var(--red-2); font-size:14px; margin:18px 0 6px; text-transform:uppercase; letter-spacing:.03em;}
+  .history-text p{font-size:14px; margin:0 0 12px;}
+  .history-text .oldmembers{font-size:13px; line-height:1.7;}
+
   /* members */
   .members-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
   .member{position:relative; background:var(--paper-2); border:5px solid var(--paper-2); overflow:hidden;
@@ -261,6 +281,7 @@
   <a class="brand" href="#top"><span class="mark f-comic"><span class="a">EXPLOSION</span> ROCKETS</span></a>
   <div class="nav-links" id="navLinks">
     <a href="#about" data-i18n="nav_band">DE BAND</a>
+    <a href="#history" data-i18n="nav_history">HISTORIE</a>
     <a href="#members" data-i18n="nav_members">MANNEN</a>
     <a href="#music" data-i18n="nav_music">MUZIEK</a>
     <a href="#shows" data-i18n="nav_shows">SHOWS</a>
@@ -315,6 +336,39 @@
         <div class="inst"><img src="assets/icons/ic-drums.jpg" alt="Drums" loading="lazy" /></div>
         <div class="inst"><img src="assets/icons/ic-bass.jpg" alt="Bas" loading="lazy" /></div>
       </div>
+    </div>
+  </section>
+
+  <!-- HISTORY -->
+  <section class="sec" id="history">
+    <div class="panel reveal">
+      <img class="decal" src="assets/stickers/pow.png" alt="" style="top:-28px; right:-10px;" />
+      <h2 class="sec-label" data-i18n="hist_label">GESCHIEDENIS</h2>
+      <p class="hist-intro" data-i18n="hist_intro">Van The Jet Black Robbers (1959) tot ruim 40 jaar later — met één missie: de muziek van Elvis, Buddy Holly, Cliff Richard, Jerry Lee Lewis en Chuck Berry levend houden.</p>
+      <div class="timeline" id="timeline"></div>
+      <details class="history-full">
+        <summary data-i18n="hist_more">Lees de volledige geschiedenis</summary>
+        <div class="history-text">
+          <p>De Nederlandse rock-’n-rollband The Explosion Rockets behoort tot de langst actieve rock-’n-rollacts van Nederland. De groep ontstond eind jaren vijftig in Vught en groeide uit tot een vaste waarde binnen de Europese rockabilly- en rock-’n-rollscene. Door de decennia heen kende de band verschillende namen, bezettingen en muzikale fases, maar bleef steeds trouw aan één missie: het levend houden van de muziek van Elvis Presley, Buddy Holly, Cliff Richard, Jerry Lee Lewis, Chuck Berry en andere pioniers uit de jaren vijftig en vroege jaren zestig.</p>
+          <h4>De beginjaren: van The Jet Black Robbers naar The Hurricane Rollers</h4>
+          <p>De oorsprong gaat terug naar 1959, toen in Vught een groep jonge muzikanten ontstond onder de naam The Jet Black Robbers. Ze deden mee aan talentenjachten en bereikten de finale van een talentwedstrijd op Radio Luxembourg — destijds een van de invloedrijkste radiostations van Europa. In de jaren zestig ging de groep, onder leiding van gitarist Bart Strik, verder als The Hurricane Rollers (met toestemming van de oorspronkelijke Hurricane Rollers) en bouwde een stevige reputatie op in het Nederlandse livecircuit.</p>
+          <h4>De geboorte van The Explosion Rockets</h4>
+          <p>Begin jaren zeventig kreeg de band de naam die legendarisch zou worden: The Explosion Rockets. De stijl werd herkenbaar: nauwkeurige uitvoeringen van klassiekers, gecombineerd met humor, show en publieksinteractie. Met zanger Savage Kalman — als Savage Kalman & The Explosion Rockets — kwam landelijke bekendheid, met een optreden tijdens de honderdste uitzending van Felix Meurders’ The Rock ’n Roll Methode en een verschijning in de TROS Top 50.</p>
+          <h4>Uiteenvallen en wederoprichting</h4>
+          <p>Begin jaren tachtig viel de band uiteen door het veranderende muzieklandschap (new wave, disco, moderne pop). In 1985 volgde de wederoprichting — sindsdien is de groep onafgebroken actief. Vanaf de tweede helft van de jaren tachtig trad de band steeds vaker op in Luxemburg, Duitsland en Engeland en bouwde daar een trouwe fanbase op.</p>
+          <h4>Internationale reputatie</h4>
+          <p>The Explosion Rockets werd een vaste naam in het Europese rock-’n-rollcircuit, met optredens in Nederland, Duitsland, Luxemburg, Spanje en Engeland. Kenmerkend: authentieke instrumentatie, close-harmony zang, uitgebreide Elvis- en Cliff Richard-segmenten, humor en dansbaarheid. De band deelde het podium met o.a. Peter Koelewijn, Chris Montez, The Blue Diamonds en gitarist James Burton, en was support-act tijdens een Europese tour van Jerry Lee Lewis.</p>
+          <h4>Andy Tielman Award en hernieuwde populariteit</h4>
+          <p>In 2014 ontving de band de prestigieuze Andy Tielman Award. In de jaren 2020 groeide de belangstelling opnieuw — mede door de Elvis-biopic van Baz Luhrmann. In 2023 en 2024 was The Explosion Rockets hoofdact op het Elvis Festival in Bad Nauheim, voor duizenden bezoekers.</p>
+          <h4>Discografie en stijl</h4>
+          <p>Gedurende ruim vier decennia bracht de band meerdere lp’s en cd’s uit — grotendeels zorgvuldig uitgevoerde covers, maar ook eigen werk in dezelfde traditie. Muzikaal beïnvloed door Elvis Presley, Buddy Holly, Cliff Richard, Jerry Lee Lewis, Chuck Berry en Shakin’ Stevens. Op Spotify worden hun albums maandelijks door duizenden luisteraars beluisterd.</p>
+          <h4>De huidige band</h4>
+          <p>Vandaag geldt The Explosion Rockets als een van de belangrijkste rock-’n-rollacts van Nederland, met frontman Ruud Kuijpers als gezicht van de moderne bezetting. In 2025 viert de band haar 40-jarig jubileum met een groot jubileumconcert en een speciaal album, deels opgenomen in de legendarische Sun Studio in Memphis.</p>
+          <p class="oldmembers"><strong>Oud-bandleden:</strong> Thom Sens · Hank van Empel · Amse de Jong · Jack Koenraad · Ad van den Burgt · Henk Verkooijen · Herman Salomonsen · Erik Peers · Joop Devilee · Piet Krol · Theo van den Burgt · Wil Dona · Wil van Gurp · Savage Kalman · Bart Strik</p>
+          <h4>Culturele betekenis</h4>
+          <p>Hoewel nooit een mainstream popgroep, neemt The Explosion Rockets een uitzonderlijke positie in binnen de Nederlandse rock-’n-rollsubcultuur: het bewaren van authentieke tradities, het verbinden van generaties fans en het internationaal vertegenwoordigen van Nederlandse rock-’n-roll. Binnen de rockabilly- en oldieswereld geldt de band als een instituut — een groep die niet alleen muziek speelt, maar een complete tijdsgeest levend houdt.</p>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -411,12 +465,22 @@
 
 <script>
 var MEMBERS = [
-  ['Ruud Kuijpers','Zang','Lead Vocals','ruud'],
+  ['Ruud Kuijpers','Lead zang','Lead Vocals','ruud'],
   ['Joost Roest','Leadgitaar','Lead Guitar','joost'],
-  ['Menno Kuijpers','Slaggitaar','Rhythm Guitar','menno'],
-  ['Frans van Esch','Drums','Drums','frans'],
-  ['Martien van Engelen','Piano','Piano','martien'],
-  ['Teun Duijghuisen','Bas','Bass','teun']
+  ['Menno Kuijpers','Gitaar & zang','Guitar & Vocals','menno'],
+  ['Martien van Engelen','Toetsen & zang','Keys & Vocals','martien'],
+  ['Teun Duijghuisen','Bas & zang','Bass & Vocals','teun'],
+  ['Frans van Esch','Drums & zang','Drums & Vocals','frans']
+];
+var TIMELINE = [
+  ['1959','The Jet Black Robbers','The Jet Black Robbers','In Vught vormt zich een groep jonge muzikanten; ze halen de finale van een talentwedstrijd op Radio Luxembourg.','In Vught a group of young musicians forms; they reach the final of a talent contest on Radio Luxembourg.'],
+  ['60s','The Hurricane Rollers','The Hurricane Rollers','Onder leiding van Bart Strik gaat de band verder als The Hurricane Rollers en bouwt een stevige live-reputatie op.','Led by Bart Strik the band continues as The Hurricane Rollers and builds a strong live reputation.'],
+  ['70s','The Explosion Rockets','The Explosion Rockets','De legendarische naam is geboren. Als Savage Kalman & The Explosion Rockets volgt landelijke bekendheid, radio en TV.','The legendary name is born. As Savage Kalman & The Explosion Rockets comes national fame, radio and TV.'],
+  ['1985','Wederoprichting','Reunited','Na een pauze wordt de band heropgericht — het begin van de moderne periode, sindsdien onafgebroken actief.','After a break the band reforms — the start of the modern era, active ever since.'],
+  ['80s–90s','Internationaal','International','Trouwe fanbase in Luxemburg, Duitsland, Engeland en Spanje; support-act op een Europese tour van Jerry Lee Lewis.','A loyal fanbase across Luxembourg, Germany, England and Spain; support act on a Jerry Lee Lewis European tour.'],
+  ['2014','Andy Tielman Award','Andy Tielman Award','Erkenning van de Nederlandse rock-’n-rollgemeenschap voor decennia podiumervaring.','Recognition from the Dutch rock ’n roll community for decades on stage.'],
+  ['2023–24','Bad Nauheim','Bad Nauheim','Hoofdact op het Elvis Festival in Bad Nauheim, voor duizenden bezoekers.','Main act at the Elvis Festival in Bad Nauheim, for thousands of visitors.'],
+  ['2025','40 jaar & Sun Studio','40 years & Sun Studio','Veertigjarig jubileum met een groot jubileumconcert en ‘The Sun Sessions’, deels opgenomen in Sun Studio, Memphis.','40th anniversary with a big show and ‘The Sun Sessions’, partly recorded at Sun Studio, Memphis.']
 ];
 var SHOWS = [
   ['25','MEI','Het Tolhuys aan de Zaan','Zaandam',false],
@@ -434,7 +498,10 @@ function ytThumb(id,q){ return 'https://i.ytimg.com/vi/'+id+'/'+(q||'hqdefault')
 
 var I18N = {
   nav_band:['DE BAND','THE BAND'], nav_members:['MANNEN','THE MEN'], nav_music:['MUZIEK','MUSIC'],
-  nav_shows:['SHOWS','SHOWS'], nav_video:['VIDEO','VIDEO'], nav_book:['Book us','Book us'],
+  nav_shows:['SHOWS','SHOWS'], nav_video:['VIDEO','VIDEO'], nav_book:['Book us','Book us'], nav_history:['HISTORIE','HISTORY'],
+  hist_label:['GESCHIEDENIS','HISTORY'],
+  hist_intro:['Van The Jet Black Robbers (1959) tot ruim 40 jaar later — met één missie: de muziek van Elvis, Buddy Holly, Cliff Richard, Jerry Lee Lewis en Chuck Berry levend houden.','From The Jet Black Robbers (1959) to 40+ years later — with one mission: keeping the music of Elvis, Buddy Holly, Cliff Richard, Jerry Lee Lewis and Chuck Berry alive.'],
+  hist_more:['Lees de volledige geschiedenis','Read the full history'],
   hero_tag:['Rockin’ & Rollin’ since 1959','Rockin’ & Rollin’ since 1959'],
   hero_cta1:['BEKIJK SHOWS','SEE THE SHOWS'], hero_cta2:['LUISTER NU','LISTEN NOW'],
   about_label:['DE BAND','THE BAND'],
@@ -458,7 +525,16 @@ function applyLang(){
   document.querySelectorAll('[data-i18n]').forEach(function(el){ var k=el.getAttribute('data-i18n'); if(I18N[k]) el.innerHTML=I18N[k][lang]; });
   document.documentElement.lang=lang?'en':'nl';
   document.getElementById('langBtn').innerHTML=lang?'NL / <b>EN</b>':'<b>NL</b> / EN';
-  renderMembers();
+  renderMembers(); renderTimeline();
+}
+function renderTimeline(){
+  var t=document.getElementById('timeline'); if(!t) return; t.innerHTML='';
+  TIMELINE.forEach(function(e){
+    var d=document.createElement('div'); d.className='tl reveal';
+    d.innerHTML='<div class="tl-year">'+e[0]+'</div><div class="tl-body"><h4>'+(lang?e[2]:e[1])+'</h4><p>'+(lang?e[4]:e[3])+'</p></div>';
+    t.appendChild(d);
+  });
+  observeReveal();
 }
 function renderMembers(){
   var g=document.getElementById('membersGrid'); g.innerHTML='';
@@ -544,7 +620,7 @@ function onScroll(){ var y=window.scrollY, h=document.documentElement.scrollHeig
 
 document.getElementById('year').textContent=new Date().getFullYear();
 (function(){ var t=document.getElementById('tickerTrack'); if(t) t.innerHTML+=t.innerHTML; })();
-renderMembers(); renderShows(); renderVideos(); renderRep();
+renderMembers(); renderTimeline(); renderShows(); renderVideos(); renderRep();
 initNav(); initBg(); applyLang(); observeReveal();
 window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 </script>
