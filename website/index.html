@@ -73,14 +73,14 @@
   .cbtn-y{background:var(--yellow);} .cbtn-y:hover{background:#ffd84e;}
   .cbtn-r{background:var(--red); color:var(--paper-2);} .cbtn-r:hover{background:var(--red-2);}
   .cbtn-b{background:var(--blue); color:var(--paper-2);} .cbtn-b:hover{background:var(--blue-2);}
-  .scroll-cue{position:absolute; left:50%; bottom:24px; transform:translateX(-50%);
+  .scroll-cue{position:absolute; left:50%; bottom:-26px; transform:translateX(-50%);
     font-family:'Bangers',sans-serif; font-size:20px; color:var(--ink); background:var(--yellow);
     border:3px solid var(--ink); border-radius:99px; padding:4px 16px; box-shadow:3px 3px 0 var(--ink); animation:bob 1.8s ease-in-out infinite;}
   @keyframes bob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,7px);}}
 
   /* ---- TICKER ---- */
   .ticker{background:var(--red); color:var(--paper-2); border-top:var(--bd) solid var(--ink); border-bottom:var(--bd) solid var(--ink);
-    overflow:hidden; white-space:nowrap;}
+    overflow:hidden; white-space:nowrap; margin-top:50px;}
   .ticker-track{display:inline-flex; animation:scroll 30s linear infinite; padding:9px 0;}
   .ticker:hover .ticker-track{animation-play-state:paused;}
   .ticker span{font-family:'Bangers',sans-serif; font-size:22px; letter-spacing:.08em; padding:0 22px;}
@@ -274,7 +274,7 @@
   <!-- HERO -->
   <header class="hero2" id="top">
     <img class="logo-big" src="assets/logo.png" alt="The Explosion Rockets" fetchpriority="high" />
-    <p class="tag" data-i18n="hero_tag">Echte rock 'n roll sinds 1959</p>
+    <p class="tag" data-i18n="hero_tag">Rockin' & Rollin' since 1959</p>
     <div class="hero-btns">
       <a class="cbtn cbtn-y" href="#shows" data-i18n="hero_cta1">SEE THE SHOWS</a>
       <a class="cbtn cbtn-r" href="#music" data-i18n="hero_cta2">LISTEN NOW</a>
@@ -434,7 +434,7 @@ function ytThumb(id,q){ return 'https://i.ytimg.com/vi/'+id+'/'+(q||'hqdefault')
 var I18N = {
   nav_band:['DE BAND','THE BAND'], nav_members:['MANNEN','THE MEN'], nav_music:['MUZIEK','MUSIC'],
   nav_shows:['SHOWS','SHOWS'], nav_video:['VIDEO','VIDEO'], nav_book:['Book us','Book us'],
-  hero_tag:['Echte rock ’n roll sinds 1959','Real rock ’n roll since 1959'],
+  hero_tag:['Rockin’ & Rollin’ since 1959','Rockin’ & Rollin’ since 1959'],
   hero_cta1:['BEKIJK SHOWS','SEE THE SHOWS'], hero_cta2:['LUISTER NU','LISTEN NOW'],
   about_label:['DE BAND','THE BAND'],
   about_p1:['Al sinds <strong>1959</strong> knalt The Explosion Rockets onvervalste rock-’n-roll de zaal in. Begonnen in Vught als <strong>The Jet Black Robbers</strong> — met een finaleplek op Radio Luxemburg — en sinds <strong>1985</strong> onafgebroken op de planken.','Since <strong>1959</strong> The Explosion Rockets have blasted pure rock ’n roll into the room. Started in Vught as <strong>The Jet Black Robbers</strong> — with a final round on Radio Luxembourg — and on stage non-stop since <strong>1985</strong>.'],
