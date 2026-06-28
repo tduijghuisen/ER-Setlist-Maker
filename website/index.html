@@ -78,6 +78,17 @@
     font-family:'Bangers',sans-serif; font-size:20px; color:var(--ink); background:var(--yellow);
     border:3px solid var(--ink); border-radius:99px; padding:4px 16px; box-shadow:3px 3px 0 var(--ink); animation:bob 1.8s ease-in-out infinite;}
   @keyframes bob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,7px);}}
+  .nextshow{margin-top:2px; display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center;
+    font-family:'Archivo Black',sans-serif; font-style:italic; font-size:13px; color:var(--ink); text-decoration:none;
+    background:var(--yellow); border:3px solid var(--ink); box-shadow:4px 4px 0 var(--ink); padding:7px 15px;}
+  .nextshow b{font-family:'Bangers',sans-serif; font-style:normal; letter-spacing:.04em; color:var(--red-2); font-size:16px;}
+  .nextshow:hover{background:#ffd84e;}
+  .about-text .lead{font-size:clamp(17px,2.2vw,21px); font-weight:800;}
+  .about-text .perks{list-style:none; padding:0; margin:8px 0 20px; display:grid; gap:8px;}
+  .about-text .perks li{position:relative; padding-left:26px; font-size:15px;}
+  .about-text .perks li::before{content:'★'; position:absolute; left:0; top:1px; color:var(--red); font-size:14px;}
+  .about-text>.cbtn{margin-top:2px;}
+  .music-more{margin-top:24px;}
 
   /* ---- TICKER ---- */
   .ticker{background:var(--red); color:var(--paper-2); border-top:var(--bd) solid var(--ink); border-bottom:var(--bd) solid var(--ink);
@@ -302,12 +313,13 @@
       <a class="cbtn cbtn-y" href="#shows" data-i18n="hero_cta1">SEE THE SHOWS</a>
       <a class="cbtn cbtn-r" href="#music" data-i18n="hero_cta2">LISTEN NOW</a>
     </div>
+    <a class="nextshow" id="nextShow" href="#shows"></a>
     <a class="scroll-cue f-comic" href="#about">SCROLL ↓</a>
   </header>
 
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track" id="tickerTrack">
-      <span>SINDS 1959</span><span>500+ SHOWS IN EUROPA</span><span>ANDY TIELMAN AWARD</span><span>9 ALBUMS</span><span>ELVIS FESTIVAL BAD NAUHEIM</span><span>SUN STUDIO MEMPHIS</span><span>200+ NUMMERS</span>
+      <span>AL MEER DAN 40 JAAR ONAFGEBROKEN ON STAGE!</span><span>EUROPA’S NO1 ROCK &amp; ROLL SHOW!</span><span>MEER DAN 500 SHOWS DOOR HEEL EUROPA!</span>
     </div>
   </div>
 
@@ -316,27 +328,37 @@
     <div class="panel reveal">
       <img class="decal" src="assets/stickers/zap.png" alt="" style="top:-28px; right:-10px;" />
       <h2 class="sec-label" data-i18n="about_label">DE BAND</h2>
-      <div class="about-grid">
-        <img class="crash" src="assets/stickers/crash.png" alt="" aria-hidden="true" />
-        <div class="about-text">
-          <p data-i18n="about_p1">Al sinds <strong>1959</strong> knalt The Explosion Rockets onvervalste rock-'n-roll de zaal in. Begonnen in Vught als <strong>The Jet Black Robbers</strong> — met een finaleplek op Radio Luxemburg — en sinds <strong>1985</strong> onafgebroken op de planken.</p>
-          <p data-i18n="about_p2">Winnaar van de <strong>Andy Tielman Award</strong> en hoofdact op het <strong>Elvis Festival in Bad Nauheim</strong>. Podium gedeeld met Peter Koelewijn, Chris Montez, The Blue Diamonds en Elvis-gitarist James Burton — en <strong>ruim 500 shows</strong> door heel Europa, and counting.</p>
-          <p data-i18n="about_p3">Voor het 40-jarig jubileum nam de band <strong>'The Sun Sessions'</strong> deels op in de legendarische <strong>Sun Studio in Memphis</strong> — waar Elvis, Johnny Cash en Jerry Lee Lewis ooit begonnen.</p>
-          <div class="stats">
-            <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b data-count="40" data-suffix="+">0</b><span data-i18n="stat_years">JAAR</span></span></div>
-            <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b data-count="9">0</b><span data-i18n="stat_albums">ALBUMS</span></span></div>
-            <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b data-count="500" data-suffix="+">0</b><span data-i18n="stat_shows">SHOWS</span></span></div>
-            <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b>'14</b><span data-i18n="stat_award">AWARD</span></span></div>
-          </div>
-        </div>
+      <div class="about-text lang-nl">
+        <p class="lead">Vuurwerk op het podium, knallende hits en een zaal die niet meer stil staat. The Explosion Rockets brengen al ruim <strong>40 jaar</strong> dé rock-'n-roll-show van Europa — van Elvis, Chuck Berry en Jerry Lee Lewis tot Buddy Holly en Cliff Richard. Strak gespeeld, vol humor en met een energie die meteen aanslaat.</p>
+        <p>Boek je The Explosion Rockets, dan boek je geen bandje maar een complete show: ervaren podiumbeesten, close-harmony zang en een dansvloer die gegarandeerd volloopt.</p>
+        <ul class="perks">
+          <li>Een explosieve liveshow met 40+ jaar podiumervaring</li>
+          <li>Knallende hits van Elvis, Chuck Berry, Jerry Lee Lewis, Buddy Holly &amp; meer</li>
+          <li>Volle dansvloer — publiek van jong tot oud</li>
+          <li>Flexibel inzetbaar: festival, theater, weekender of besloten feest</li>
+        </ul>
+        <a class="cbtn cbtn-r" href="#booking">✦ BOEK DE BAND</a>
       </div>
-      <div class="instruments">
-        <div class="inst"><img src="assets/icons/ic-guitar.jpg" alt="Gitaar" loading="lazy" /></div>
-        <div class="inst"><img src="assets/icons/ic-mic.jpg" alt="Microfoon" loading="lazy" /></div>
-        <div class="inst"><img src="assets/icons/ic-piano.jpg" alt="Piano" loading="lazy" /></div>
-        <div class="inst"><img src="assets/icons/ic-drums.jpg" alt="Drums" loading="lazy" /></div>
-        <div class="inst"><img src="assets/icons/ic-bass.jpg" alt="Bas" loading="lazy" /></div>
+      <div class="about-text lang-en">
+        <p class="lead">Fireworks on stage, blazing hits and a room that won't sit still. For over <strong>40 years</strong> The Explosion Rockets have delivered Europe's hottest rock 'n roll show — from Elvis, Chuck Berry and Jerry Lee Lewis to Buddy Holly and Cliff Richard. Tight, full of humour and instantly infectious.</p>
+        <p>Book The Explosion Rockets and you don't book a band — you book a complete show: seasoned stage animals, close-harmony vocals and a dance floor that's guaranteed to fill up.</p>
+        <ul class="perks">
+          <li>An explosive live show backed by 40+ years on stage</li>
+          <li>Blazing hits by Elvis, Chuck Berry, Jerry Lee Lewis, Buddy Holly &amp; more</li>
+          <li>A packed dance floor — crowds young and old</li>
+          <li>Flexible: festival, theatre, weekender or private party</li>
+        </ul>
+        <a class="cbtn cbtn-r" href="#booking">✦ BOOK THE BAND</a>
       </div>
+    </div>
+  </section>
+
+  <!-- MEMBERS -->
+  <section class="sec" id="members">
+    <div class="panel ink reveal">
+      <img class="decal" src="assets/stickers/boom.png" alt="" style="top:-28px; left:-10px;" />
+      <h2 class="sec-label" data-i18n="mem_label">DE MANNEN</h2>
+      <div class="members-grid" id="membersGrid"></div>
     </div>
   </section>
 
@@ -393,15 +415,6 @@
     </div>
   </section>
 
-  <!-- MEMBERS -->
-  <section class="sec" id="members">
-    <div class="panel ink reveal">
-      <img class="decal" src="assets/stickers/boom.png" alt="" style="top:-28px; left:-10px;" />
-      <h2 class="sec-label" data-i18n="mem_label">DE MANNEN</h2>
-      <div class="members-grid" id="membersGrid"></div>
-    </div>
-  </section>
-
   <!-- MUSIC -->
   <section class="sec" id="music">
     <div class="panel blue reveal">
@@ -409,8 +422,8 @@
       <div class="music-grid">
         <div class="music-copy">
           <span class="album-tag"><span class="eq"><i></i><i></i><i></i><i></i></span><span data-i18n="music_album">NIEUW ALBUM · 2025</span></span>
-          <h3>THE SUN SESSIONS</h3>
-          <p data-i18n="music_p">Opgenomen in de legendarische Sun Studio in Memphis. Negen albums diep en nog altijd op volle kracht — ruim 2.200 luisteraars per maand op Spotify. Zet 'm op, draai 'm hard.</p>
+          <h3>REELIN’ &amp; ROCKIN’</h3>
+          <p data-i18n="music_p">Knallende rock-'n-roll, strak op de plaat. Beluister ons uitgelichte album <strong>Reelin' &amp; Rockin'</strong> — en draai 'm vooral hard.</p>
           <div class="stream">
             <a href="https://open.spotify.com/artist/50oIPfD4YcZc5xCzvMYBVZ" target="_blank" rel="noopener">SPOTIFY</a>
             <a href="https://music.apple.com/artist/1567915449" target="_blank" rel="noopener">APPLE MUSIC</a>
@@ -418,17 +431,11 @@
           </div>
         </div>
         <div class="spotify-frame">
-          <iframe style="display:block;" src="https://open.spotify.com/embed/artist/50oIPfD4YcZc5xCzvMYBVZ?utm_source=generator&theme=0" width="100%" height="352" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="The Explosion Rockets op Spotify"></iframe>
+          <iframe style="display:block;" src="https://open.spotify.com/embed/album/4DRp6hUruElHsg8Hb9loke?utm_source=generator&theme=0" width="100%" height="380" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Reelin' & Rockin' — The Explosion Rockets op Spotify"></iframe>
         </div>
       </div>
-      <div class="disco">
-        <h4 data-i18n="disco_h">DISCOGRAFIE · 9 ALBUMS</h4>
-        <div class="disco-row">
-          <div class="album"><div class="sleeve"><div class="ph r"><img src="assets/logo.png" alt="" /><span data-i18n="disco_soon">cover volgt</span></div></div><div class="cap">The Sun Sessions · 2025</div></div>
-          <div class="album"><div class="sleeve"><img src="assets/albums/album-2.jpg" alt="Album" loading="lazy" /></div><div class="cap">Rock ’n Roll Fire</div></div>
-          <div class="album"><div class="sleeve"><div class="ph y"><img src="assets/logo.png" alt="" /><span data-i18n="disco_soon">cover volgt</span></div></div><div class="cap">Live &amp; Loud</div></div>
-          <div class="album"><div class="sleeve"><div class="ph b"><img src="assets/logo.png" alt="" /><span data-i18n="disco_soon">cover volgt</span></div></div><div class="cap">The Early Years</div></div>
-        </div>
+      <div class="music-more">
+        <a class="cbtn cbtn-y" href="https://open.spotify.com/artist/50oIPfD4YcZc5xCzvMYBVZ" target="_blank" rel="noopener" data-i18n="music_more">▶ ALLE ALBUMS OP SPOTIFY</a>
       </div>
       <div class="rep-marquee" aria-hidden="true"><div class="rep-track" id="repTrack"></div></div>
     </div>
@@ -504,11 +511,9 @@ var TIMELINE = [
   ['2025','40 jaar & Sun Studio','40 years & Sun Studio','Veertigjarig jubileum met een groot jubileumconcert en ‘The Sun Sessions’, deels opgenomen in Sun Studio, Memphis.','40th anniversary with a big show and ‘The Sun Sessions’, partly recorded at Sun Studio, Memphis.']
 ];
 var SHOWS = [
-  ['25','MEI','Het Tolhuys aan de Zaan','Zaandam',false],
-  ['05','JUL','Tiliander','Oisterwijk',false],
-  ['31','AUG','Akercity Rock ’n Roll Weekend','Akersloot',false],
-  ['18','OKT','Swindon Rock ’n Roll Club','Swindon · UK',false],
-  ['08','NOV','40 Years Anniversary Show','DeAvenue · Breda',true]
+  ['04','JUL','PARELROCK · Tiliander','Oisterwijk',true],
+  ['19','JUL','Rock & Roll Summer Vibes','Oosterhout',false],
+  ['26','JUL','Rock & Roll Summer Dance Party','De Boemel',false]
 ];
 var VIDEOS = [
   ['VYpoGYxb6hw','40th Anniversary Show'],['j76BaMPWigw','The Explosion Rockets · LIVE'],
@@ -531,11 +536,11 @@ var I18N = {
   about_p3:['Voor het 40-jarig jubileum nam de band <strong>’The Sun Sessions’</strong> deels op in de legendarische <strong>Sun Studio in Memphis</strong> — waar Elvis, Johnny Cash en Jerry Lee Lewis ooit begonnen.','For their 40th anniversary the band recorded <strong>’The Sun Sessions’</strong> partly at the legendary <strong>Sun Studio in Memphis</strong> — where Elvis, Johnny Cash and Jerry Lee Lewis once began.'],
   stat_years:['JAAR','YEARS'], stat_albums:['ALBUMS','ALBUMS'], stat_shows:['SHOWS','SHOWS'], stat_award:['AWARD','AWARD'],
   mem_label:['DE MANNEN','THE MEN'],
-  music_label:['MUZIEK','MUSIC'], music_album:['NIEUW ALBUM · 2025','NEW ALBUM · 2025'],
-  music_p:['Opgenomen in de legendarische Sun Studio in Memphis. Negen albums diep en nog altijd op volle kracht — ruim 2.200 luisteraars per maand op Spotify. Zet ’m op, draai ’m hard.','Recorded at the legendary Sun Studio in Memphis. Nine albums deep and still at full power — over 2,200 monthly listeners on Spotify. Turn it up, play it loud.'],
-  disco_h:['DISCOGRAFIE · 9 ALBUMS','DISCOGRAPHY · 9 ALBUMS'], disco_soon:['cover volgt','cover soon'],
+  music_label:['MUZIEK','MUSIC'], music_album:['UITGELICHT ALBUM','FEATURED ALBUM'],
+  music_more:['▶ ALLE ALBUMS OP SPOTIFY','▶ ALL ALBUMS ON SPOTIFY'],
+  music_p:['Knallende rock-’n-roll, strak op de plaat. Beluister ons uitgelichte album <strong>Reelin’ &amp; Rockin’</strong> — en draai ’m vooral hard.','Blazing rock ’n roll, tight on record. Press play on our featured album <strong>Reelin’ &amp; Rockin’</strong> — and turn it up.'],
   shows_label:['UPCOMING SHOWS','UPCOMING SHOWS'],
-  shows_note:['★ Data uit het jubileumjaar 2025 — check de socials voor de actuele agenda.','★ Dates from the 2025 anniversary year — check socials for the latest agenda.'],
+  shows_note:['★ Meer optredens en tickets op de officiële site.','★ More shows and tickets on the official site.'],
   video_label:['VIDEO','VIDEO'],
   book_title:['BOEK DE BAND!','BOOK THE BAND!'],
   book_p:['Festival, rock-’n-roll-weekend of besloten feest? The Explosion Rockets brengen 40 jaar podiumervaring mee — en een dansvloer die niet meer stilstaat.','Festival, rock ’n roll weekend or private party? The Explosion Rockets bring 40 years of stage experience — and a dance floor that won’t sit down.'],
@@ -548,7 +553,12 @@ function applyLang(){
   document.getElementById('langBtn').innerHTML=lang?'NL / <b>EN</b>':'<b>NL</b> / EN';
   document.querySelectorAll('.lang-nl').forEach(function(el){ el.style.display=lang?'none':''; });
   document.querySelectorAll('.lang-en').forEach(function(el){ el.style.display=lang?'':'none'; });
-  renderMembers(); renderTimeline();
+  renderMembers(); renderTimeline(); renderNextShow();
+}
+function renderNextShow(){
+  var el=document.getElementById('nextShow'); if(!el||!SHOWS.length) return;
+  var s=SHOWS[0], lbl=lang?'NEXT SHOW':'EERSTVOLGENDE SHOW';
+  el.innerHTML='<b>'+lbl+'</b><span>'+s[0]+' '+s[1]+' · '+s[2]+' · '+s[3]+'</span>';
 }
 function renderTimeline(){
   var t=document.getElementById('timeline'); if(!t) return; t.innerHTML='';
@@ -576,7 +586,7 @@ function renderShows(){
     var d=document.createElement('div'); d.className='show'+(s[4]?' hl':'');
     d.innerHTML='<div class="show-date"><div class="dd">'+s[0]+'</div><div class="mm">'+s[1]+'</div></div>'+
       '<div class="show-info"><b>'+s[2]+'</b><span>'+s[3]+'</span></div>'+
-      '<a class="ticket" href="#booking">'+(s[4]?'JUBILEUM':'TICKETS')+'</a>';
+      '<a class="ticket" href="https://explosionrockets.com/#upcoming-events" target="_blank" rel="noopener">TICKETS</a>';
     l.appendChild(d);
   });
 }
@@ -643,7 +653,7 @@ function onScroll(){ var y=window.scrollY, h=document.documentElement.scrollHeig
 
 document.getElementById('year').textContent=new Date().getFullYear();
 (function(){ var t=document.getElementById('tickerTrack'); if(t) t.innerHTML+=t.innerHTML; })();
-renderMembers(); renderTimeline(); renderShows(); renderVideos(); renderRep();
+renderMembers(); renderTimeline(); renderShows(); renderVideos(); renderRep(); renderNextShow();
 initNav(); initBg(); applyLang(); observeReveal();
 window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 </script>
