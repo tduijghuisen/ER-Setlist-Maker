@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="theme-color" content="#E5342A" />
+<meta name="theme-color" content="#16130F" />
 <title>The Explosion Rockets · Rock 'n Roll sinds 1959</title>
 <meta name="description" content="The Explosion Rockets — echte Nederlandse rock-'n-roll & rockabilly sinds 1959. Andy Tielman Award, 9 albums, 500+ shows, Elvis Festival Bad Nauheim, jubileumalbum opgenomen in Sun Studio Memphis." />
 <meta property="og:title" content="The Explosion Rockets · Rock 'n Roll sinds 1959" />
 <meta property="og:description" content="Echte Nederlandse rock-'n-roll sinds 1959. CRASH! TWANG! ROCK!" />
-<meta property="og:image" content="assets/hero.jpg" />
+<meta property="og:image" content="assets/bg-desktop.jpg" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpolygon points='32,2 39,20 58,12 49,30 62,44 42,43 44,62 30,49 16,60 19,41 2,38 20,28 10,11 30,18' fill='%23FFC81E' stroke='%2316130F' stroke-width='3' stroke-linejoin='round'/%3E%3Ctext x='32' y='40' font-family='Georgia,serif' font-size='20' font-weight='700' fill='%23E5342A' text-anchor='middle'%3EER%3C/text%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,163 +17,135 @@
   :root{
     --paper:#F3E9D2; --paper-2:#FFFDF4; --ink:#16130F;
     --red:#E5342A; --red-2:#B81E16; --yellow:#FFC81E; --blue:#1E83C9; --blue-2:#135E94;
-    --maxw:1180px; --bd:4px;
+    --maxw:1040px; --bd:4px;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html{scroll-behavior:smooth;}
-  body{margin:0; background:var(--paper); color:var(--ink);
-    font-family:'Inter',system-ui,sans-serif; font-weight:600; line-height:1.55; overflow-x:hidden;
-    background-image:radial-gradient(circle, rgba(22,19,15,.05) 22%, transparent 23%),radial-gradient(circle, rgba(22,19,15,.05) 22%, transparent 23%);
-    background-size:14px 14px; background-position:0 0,7px 7px;}
+  body{margin:0; background:var(--ink); color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif; font-weight:600; line-height:1.55; overflow-x:hidden;}
   a{color:inherit; text-decoration:none;}
   img{max-width:100%; display:block;}
   ::selection{background:var(--yellow); color:var(--ink);}
   .f-comic{font-family:'Bangers',Impact,sans-serif; letter-spacing:.02em; font-weight:400;}
   .f-anton{font-family:'Anton',Impact,sans-serif; font-weight:400;}
   .f-black{font-family:'Archivo Black',sans-serif; font-weight:400;}
-  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 20px;}
+
+  /* ---- FIXED VIDEO BACKGROUND ---- */
+  .bgfx{position:fixed; inset:0; z-index:-2; overflow:hidden; background:#16130f;}
+  .bgvid{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .bgfx-scan{position:absolute; inset:0; z-index:1; pointer-events:none; opacity:.16; mix-blend-mode:overlay;
+    background:repeating-linear-gradient(to bottom, rgba(0,0,0,.7) 0 1px, transparent 1px 3px);}
+  .bgfx-veil{position:absolute; inset:0; z-index:2; pointer-events:none;
+    background:linear-gradient(rgba(22,19,15,.45), rgba(22,19,15,.30) 40%, rgba(22,19,15,.55));}
 
   .progress{position:fixed; top:0; left:0; height:6px; width:0; z-index:90;
     background:linear-gradient(90deg,var(--red),var(--yellow),var(--blue)); box-shadow:0 1px 0 var(--ink);}
 
-  /* starburst (count-up stat badges) */
-  .burst{position:relative; display:inline-grid; place-items:center; isolation:isolate;}
-  .burst::before, .burst > .fill{grid-area:1/1;
-    clip-path:polygon(50% 0%,60% 18%,79% 7%,75% 28%,97% 25%,82% 40%,100% 50%,82% 60%,97% 75%,75% 72%,79% 93%,60% 82%,50% 100%,40% 82%,21% 93%,25% 72%,3% 75%,18% 60%,0% 50%,18% 40%,3% 25%,25% 28%,21% 7%,40% 18%);}
-  .burst::before{content:''; background:var(--ink); transform:scale(1.12); z-index:-1;}
-  .burst > .fill{width:100%; height:100%; z-index:-1;}
-  .burst > .txt{grid-area:1/1; z-index:1; text-align:center; line-height:.9;}
-
-  /* comic sticker decals (real PNGs) */
-  .decal{position:absolute; z-index:30; pointer-events:none; width:clamp(64px,9vw,120px);
-    filter:drop-shadow(3px 4px 0 rgba(0,0,0,.22)); animation:wiggle 3.4s ease-in-out infinite;}
-  @keyframes wiggle{0%,100%{rotate:-5deg;}50%{rotate:5deg;}}
-
   /* ---- NAV ---- */
   .nav{position:fixed; top:0; left:0; right:0; z-index:70; display:flex; align-items:center; gap:14px;
-    padding:8px 20px; background:var(--paper); border-bottom:var(--bd) solid var(--ink);}
-  .nav .brand{display:flex; align-items:center; gap:11px; margin-right:auto;}
-  .nav .brand img{height:46px; width:auto;}
-  .nav .mark{font-family:'Bangers',sans-serif; font-size:23px; line-height:.82; -webkit-text-stroke:1.2px var(--ink); transform:skew(-5deg);}
-  .nav .mark .a{color:var(--red);} .nav .mark .b{color:var(--blue);}
-  .nav-links{display:flex; gap:6px; align-items:center;}
-  .nav-links a{font-family:'Archivo Black',sans-serif; font-size:14px; font-style:italic; padding:8px 12px; border:3px solid transparent; transition:.12s;}
-  .nav-links a:hover{color:var(--red); border-color:var(--ink); background:var(--yellow);}
-  .lang{font-family:'Archivo Black',sans-serif; font-size:13px; background:var(--paper-2); color:var(--ink);
-    border:3px solid var(--ink); padding:6px 10px; cursor:pointer; box-shadow:3px 3px 0 var(--ink);}
-  .lang b{color:var(--red);}
+    padding:8px 20px; background:rgba(22,19,15,.82); backdrop-filter:blur(8px); border-bottom:var(--bd) solid var(--red);}
+  .nav .brand{display:flex; align-items:center; gap:10px; margin-right:auto;}
+  .nav .brand img{height:44px; width:auto;}
+  .nav .mark{font-family:'Bangers',sans-serif; font-size:22px; line-height:.82; color:var(--paper-2); -webkit-text-stroke:0; transform:skew(-5deg);}
+  .nav .mark .a{color:var(--yellow);}
+  .nav-links{display:flex; gap:4px; align-items:center;}
+  .nav-links a{font-family:'Archivo Black',sans-serif; font-size:14px; font-style:italic; color:var(--paper-2); padding:8px 11px; border:3px solid transparent; transition:.12s;}
+  .nav-links a:hover{color:var(--ink); border-color:var(--ink); background:var(--yellow);}
+  .lang{font-family:'Archivo Black',sans-serif; font-size:13px; background:transparent; color:var(--paper-2);
+    border:3px solid var(--paper-2); padding:6px 10px; cursor:pointer;}
+  .lang b{color:var(--yellow);}
   .book{font-family:'Bangers',sans-serif; font-size:22px; color:var(--paper-2); background:var(--red);
     border:3px solid var(--ink); padding:7px 18px; box-shadow:4px 4px 0 var(--ink); transform:rotate(-2deg); transition:.1s;}
   .book:hover{background:var(--red-2);} .book:active{transform:rotate(-2deg) translate(2px,2px); box-shadow:2px 2px 0 var(--ink);}
-  .nav-toggle{display:none; background:none; border:none; color:var(--ink); font-size:28px; cursor:pointer;}
+  .nav-toggle{display:none; background:none; border:none; color:var(--paper-2); font-size:28px; cursor:pointer;}
 
-  /* ---- HERO ---- */
-  .hero{padding:84px 20px 26px; max-width:var(--maxw); margin:0 auto; position:relative;}
-  .hero-panel{position:relative; border:5px solid var(--ink); box-shadow:14px 14px 0 var(--ink); background:var(--blue);}
-  .hero-media{position:relative; overflow:hidden; min-height:clamp(440px,72vh,720px);}
-  .hero-bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center;
-    transform-origin:60% 50%; animation:kenburns 22s ease-in-out infinite alternate;}
-  @keyframes kenburns{from{transform:scale(1.05);} to{transform:scale(1.16) translate(-2%,-1.5%);}}
-  .hero-flash{position:absolute; inset:0; z-index:1; pointer-events:none; mix-blend-mode:screen; opacity:0;
-    background:radial-gradient(circle at 50% 40%, rgba(255,255,255,.6), transparent 60%); animation:flash 6s ease-in-out infinite;}
-  @keyframes flash{0%,93%,100%{opacity:0;}95%{opacity:.5;}97%{opacity:0;}98%{opacity:.35;}}
-  .hero-scrim{position:absolute; inset:0; z-index:2; pointer-events:none;
-    background:linear-gradient(transparent 28%, rgba(22,19,15,.5) 62%, rgba(22,19,15,.92));}
-  .hero-copy{position:absolute; left:0; right:0; bottom:0; z-index:5; padding:26px 30px 30px;
-    display:flex; align-items:flex-end; justify-content:space-between; gap:18px 26px; flex-wrap:wrap;}
-  .hero-titles{display:flex; flex-direction:column; gap:8px;}
-  .hero-copy h1{font-family:'Bangers',sans-serif; margin:0; line-height:.84; font-size:clamp(40px,6.6vw,86px);
-    color:var(--paper-2); text-shadow:4px 4px 0 var(--red), 6px 6px 0 rgba(0,0,0,.5);}
-  .hero-tag{font-family:'Archivo Black',sans-serif; font-style:italic; font-size:clamp(15px,2.2vw,20px); color:var(--yellow);}
-  .hero-btns{display:flex; gap:14px; flex-wrap:wrap;}
+  /* ---- PAGE / HERO ---- */
+  .page{position:relative; z-index:1;}
+  .hero2{min-height:100svh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    padding:110px 20px 80px; gap:18px; position:relative;}
+  .hero2 .logo-big{width:min(460px,82vw); height:auto; filter:drop-shadow(6px 8px 0 rgba(0,0,0,.45)); animation:floaty 5s ease-in-out infinite;}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-12px) rotate(1deg);}}
+  .hero2 .tag{font-family:'Bangers',sans-serif; font-size:clamp(24px,5vw,46px); color:var(--paper-2);
+    -webkit-text-stroke:1.5px var(--ink); paint-order:stroke fill; text-shadow:3px 3px 0 var(--red);}
+  .hero-btns{display:flex; gap:14px; flex-wrap:wrap; justify-content:center;}
   .cbtn{font-family:'Bangers',sans-serif; font-size:clamp(20px,2.6vw,26px); letter-spacing:.05em;
-    border:4px solid var(--ink); padding:11px 22px; cursor:pointer; box-shadow:5px 5px 0 var(--ink); transition:.1s; color:var(--ink);}
+    border:4px solid var(--ink); padding:11px 24px; cursor:pointer; box-shadow:5px 5px 0 var(--ink); transition:.1s; color:var(--ink);}
   .cbtn:active{transform:translate(3px,3px); box-shadow:2px 2px 0 var(--ink);}
   .cbtn-y{background:var(--yellow);} .cbtn-y:hover{background:#ffd84e;}
   .cbtn-r{background:var(--red); color:var(--paper-2);} .cbtn-r:hover{background:var(--red-2);}
   .cbtn-b{background:var(--blue); color:var(--paper-2);} .cbtn-b:hover{background:var(--blue-2);}
-  .stamp{position:absolute; right:-22px; top:60px; width:128px; height:128px; z-index:35; filter:drop-shadow(3px 3px 0 var(--ink));}
-  .stamp .ring{position:absolute; inset:0; animation:spin 14s linear infinite;}
-  .stamp .ring text{font-family:'Archivo Black',sans-serif; font-size:14px; fill:var(--ink); letter-spacing:1px;}
-  .stamp .disc{position:absolute; inset:25px; width:auto; height:auto;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-  .hero .sk-a{top:60px; left:-6px;} .hero .sk-b{top:64px; right:120px;}
-  .scroll-cue{position:absolute; left:50%; bottom:-14px; transform:translateX(-50%); z-index:36;
+  .scroll-cue{position:absolute; left:50%; bottom:24px; transform:translateX(-50%);
     font-family:'Bangers',sans-serif; font-size:20px; color:var(--ink); background:var(--yellow);
-    border:3px solid var(--ink); border-radius:99px; padding:4px 14px; box-shadow:3px 3px 0 var(--ink); animation:bob 1.8s ease-in-out infinite;}
+    border:3px solid var(--ink); border-radius:99px; padding:4px 16px; box-shadow:3px 3px 0 var(--ink); animation:bob 1.8s ease-in-out infinite;}
   @keyframes bob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,7px);}}
 
   /* ---- TICKER ---- */
   .ticker{background:var(--red); color:var(--paper-2); border-top:var(--bd) solid var(--ink); border-bottom:var(--bd) solid var(--ink);
-    overflow:hidden; white-space:nowrap; margin-top:30px;}
+    overflow:hidden; white-space:nowrap;}
   .ticker-track{display:inline-flex; animation:scroll 30s linear infinite; padding:9px 0;}
   .ticker:hover .ticker-track{animation-play-state:paused;}
   .ticker span{font-family:'Bangers',sans-serif; font-size:22px; letter-spacing:.08em; padding:0 22px;}
   .ticker span::after{content:'★'; color:var(--yellow); margin-left:22px;}
   @keyframes scroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
 
-  /* ---- SECTION ---- */
-  .section{max-width:var(--maxw); margin:0 auto; padding:clamp(50px,7vw,88px) 20px; position:relative;}
+  /* ---- FLOATING PANELS ---- */
+  .sec{max-width:var(--maxw); margin:58px auto; padding:0 18px; position:relative;}
+  .panel{background:var(--paper-2); color:var(--ink); border:5px solid var(--ink); box-shadow:12px 12px 0 var(--ink);
+    padding:clamp(26px,4vw,46px); position:relative; border-radius:3px;}
+  .panel.ink{background:var(--ink); color:var(--paper-2);} .panel.blue{background:var(--blue); color:var(--paper-2);} .panel.red{background:var(--red); color:var(--paper-2);}
   .sec-label{font-family:'Archivo Black',sans-serif; font-style:italic; font-size:clamp(22px,3.4vw,34px);
     margin:0 0 24px; display:inline-block; border-bottom:6px solid var(--yellow);}
-  .sec-label.on-dark{color:var(--paper-2); border-color:var(--red);}
+  .panel.ink .sec-label,.panel.blue .sec-label,.panel.red .sec-label{color:var(--paper-2);}
 
-  /* ---- ABOUT ---- */
-  .about-grid{display:grid; grid-template-columns:300px 1fr; gap:30px; align-items:start;}
-  .crash{width:280px; max-width:100%; justify-self:center; animation:pulse 2.6s ease-in-out infinite;}
+  /* decal stickers */
+  .decal{position:absolute; z-index:20; pointer-events:none; width:clamp(64px,8vw,112px);
+    filter:drop-shadow(3px 4px 0 rgba(0,0,0,.22)); animation:wiggle 3.4s ease-in-out infinite;}
+  @keyframes wiggle{0%,100%{rotate:-5deg;}50%{rotate:5deg;}}
+
+  /* about */
+  .about-grid{display:grid; grid-template-columns:260px 1fr; gap:30px; align-items:start;}
+  .crash{width:240px; max-width:100%; justify-self:center; animation:pulse 2.6s ease-in-out infinite;}
   @keyframes pulse{0%,100%{transform:rotate(-4deg) scale(1);}50%{transform:rotate(-4deg) scale(1.05);}}
-  .about-text p{font-size:clamp(16px,2vw,19px); margin:0 0 16px;}
-  .about-text strong{background:var(--yellow); box-shadow:0 -8px 0 var(--yellow) inset; padding:0 2px;}
-  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:8px;}
+  .about-text p{font-size:clamp(15px,1.9vw,18px); margin:0 0 15px;}
+  .about-text strong{background:var(--yellow); box-shadow:0 -7px 0 var(--yellow) inset; padding:0 2px;}
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:6px;}
   .stat{aspect-ratio:1/1; width:100%;}
+  .burst{position:relative; display:inline-grid; place-items:center; isolation:isolate;}
+  .burst::before, .burst > .fill{grid-area:1/1;
+    clip-path:polygon(50% 0%,60% 18%,79% 7%,75% 28%,97% 25%,82% 40%,100% 50%,82% 60%,97% 75%,75% 72%,79% 93%,60% 82%,50% 100%,40% 82%,21% 93%,25% 72%,3% 75%,18% 60%,0% 50%,18% 40%,3% 25%,25% 28%,21% 7%,40% 18%);}
+  .burst::before{content:''; background:var(--ink); transform:scale(1.12); z-index:-1;}
+  .burst > .fill{width:100%; height:100%; z-index:-1;}
+  .burst > .txt{grid-area:1/1; z-index:1; text-align:center; line-height:.9;}
   .stat .fill{background:var(--red);} .stat:nth-child(2) .fill{background:var(--blue);}
   .stat:nth-child(3) .fill{background:var(--yellow);} .stat:nth-child(4) .fill{background:var(--ink);}
   .stat .txt{color:var(--paper-2); -webkit-text-stroke:1px var(--ink); paint-order:stroke fill; padding:0 6px;}
   .stat:nth-child(3) .txt{color:var(--ink); -webkit-text-stroke:0;}
-  .stat .txt b{font-family:'Bangers',sans-serif; font-size:clamp(26px,4vw,42px); display:block;}
+  .stat .txt b{font-family:'Bangers',sans-serif; font-size:clamp(24px,4vw,40px); display:block;}
   .stat .txt span{font-family:'Archivo Black',sans-serif; font-size:11px; font-style:italic;}
-
-  /* instrument tiles */
-  .instruments{display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:34px;}
-  .inst{border:var(--bd) solid var(--ink); box-shadow:5px 5px 0 var(--ink); overflow:hidden; background:var(--paper-2);
-    transition:transform .14s, box-shadow .14s;}
-  .inst:hover{transform:translateY(-5px) rotate(-1deg); box-shadow:8px 9px 0 var(--red);}
+  .instruments{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:30px;}
+  .inst{border:var(--bd) solid var(--ink); box-shadow:4px 4px 0 var(--ink); overflow:hidden; background:var(--paper-2); transition:transform .14s, box-shadow .14s;}
+  .inst:hover{transform:translateY(-5px) rotate(-1deg); box-shadow:7px 8px 0 var(--red);}
   .inst img{width:100%; aspect-ratio:1/1; object-fit:cover; display:block;}
 
-  /* ---- MEMBERS ---- */
-  .members{background:var(--ink);}
-  .members-inner{max-width:var(--maxw); margin:0 auto; padding:clamp(50px,7vw,88px) 20px; position:relative;}
-  .members-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  /* members */
+  .members-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
   .member{position:relative; background:var(--paper-2); border:5px solid var(--paper-2); overflow:hidden;
     box-shadow:8px 8px 0 var(--red); transition:transform .15s, box-shadow .15s;}
-  .member:nth-child(3n+2){box-shadow:8px 8px 0 var(--yellow);}
-  .member:nth-child(3n){box-shadow:8px 8px 0 var(--blue);}
-  .member:hover{transform:translateY(-6px) rotate(-1deg); box-shadow:12px 14px 0 var(--paper-2);}
+  .member:nth-child(3n+2){box-shadow:8px 8px 0 var(--yellow);} .member:nth-child(3n){box-shadow:8px 8px 0 var(--blue);}
+  .member:hover{transform:translateY(-6px) rotate(-1deg);}
   .member-pic{aspect-ratio:4/5; overflow:hidden; border-bottom:5px solid var(--ink); position:relative;}
   .member-pic img{width:100%; height:100%; object-fit:cover; object-position:center top; transition:transform .4s;}
   .member:hover .member-pic img{transform:scale(1.06);}
   .member-no{position:absolute; top:8px; left:8px; z-index:2; font-family:'Bangers',sans-serif; font-size:22px;
     color:var(--paper-2); background:var(--red); border:3px solid var(--ink); width:42px; height:42px; display:grid; place-items:center; transform:rotate(-6deg);}
-  .member-body{background:var(--paper-2); padding:12px 14px 14px;}
-  .member-body h3{font-family:'Archivo Black',sans-serif; font-size:18px; margin:0 0 2px;}
+  .member-body{background:var(--paper-2); padding:11px 13px 13px;}
+  .member-body h3{font-family:'Archivo Black',sans-serif; font-size:17px; margin:0 0 2px; color:var(--ink);}
   .member-role{font-family:'Bangers',sans-serif; font-size:19px; letter-spacing:.04em; color:var(--red-2);}
 
-  /* ---- PARALLAX STRIP ---- */
-  .strip{position:relative; min-height:62vh; display:grid; place-items:center; text-align:center; overflow:hidden;
-    border-top:var(--bd) solid var(--ink); border-bottom:var(--bd) solid var(--ink); background:var(--ink);}
-  .strip-bg{position:absolute; inset:-12% 0; background-size:cover; background-position:center; will-change:transform;}
-  .strip::before{content:''; position:absolute; inset:0; background:rgba(22,19,15,.5); z-index:1;}
-  .strip-in{position:relative; z-index:2; padding:30px;}
-  .strip-in h2{font-family:'Bangers',sans-serif; font-size:clamp(44px,9vw,120px); color:var(--paper-2); margin:0; line-height:.85;
-    text-shadow:5px 5px 0 var(--red), 9px 9px 0 rgba(0,0,0,.5);}
-  .strip-in p{font-family:'Archivo Black',sans-serif; font-style:italic; color:var(--yellow); font-size:clamp(15px,2.4vw,22px); margin:10px 0 0;}
-
-  /* ---- MUSIC ---- */
-  .music{background:var(--blue); border-top:var(--bd) solid var(--ink); border-bottom:var(--bd) solid var(--ink);}
-  .music-inner{max-width:var(--maxw); margin:0 auto; padding:clamp(50px,7vw,88px) 20px; position:relative;}
-  .music-grid{display:grid; grid-template-columns:1fr 1fr; gap:34px; align-items:center;}
-  .music-copy h3{font-family:'Bangers',sans-serif; font-size:clamp(32px,5vw,56px); color:var(--paper-2); margin:0 0 6px; line-height:.9; text-shadow:3px 3px 0 var(--red);}
-  .music-copy p{color:var(--paper-2); font-weight:700; font-size:16px; margin:0 0 18px;}
+  /* music */
+  .music-grid{display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:center;}
+  .music-copy h3{font-family:'Bangers',sans-serif; font-size:clamp(30px,5vw,52px); color:var(--paper-2); margin:0 0 6px; line-height:.9; text-shadow:3px 3px 0 var(--red);}
+  .music-copy p{color:var(--paper-2); font-weight:700; font-size:15px; margin:0 0 16px;}
   .album-tag{display:inline-flex; align-items:center; gap:10px; font-family:'Archivo Black',sans-serif; font-style:italic; font-size:13px;
     background:var(--yellow); color:var(--ink); border:3px solid var(--ink); padding:5px 12px; box-shadow:3px 3px 0 var(--ink); margin-bottom:14px;}
   .eq{display:inline-flex; align-items:flex-end; gap:2px; height:16px;}
@@ -185,116 +157,109 @@
     border:3px solid var(--ink); padding:8px 15px; box-shadow:4px 4px 0 var(--ink); transition:.1s;}
   .stream a:hover{background:var(--yellow);} .stream a:active{transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink);}
   .spotify-frame{border:5px solid var(--ink); box-shadow:9px 9px 0 var(--ink); background:var(--ink); overflow:hidden;}
-  .disco{margin-top:36px;}
-  .disco h4{font-family:'Archivo Black',sans-serif; font-style:italic; color:var(--paper-2); font-size:18px; margin:0 0 14px;}
-  .disco-row{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
+  .disco{margin-top:34px;}
+  .disco h4{font-family:'Archivo Black',sans-serif; font-style:italic; color:var(--paper-2); font-size:17px; margin:0 0 14px;}
+  .disco-row{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
   .album{border:var(--bd) solid var(--ink); box-shadow:6px 6px 0 var(--ink); overflow:hidden; background:var(--paper-2); transition:transform .14s, box-shadow .14s;}
-  .album:hover{transform:translateY(-5px) rotate(-1deg); box-shadow:9px 10px 0 var(--ink);}
+  .album:hover{transform:translateY(-5px) rotate(-1deg);}
   .album .sleeve{aspect-ratio:1/1; position:relative; overflow:hidden; display:grid; place-items:center;}
   .album .sleeve img{width:100%; height:100%; object-fit:cover;}
-  .album .ph{width:100%; height:100%; display:grid; place-items:center; gap:8px; text-align:center; padding:14px;}
+  .album .ph{width:100%; height:100%; display:grid; place-items:center; gap:6px; text-align:center; padding:12px;}
   .album .ph img{width:54%; height:auto;}
-  .album .ph span{font-family:'Archivo Black',sans-serif; font-style:italic; font-size:11px; color:var(--ink); opacity:.7;}
+  .album .ph span{font-family:'Archivo Black',sans-serif; font-style:italic; font-size:10px; color:var(--ink); opacity:.7;}
   .album.r .ph{background:var(--red);} .album.y .ph{background:var(--yellow);} .album.b .ph{background:var(--blue);}
-  .album .cap{font-family:'Archivo Black',sans-serif; font-size:13px; padding:9px 10px; border-top:3px solid var(--ink); background:var(--paper-2);}
-  .rep-marquee{margin-top:30px; background:var(--ink); border:3px solid var(--ink); overflow:hidden; white-space:nowrap;}
+  .album .cap{font-family:'Archivo Black',sans-serif; font-size:12px; padding:9px 10px; border-top:3px solid var(--ink); background:var(--paper-2); color:var(--ink);}
+  .rep-marquee{margin-top:28px; background:var(--ink); border:3px solid var(--ink); overflow:hidden; white-space:nowrap;}
   .rep-track{display:inline-flex; animation:scroll 40s linear infinite; padding:8px 0;}
   .rep-marquee:hover .rep-track{animation-play-state:paused;}
-  .rep-track span{font-family:'Archivo Black',sans-serif; font-style:italic; font-size:14px; color:var(--yellow); padding:0 16px;}
+  .rep-track span{font-family:'Archivo Black',sans-serif; font-style:italic; font-size:13px; color:var(--yellow); padding:0 16px;}
   .rep-track span::after{content:'•'; color:var(--paper-2); margin-left:16px;}
 
-  /* ---- SHOWS ---- */
-  .show{display:grid; grid-template-columns:88px 1fr auto; align-items:center; gap:18px; background:var(--paper-2);
-    border:var(--bd) solid var(--ink); box-shadow:7px 7px 0 var(--ink); padding:14px 16px; margin-bottom:16px;}
+  /* shows */
+  .show{display:grid; grid-template-columns:84px 1fr auto; align-items:center; gap:16px; background:var(--paper-2);
+    border:var(--bd) solid var(--ink); box-shadow:6px 6px 0 var(--ink); padding:13px 15px; margin-bottom:14px;}
   .show.hl{background:var(--yellow);}
   .show-date{background:var(--red); color:var(--paper-2); border:3px solid var(--ink); text-align:center; padding:8px 4px;}
   .show.hl .show-date{background:var(--ink);}
-  .show-date .dd{font-family:'Bangers',sans-serif; font-size:28px; line-height:.85;}
-  .show-date .mm{font-family:'Archivo Black',sans-serif; font-size:12px; font-style:italic;}
-  .show-info b{font-family:'Archivo Black',sans-serif; font-size:clamp(16px,2.4vw,21px); display:block; line-height:1.1;}
-  .show-info span{font-weight:700; font-size:13px; color:var(--red-2);}
-  .ticket{font-family:'Bangers',sans-serif; font-size:20px; color:var(--ink); white-space:nowrap; background:var(--yellow);
-    border:3px solid var(--ink); padding:9px 18px; box-shadow:4px 4px 0 var(--ink); transition:.1s;}
+  .show-date .dd{font-family:'Bangers',sans-serif; font-size:26px; line-height:.85;}
+  .show-date .mm{font-family:'Archivo Black',sans-serif; font-size:11px; font-style:italic;}
+  .show-info b{font-family:'Archivo Black',sans-serif; font-size:clamp(15px,2.4vw,20px); display:block; line-height:1.1; color:var(--ink);}
+  .show-info span{font-weight:700; font-size:12px; color:var(--red-2);}
+  .ticket{font-family:'Bangers',sans-serif; font-size:19px; color:var(--ink); white-space:nowrap; background:var(--yellow);
+    border:3px solid var(--ink); padding:8px 16px; box-shadow:4px 4px 0 var(--ink); transition:.1s;}
   .ticket:hover{background:#ffd84e;} .ticket:active{transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink);}
-  .shows-note{font-weight:700; font-size:14px; color:var(--red-2); margin-top:6px;}
+  .shows-note{font-weight:700; font-size:13px; color:var(--red-2); margin-top:4px;}
 
-  /* ---- VIDEO ---- */
-  .video{background:var(--red); border-top:var(--bd) solid var(--ink); border-bottom:var(--bd) solid var(--ink);}
-  .video-inner{max-width:var(--maxw); margin:0 auto; padding:clamp(50px,7vw,88px) 20px; position:relative;}
-  .video-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  /* video */
+  .video-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
   .vcard{position:relative; aspect-ratio:16/9; padding:0; cursor:pointer; overflow:hidden; border:5px solid var(--ink);
-    background:var(--ink); box-shadow:9px 9px 0 var(--ink); transition:.12s;}
-  .vcard:hover{transform:translate(-2px,-2px); box-shadow:12px 12px 0 var(--ink);}
+    background:var(--ink); box-shadow:8px 8px 0 var(--ink); transition:.12s;}
+  .vcard:hover{transform:translate(-2px,-2px); box-shadow:11px 11px 0 var(--ink);}
   .vcard img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:saturate(.9) contrast(1.05);}
-  .vcard .vplay{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2; width:74px; height:74px;
+  .vcard .vplay{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2; width:70px; height:70px;
     border-radius:50%; display:grid; place-items:center; padding-left:5px; background:var(--yellow); color:var(--ink);
-    border:5px solid var(--ink); font-size:28px; box-shadow:0 5px 14px rgba(0,0,0,.5);}
+    border:5px solid var(--ink); font-size:26px; box-shadow:0 5px 14px rgba(0,0,0,.5);}
   .vcard:hover .vplay{background:var(--paper-2);}
-  .vcard .vtitle{position:absolute; z-index:2; left:0; right:0; bottom:0; padding:26px 14px 12px;
-    font-family:'Archivo Black',sans-serif; font-style:italic; font-size:15px; color:var(--paper-2); background:linear-gradient(transparent, rgba(22,19,15,.92));}
+  .vcard .vtitle{position:absolute; z-index:2; left:0; right:0; bottom:0; padding:24px 12px 11px;
+    font-family:'Archivo Black',sans-serif; font-style:italic; font-size:14px; color:var(--paper-2); background:linear-gradient(transparent, rgba(22,19,15,.92));}
   .vcard iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
 
-  /* ---- BOOKING ---- */
-  .booking .panel{background:var(--paper-2); border:var(--bd) solid var(--ink); box-shadow:10px 10px 0 var(--ink);
-    padding:36px 28px; text-align:center; position:relative;}
-  .booking h2{font-family:'Bangers',sans-serif; font-size:clamp(34px,6vw,62px); margin:0 0 8px; color:var(--red);
-    -webkit-text-stroke:1.5px var(--ink); paint-order:stroke fill;}
-  .booking p{font-weight:700; max-width:560px; margin:0 auto 22px;}
+  /* booking */
+  .booking h2{font-family:'Bangers',sans-serif; font-size:clamp(32px,6vw,58px); margin:0 0 8px; color:var(--red);
+    -webkit-text-stroke:1.5px var(--ink); paint-order:stroke fill; text-align:center;}
+  .booking p{font-weight:700; max-width:560px; margin:0 auto 22px; text-align:center;}
   .booking .b-cta{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
 
-  /* ---- FOOTER ---- */
-  footer{background:var(--ink); color:var(--paper-2); padding:40px 20px 30px;}
+  /* footer */
+  footer{position:relative; z-index:1; background:var(--ink); color:var(--paper-2); padding:38px 20px 30px; border-top:var(--bd) solid var(--red);}
   .foot-grid{max-width:var(--maxw); margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:22px; flex-wrap:wrap;}
-  .foot-left{display:flex; align-items:center; gap:16px;}
-  .foot-badge{width:74px; height:74px; animation:spin 16s linear infinite;}
-  .foot-mark{font-family:'Bangers',sans-serif; font-size:30px; transform:skew(-5deg);}
+  .foot-badge{width:70px; height:auto; animation:spin 16s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .foot-mark{font-family:'Bangers',sans-serif; font-size:28px; transform:skew(-5deg);}
   .foot-mark .a{color:var(--red);} .foot-mark .b{color:var(--yellow);}
   .socials{display:flex; gap:12px;}
   .socials a{width:46px; height:46px; border-radius:50%; display:grid; place-items:center; background:var(--paper-2); color:var(--ink);
     border:3px solid var(--paper-2); font-family:'Archivo Black',sans-serif; font-size:15px; transition:.1s;}
   .socials a:hover{transform:translateY(-3px); background:var(--yellow);}
-  .foot-fine{max-width:var(--maxw); margin:24px auto 0; font-family:'Archivo Black',sans-serif; font-style:italic; font-size:12px; color:#cfc4ad; text-align:center;}
+  .foot-fine{max-width:var(--maxw); margin:22px auto 0; font-family:'Archivo Black',sans-serif; font-style:italic; font-size:12px; color:#cfc4ad; text-align:center;}
 
   .reveal{opacity:0; transform:translateY(26px); transition:opacity .6s, transform .6s;}
   .reveal.in{opacity:1; transform:none;}
-  .reveal.from-left{transform:translateX(-40px);} .reveal.from-right{transform:translateX(40px);}
-  .reveal.from-left.in,.reveal.from-right.in{transform:none;}
 
   @media(max-width:880px){
-    .nav-links{position:fixed; inset:62px 0 auto 0; flex-direction:column; gap:0; background:var(--paper);
-      border-bottom:var(--bd) solid var(--ink); padding:6px 0; display:none;}
-    .nav-links.open{display:flex;} .nav-links a{border:none; border-bottom:2px solid rgba(0,0,0,.1); padding:14px 20px;}
+    .nav-links{position:fixed; inset:60px 0 auto 0; flex-direction:column; gap:0; background:rgba(22,19,15,.96);
+      border-bottom:var(--bd) solid var(--red); padding:6px 0; display:none;}
+    .nav-links.open{display:flex;} .nav-links a{border:none; border-bottom:2px solid rgba(255,255,255,.08); padding:14px 20px;}
     .nav-toggle{display:block;} .book{display:none;} .nav .brand .mark{display:none;}
-    .hero-copy{flex-direction:column; align-items:flex-start;}
-    .stamp{width:96px; height:96px; top:auto; bottom:118px; right:-8px;}
     .about-grid,.music-grid{grid-template-columns:1fr;}
     .members-grid{grid-template-columns:1fr 1fr;}
     .instruments{grid-template-columns:repeat(3,1fr);}
     .disco-row{grid-template-columns:1fr 1fr;}
     .video-grid{grid-template-columns:1fr;}
-    .hero .sk-b{display:none;}
   }
   @media(max-width:520px){
     .stats{grid-template-columns:1fr 1fr;} .instruments{grid-template-columns:repeat(2,1fr);}
     .members-grid{grid-template-columns:1fr 1fr;}
-    .show{grid-template-columns:70px 1fr;} .ticket{grid-column:2; justify-self:start; margin-top:4px;}
+    .show{grid-template-columns:64px 1fr;} .ticket{grid-column:2; justify-self:start; margin-top:4px;}
   }
   @media(prefers-reduced-motion:reduce){
-    *{animation:none !important; scroll-behavior:auto;}
-    .reveal{opacity:1; transform:none;} .hero-banner img{transform:none;}
-    .strip-bg{transform:none !important;}
+    *{animation:none !important; scroll-behavior:auto;} .reveal{opacity:1; transform:none;}
   }
 </style>
 </head>
 <body>
+<!-- FIXED VIDEO BACKGROUND -->
+<div class="bgfx" aria-hidden="true">
+  <video class="bgvid" id="bgvid" muted playsinline autoplay preload="auto" poster="assets/bg-desktop.jpg"></video>
+  <div class="bgfx-scan"></div>
+  <div class="bgfx-veil"></div>
+</div>
 <div class="progress" id="progress"></div>
 
 <!-- NAV -->
 <nav class="nav" id="nav">
-  <a class="brand" href="#top">
-    <img src="assets/logo.png" alt="The Explosion Rockets logo" />
-    <span class="mark f-comic"><span class="a">THE EXPLOSION</span> <span class="b">ROCKETS</span></span>
-  </a>
+  <a class="brand" href="#top"><img src="assets/logo.png" alt="The Explosion Rockets logo" />
+    <span class="mark f-comic"><span class="a">EXPLOSION</span> ROCKETS</span></a>
   <div class="nav-links" id="navLinks">
     <a href="#about" data-i18n="nav_band">DE BAND</a>
     <a href="#members" data-i18n="nav_members">MANNEN</a>
@@ -307,155 +272,131 @@
   <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
 </nav>
 
-<!-- HERO -->
-<header class="hero" id="top">
-  <img class="decal sk-a" src="assets/stickers/crash.png" alt="" data-depth="26" />
-  <img class="decal sk-b" src="assets/stickers/pow.png" alt="" data-depth="-20" />
-  <div class="hero-panel">
-    <div class="hero-media">
-      <img class="hero-bg" src="assets/hero.jpg" alt="The Explosion Rockets live op het podium" fetchpriority="high" />
-      <div class="hero-flash"></div>
-      <div class="hero-scrim"></div>
-      <div class="hero-copy">
-        <div class="hero-titles">
-          <h1>THE EXPLOSION ROCKETS</h1>
-          <p class="hero-tag" data-i18n="hero_tag">Echte rock 'n roll sinds 1959</p>
-        </div>
-        <div class="hero-btns">
-          <a class="cbtn cbtn-y" href="#shows" data-i18n="hero_cta1">SEE THE SHOWS</a>
-          <a class="cbtn cbtn-r" href="#music" data-i18n="hero_cta2">LISTEN NOW</a>
-        </div>
-      </div>
-      <svg class="stamp" viewBox="0 0 128 128" aria-hidden="true">
-        <g class="ring"><defs><path id="circ" d="M64,64 m-50,0 a50,50 0 1,1 100,0 a50,50 0 1,1 -100,0"/></defs>
-        <circle cx="64" cy="64" r="62" fill="#FFC81E" stroke="#16130F" stroke-width="3"/>
-        <text><textPath href="#circ" startOffset="0">★ ROCK ’N ROLL ★ SINCE 1959 ★ </textPath></text></g>
-        <image class="disc" href="assets/logo.png" width="78" height="78"></image>
-      </svg>
-      <a class="scroll-cue f-comic" href="#about">SCROLL ↓</a>
+<div class="page">
+  <!-- HERO -->
+  <header class="hero2" id="top">
+    <img class="logo-big" src="assets/logo.png" alt="The Explosion Rockets" fetchpriority="high" />
+    <p class="tag" data-i18n="hero_tag">Echte rock 'n roll sinds 1959</p>
+    <div class="hero-btns">
+      <a class="cbtn cbtn-y" href="#shows" data-i18n="hero_cta1">SEE THE SHOWS</a>
+      <a class="cbtn cbtn-r" href="#music" data-i18n="hero_cta2">LISTEN NOW</a>
     </div>
-  </div>
+    <a class="scroll-cue f-comic" href="#about">SCROLL ↓</a>
+  </header>
+
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track" id="tickerTrack">
       <span>SINDS 1959</span><span>500+ SHOWS IN EUROPA</span><span>ANDY TIELMAN AWARD</span><span>9 ALBUMS</span><span>ELVIS FESTIVAL BAD NAUHEIM</span><span>SUN STUDIO MEMPHIS</span><span>200+ NUMMERS</span>
     </div>
   </div>
-</header>
 
-<!-- ABOUT -->
-<section class="section" id="about">
-  <img class="decal" src="assets/stickers/zap.png" alt="" style="top:18px; right:8px;" />
-  <h2 class="sec-label" data-i18n="about_label">DE BAND</h2>
-  <div class="about-grid">
-    <img class="crash reveal" src="assets/stickers/crash.png" alt="" aria-hidden="true" />
-    <div class="about-text reveal">
-      <p data-i18n="about_p1">Al sinds <strong>1959</strong> knalt The Explosion Rockets onvervalste rock-'n-roll de zaal in. Begonnen in Vught als <strong>The Jet Black Robbers</strong> — met een finaleplek op Radio Luxemburg — en sinds <strong>1985</strong> onafgebroken op de planken.</p>
-      <p data-i18n="about_p2">Winnaar van de <strong>Andy Tielman Award</strong> en hoofdact op het <strong>Elvis Festival in Bad Nauheim</strong>. Podium gedeeld met Peter Koelewijn, Chris Montez, The Blue Diamonds en Elvis-gitarist James Burton — en <strong>ruim 500 shows</strong> door heel Europa, and counting.</p>
-      <p data-i18n="about_p3">Voor het 40-jarig jubileum nam de band <strong>'The Sun Sessions'</strong> deels op in de legendarische <strong>Sun Studio in Memphis</strong> — waar Elvis, Johnny Cash en Jerry Lee Lewis ooit begonnen.</p>
-      <div class="stats">
-        <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b data-count="40" data-suffix="+">0</b><span data-i18n="stat_years">JAAR</span></span></div>
-        <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b data-count="9">0</b><span data-i18n="stat_albums">ALBUMS</span></span></div>
-        <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b data-count="500" data-suffix="+">0</b><span data-i18n="stat_shows">SHOWS</span></span></div>
-        <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b>'14</b><span data-i18n="stat_award">AWARD</span></span></div>
-      </div>
-    </div>
-  </div>
-  <div class="instruments reveal">
-    <div class="inst"><img src="assets/icons/ic-guitar.jpg" alt="Gitaar" loading="lazy" /></div>
-    <div class="inst"><img src="assets/icons/ic-mic.jpg" alt="Microfoon" loading="lazy" /></div>
-    <div class="inst"><img src="assets/icons/ic-piano.jpg" alt="Piano" loading="lazy" /></div>
-    <div class="inst"><img src="assets/icons/ic-drums.jpg" alt="Drums" loading="lazy" /></div>
-    <div class="inst"><img src="assets/icons/ic-bass.jpg" alt="Bas" loading="lazy" /></div>
-  </div>
-</section>
-
-<!-- MEMBERS -->
-<section class="members" id="members">
-  <div class="members-inner">
-    <img class="decal" src="assets/stickers/boom.png" alt="" style="top:24px; right:10px;" />
-    <h2 class="sec-label on-dark" data-i18n="mem_label">DE MANNEN</h2>
-    <div class="members-grid" id="membersGrid"></div>
-  </div>
-</section>
-
-<!-- STRIP 1 -->
-<section class="strip" aria-label="40 jaar live">
-  <div class="strip-bg" data-bg="assets/strip-stage.jpg"></div>
-  <div class="strip-in reveal"><h2>40 JAAR LIVE</h2><p data-i18n="strip_p">500+ SHOWS · ONVERVALSTE ROCK 'N ROLL</p></div>
-</section>
-
-<!-- MUSIC -->
-<section class="music" id="music">
-  <div class="music-inner">
-    <h2 class="sec-label on-dark" data-i18n="music_label">MUZIEK</h2>
-    <div class="music-grid">
-      <div class="music-copy reveal from-left">
-        <span class="album-tag"><span class="eq"><i></i><i></i><i></i><i></i></span><span data-i18n="music_album">NIEUW ALBUM · 2025</span></span>
-        <h3>THE SUN SESSIONS</h3>
-        <p data-i18n="music_p">Opgenomen in de legendarische Sun Studio in Memphis. Negen albums diep en nog altijd op volle kracht — ruim 2.200 luisteraars per maand op Spotify. Zet 'm op, draai 'm hard.</p>
-        <div class="stream">
-          <a href="https://open.spotify.com/artist/50oIPfD4YcZc5xCzvMYBVZ" target="_blank" rel="noopener">SPOTIFY</a>
-          <a href="https://music.apple.com/artist/1567915449" target="_blank" rel="noopener">APPLE MUSIC</a>
-          <a href="https://www.youtube.com/user/TheExplosionRockets" target="_blank" rel="noopener">YOUTUBE</a>
+  <!-- ABOUT -->
+  <section class="sec" id="about">
+    <div class="panel reveal">
+      <img class="decal" src="assets/stickers/zap.png" alt="" style="top:-28px; right:-10px;" />
+      <h2 class="sec-label" data-i18n="about_label">DE BAND</h2>
+      <div class="about-grid">
+        <img class="crash" src="assets/stickers/crash.png" alt="" aria-hidden="true" />
+        <div class="about-text">
+          <p data-i18n="about_p1">Al sinds <strong>1959</strong> knalt The Explosion Rockets onvervalste rock-'n-roll de zaal in. Begonnen in Vught als <strong>The Jet Black Robbers</strong> — met een finaleplek op Radio Luxemburg — en sinds <strong>1985</strong> onafgebroken op de planken.</p>
+          <p data-i18n="about_p2">Winnaar van de <strong>Andy Tielman Award</strong> en hoofdact op het <strong>Elvis Festival in Bad Nauheim</strong>. Podium gedeeld met Peter Koelewijn, Chris Montez, The Blue Diamonds en Elvis-gitarist James Burton — en <strong>ruim 500 shows</strong> door heel Europa, and counting.</p>
+          <p data-i18n="about_p3">Voor het 40-jarig jubileum nam de band <strong>'The Sun Sessions'</strong> deels op in de legendarische <strong>Sun Studio in Memphis</strong> — waar Elvis, Johnny Cash en Jerry Lee Lewis ooit begonnen.</p>
+          <div class="stats">
+            <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b data-count="40" data-suffix="+">0</b><span data-i18n="stat_years">JAAR</span></span></div>
+            <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b data-count="9">0</b><span data-i18n="stat_albums">ALBUMS</span></span></div>
+            <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b data-count="500" data-suffix="+">0</b><span data-i18n="stat_shows">SHOWS</span></span></div>
+            <div class="burst stat reveal"><span class="fill"></span><span class="txt"><b>'14</b><span data-i18n="stat_award">AWARD</span></span></div>
+          </div>
         </div>
       </div>
-      <div class="spotify-frame reveal from-right">
-        <iframe style="display:block;" src="https://open.spotify.com/embed/artist/50oIPfD4YcZc5xCzvMYBVZ?utm_source=generator&theme=0" width="100%" height="352" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="The Explosion Rockets op Spotify"></iframe>
+      <div class="instruments">
+        <div class="inst"><img src="assets/icons/ic-guitar.jpg" alt="Gitaar" loading="lazy" /></div>
+        <div class="inst"><img src="assets/icons/ic-mic.jpg" alt="Microfoon" loading="lazy" /></div>
+        <div class="inst"><img src="assets/icons/ic-piano.jpg" alt="Piano" loading="lazy" /></div>
+        <div class="inst"><img src="assets/icons/ic-drums.jpg" alt="Drums" loading="lazy" /></div>
+        <div class="inst"><img src="assets/icons/ic-bass.jpg" alt="Bas" loading="lazy" /></div>
       </div>
     </div>
-    <div class="disco reveal">
-      <h4 data-i18n="disco_h">DISCOGRAFIE · 9 ALBUMS</h4>
-      <div class="disco-row">
-        <div class="album"><div class="sleeve"><div class="ph r"><img src="assets/logo.png" alt="" /><span data-i18n="disco_soon">cover volgt</span></div></div><div class="cap">The Sun Sessions · 2025</div></div>
-        <div class="album"><div class="sleeve"><img src="assets/albums/album-2.jpg" alt="Album" loading="lazy" /></div><div class="cap">Rock ’n Roll Fire</div></div>
-        <div class="album"><div class="sleeve"><div class="ph b"><img src="assets/logo.png" alt="" /><span data-i18n="disco_soon">cover volgt</span></div></div><div class="cap">Live & Loud</div></div>
-        <div class="album"><div class="sleeve"><div class="ph y"><img src="assets/logo.png" alt="" /><span data-i18n="disco_soon">cover volgt</span></div></div><div class="cap">The Early Years</div></div>
+  </section>
+
+  <!-- MEMBERS -->
+  <section class="sec" id="members">
+    <div class="panel ink reveal">
+      <img class="decal" src="assets/stickers/boom.png" alt="" style="top:-28px; left:-10px;" />
+      <h2 class="sec-label" data-i18n="mem_label">DE MANNEN</h2>
+      <div class="members-grid" id="membersGrid"></div>
+    </div>
+  </section>
+
+  <!-- MUSIC -->
+  <section class="sec" id="music">
+    <div class="panel blue reveal">
+      <h2 class="sec-label" data-i18n="music_label">MUZIEK</h2>
+      <div class="music-grid">
+        <div class="music-copy">
+          <span class="album-tag"><span class="eq"><i></i><i></i><i></i><i></i></span><span data-i18n="music_album">NIEUW ALBUM · 2025</span></span>
+          <h3>THE SUN SESSIONS</h3>
+          <p data-i18n="music_p">Opgenomen in de legendarische Sun Studio in Memphis. Negen albums diep en nog altijd op volle kracht — ruim 2.200 luisteraars per maand op Spotify. Zet 'm op, draai 'm hard.</p>
+          <div class="stream">
+            <a href="https://open.spotify.com/artist/50oIPfD4YcZc5xCzvMYBVZ" target="_blank" rel="noopener">SPOTIFY</a>
+            <a href="https://music.apple.com/artist/1567915449" target="_blank" rel="noopener">APPLE MUSIC</a>
+            <a href="https://www.youtube.com/user/TheExplosionRockets" target="_blank" rel="noopener">YOUTUBE</a>
+          </div>
+        </div>
+        <div class="spotify-frame">
+          <iframe style="display:block;" src="https://open.spotify.com/embed/artist/50oIPfD4YcZc5xCzvMYBVZ?utm_source=generator&theme=0" width="100%" height="352" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="The Explosion Rockets op Spotify"></iframe>
+        </div>
+      </div>
+      <div class="disco">
+        <h4 data-i18n="disco_h">DISCOGRAFIE · 9 ALBUMS</h4>
+        <div class="disco-row">
+          <div class="album"><div class="sleeve"><div class="ph r"><img src="assets/logo.png" alt="" /><span data-i18n="disco_soon">cover volgt</span></div></div><div class="cap">The Sun Sessions · 2025</div></div>
+          <div class="album"><div class="sleeve"><img src="assets/albums/album-2.jpg" alt="Album" loading="lazy" /></div><div class="cap">Rock ’n Roll Fire</div></div>
+          <div class="album"><div class="sleeve"><div class="ph y"><img src="assets/logo.png" alt="" /><span data-i18n="disco_soon">cover volgt</span></div></div><div class="cap">Live &amp; Loud</div></div>
+          <div class="album"><div class="sleeve"><div class="ph b"><img src="assets/logo.png" alt="" /><span data-i18n="disco_soon">cover volgt</span></div></div><div class="cap">The Early Years</div></div>
+        </div>
+      </div>
+      <div class="rep-marquee" aria-hidden="true"><div class="rep-track" id="repTrack"></div></div>
+    </div>
+  </section>
+
+  <!-- SHOWS -->
+  <section class="sec" id="shows">
+    <div class="panel reveal">
+      <img class="decal" src="assets/stickers/twang.png" alt="" style="top:-26px; right:-8px;" />
+      <h2 class="sec-label" data-i18n="shows_label">UPCOMING SHOWS</h2>
+      <div id="showsList"></div>
+      <p class="shows-note" data-i18n="shows_note">★ Data uit het jubileumjaar 2025 — check de socials voor de actuele agenda.</p>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section class="sec" id="video">
+    <div class="panel red reveal">
+      <img class="decal" src="assets/stickers/rock.png" alt="" style="top:-26px; left:-8px;" />
+      <h2 class="sec-label" data-i18n="video_label">VIDEO</h2>
+      <div class="video-grid" id="videoGrid"></div>
+    </div>
+  </section>
+
+  <!-- BOOKING -->
+  <section class="sec booking" id="booking">
+    <div class="panel reveal">
+      <img class="decal" src="assets/stickers/wow.png" alt="" style="top:-30px; right:-10px;" />
+      <h2 class="f-comic" data-i18n="book_title">BOEK DE BAND!</h2>
+      <p data-i18n="book_p">Festival, rock-'n-roll-weekend of besloten feest? The Explosion Rockets brengen 40 jaar podiumervaring mee — en een dansvloer die niet meer stilstaat.</p>
+      <div class="b-cta">
+        <a class="cbtn cbtn-r" href="mailto:info@explosionrockets.com" data-i18n="book_cta1">✉ BOEKINGSAANVRAAG</a>
+        <a class="cbtn cbtn-b" href="https://explosionrockets.com" target="_blank" rel="noopener" data-i18n="book_cta2">OFFICIËLE SITE</a>
       </div>
     </div>
-    <div class="rep-marquee" aria-hidden="true"><div class="rep-track" id="repTrack"></div></div>
-  </div>
-</section>
-
-<!-- SHOWS -->
-<section class="section" id="shows">
-  <img class="decal" src="assets/stickers/twang.png" alt="" style="top:16px; right:6px;" />
-  <h2 class="sec-label" data-i18n="shows_label">UPCOMING SHOWS</h2>
-  <div id="showsList"></div>
-  <p class="shows-note" data-i18n="shows_note">★ Data uit het jubileumjaar 2025 — check de socials voor de actuele agenda.</p>
-</section>
-
-<!-- STRIP 2 -->
-<section class="strip" aria-label="live finale">
-  <div class="strip-bg" data-bg="assets/hero-alt.jpg"></div>
-  <div class="strip-in reveal"><h2 data-i18n="strip2_h">LAAT HET KNALLEN</h2><p data-i18n="strip2_p">FESTIVAL · WEEKENDER · FEEST</p></div>
-</section>
-
-<!-- VIDEO -->
-<section class="video" id="video">
-  <div class="video-inner">
-    <img class="decal" src="assets/stickers/rock.png" alt="" style="top:22px; right:10px;" />
-    <h2 class="sec-label on-dark" data-i18n="video_label">VIDEO</h2>
-    <div class="video-grid reveal" id="videoGrid"></div>
-  </div>
-</section>
-
-<!-- BOOKING -->
-<section class="section booking" id="booking">
-  <div class="panel reveal">
-    <img class="decal" src="assets/stickers/wow.png" alt="" style="top:-30px; left:-12px;" />
-    <h2 class="f-comic" data-i18n="book_title">BOEK DE BAND!</h2>
-    <p data-i18n="book_p">Festival, rock-'n-roll-weekend of besloten feest? The Explosion Rockets brengen 40 jaar podiumervaring mee — en een dansvloer die niet meer stilstaat.</p>
-    <div class="b-cta">
-      <a class="cbtn cbtn-r" href="mailto:info@explosionrockets.com" data-i18n="book_cta1">✉ BOEKINGSAANVRAAG</a>
-      <a class="cbtn cbtn-b" href="https://explosionrockets.com" target="_blank" rel="noopener" data-i18n="book_cta2">OFFICIËLE SITE</a>
-    </div>
-  </div>
-</section>
+  </section>
+</div>
 
 <!-- FOOTER -->
 <footer>
   <div class="foot-grid">
-    <div class="foot-left">
+    <div style="display:flex; align-items:center; gap:16px;">
       <img class="foot-badge" src="assets/logo.png" alt="The Explosion Rockets logo" />
       <div class="foot-mark f-comic"><span class="a">THE EXPLOSION</span> <span class="b">ROCKETS</span></div>
     </div>
@@ -486,10 +427,8 @@ var SHOWS = [
   ['08','NOV','40 Years Anniversary Show','DeAvenue · Breda',true]
 ];
 var VIDEOS = [
-  ['VYpoGYxb6hw','40th Anniversary Show'],
-  ['j76BaMPWigw','The Explosion Rockets · LIVE'],
-  ['nKgPm0Ko43c','Baby I Don’t Care · Bad Nauheim'],
-  ['BQfe-YXQRUo','Rock Around The Jukebox · 2019']
+  ['VYpoGYxb6hw','40th Anniversary Show'],['j76BaMPWigw','The Explosion Rockets · LIVE'],
+  ['nKgPm0Ko43c','Baby I Don’t Care · Bad Nauheim'],['BQfe-YXQRUo','Rock Around The Jukebox · 2019']
 ];
 var ARTISTS = ['Elvis Presley','Chuck Berry','Jerry Lee Lewis','Buddy Holly','Eddie Cochran','The Shadows','Shakin’ Stevens','Fats Domino','Little Richard','Carl Perkins','Gene Vincent','Cliff Richard','Johnny Cash','Ricky Nelson','The Ventures','Roy Orbison','Duane Eddy','Connie Francis'];
 function ytThumb(id,q){ return 'https://i.ytimg.com/vi/'+id+'/'+(q||'hqdefault')+'.jpg'; }
@@ -505,13 +444,11 @@ var I18N = {
   about_p3:['Voor het 40-jarig jubileum nam de band <strong>’The Sun Sessions’</strong> deels op in de legendarische <strong>Sun Studio in Memphis</strong> — waar Elvis, Johnny Cash en Jerry Lee Lewis ooit begonnen.','For their 40th anniversary the band recorded <strong>’The Sun Sessions’</strong> partly at the legendary <strong>Sun Studio in Memphis</strong> — where Elvis, Johnny Cash and Jerry Lee Lewis once began.'],
   stat_years:['JAAR','YEARS'], stat_albums:['ALBUMS','ALBUMS'], stat_shows:['SHOWS','SHOWS'], stat_award:['AWARD','AWARD'],
   mem_label:['DE MANNEN','THE MEN'],
-  strip_p:['500+ SHOWS · ONVERVALSTE ROCK ’N ROLL','500+ SHOWS · PURE ROCK ’N ROLL'],
   music_label:['MUZIEK','MUSIC'], music_album:['NIEUW ALBUM · 2025','NEW ALBUM · 2025'],
   music_p:['Opgenomen in de legendarische Sun Studio in Memphis. Negen albums diep en nog altijd op volle kracht — ruim 2.200 luisteraars per maand op Spotify. Zet ’m op, draai ’m hard.','Recorded at the legendary Sun Studio in Memphis. Nine albums deep and still at full power — over 2,200 monthly listeners on Spotify. Turn it up, play it loud.'],
   disco_h:['DISCOGRAFIE · 9 ALBUMS','DISCOGRAPHY · 9 ALBUMS'], disco_soon:['cover volgt','cover soon'],
   shows_label:['UPCOMING SHOWS','UPCOMING SHOWS'],
   shows_note:['★ Data uit het jubileumjaar 2025 — check de socials voor de actuele agenda.','★ Dates from the 2025 anniversary year — check socials for the latest agenda.'],
-  strip2_h:['LAAT HET KNALLEN','LIGHT THE FUSE'], strip2_p:['FESTIVAL · WEEKENDER · FEEST','FESTIVAL · WEEKENDER · PARTY'],
   video_label:['VIDEO','VIDEO'],
   book_title:['BOEK DE BAND!','BOOK THE BAND!'],
   book_p:['Festival, rock-’n-roll-weekend of besloten feest? The Explosion Rockets brengen 40 jaar podiumervaring mee — en een dansvloer die niet meer stilstaat.','Festival, rock ’n roll weekend or private party? The Explosion Rockets bring 40 years of stage experience — and a dance floor that won’t sit down.'],
@@ -537,8 +474,8 @@ function renderMembers(){
 }
 function renderShows(){
   var l=document.getElementById('showsList'); l.innerHTML='';
-  SHOWS.forEach(function(s,i){
-    var d=document.createElement('div'); d.className='show reveal '+(i%2?'from-right':'from-left')+(s[4]?' hl':'');
+  SHOWS.forEach(function(s){
+    var d=document.createElement('div'); d.className='show'+(s[4]?' hl':'');
     d.innerHTML='<div class="show-date"><div class="dd">'+s[0]+'</div><div class="mm">'+s[1]+'</div></div>'+
       '<div class="show-info"><b>'+s[2]+'</b><span>'+s[3]+'</span></div>'+
       '<a class="ticket" href="#booking">'+(s[4]?'JUBILEUM':'TICKETS')+'</a>';
@@ -574,53 +511,45 @@ function observeReveal(){
   if(!io){ io=new IntersectionObserver(function(es){ es.forEach(function(e){
     if(e.isIntersecting){ e.target.classList.add('in');
       if(e.target.hasAttribute('data-count')) countUp(e.target);
-      e.target.querySelectorAll('[data-count]').forEach(countUp);
-      io.unobserve(e.target);
+      e.target.querySelectorAll('[data-count]').forEach(countUp); io.unobserve(e.target);
     }}); },{threshold:.12}); }
   document.querySelectorAll('.reveal:not(.in)').forEach(function(el){io.observe(el);});
 }
 
-/* scroll: progress, sticker + strip parallax */
-var prog=document.getElementById('progress'), stamp=document.querySelector('.stamp');
-var decals=[].slice.call(document.querySelectorAll('.hero .decal'));
-var strips=[].slice.call(document.querySelectorAll('.strip-bg'));
-var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches, ticking=false;
-var stripIO=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){
-  var s=e.target; s.style.backgroundImage='url('+s.getAttribute('data-bg')+')'; stripIO.unobserve(s);
-}}); },{rootMargin:'320px'});
-strips.forEach(function(s){ stripIO.observe(s); });
-function onScroll(){
-  if(ticking) return; ticking=true;
-  requestAnimationFrame(function(){
-    var y=window.scrollY, h=document.documentElement.scrollHeight-window.innerHeight;
-    prog.style.width=(h>0?(y/h*100):0)+'%';
-    if(stamp&&!reduce) stamp.style.transform='translateY('+(y*0.06)+'px)';
-    if(!reduce){
-      strips.forEach(function(s){ var r=s.parentElement.getBoundingClientRect();
-        var off=(r.top+r.height/2-window.innerHeight/2)*0.12; s.style.transform='translateY('+(-off)+'px)'; });
-    }
-    ticking=false;
-  });
+/* ---- FIXED BACKGROUND VIDEO: device source + ping-pong loop ---- */
+function initBg(){
+  var v=document.getElementById('bgvid');
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function pick(){ return window.matchMedia('(max-width:768px)').matches
+    ? {src:'assets/video/bg-mobile.mp4', poster:'assets/bg-mobile.jpg'}
+    : {src:'assets/video/bg-desktop.mp4', poster:'assets/bg-desktop.jpg'}; }
+  var cur='';
+  function load(){ var p=pick(); v.poster=p.poster; if(p.src!==cur){ cur=p.src; v.src=p.src; if(!reduce){ v.play().catch(function(){}); } } }
+  load();
+  var rt; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(load,300); });
+  if(reduce) return; // keep poster frame, no motion
+  // ping-pong: play forward, then step backwards, repeat
+  var rev=false, raf=null;
+  function back(){ if(!rev) return; v.currentTime=Math.max(0,v.currentTime-0.04);
+    if(v.currentTime<=0.05){ rev=false; v.play().catch(function(){}); return; } raf=requestAnimationFrame(back); }
+  v.addEventListener('ended',function(){ rev=true; cancelAnimationFrame(raf); raf=requestAnimationFrame(back); });
+  // some browsers need a nudge to start muted autoplay
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden && !rev) v.play().catch(function(){}); });
 }
-function initStickers(){
-  var hero=document.getElementById('top');
-  if(!hero||!decals.length||reduce||!window.matchMedia('(pointer:fine)').matches) return;
-  hero.addEventListener('pointermove',function(e){
-    var r=hero.getBoundingClientRect(); var dx=(e.clientX-r.left)/r.width-0.5, dy=(e.clientY-r.top)/r.height-0.5;
-    decals.forEach(function(s){ var d=+s.getAttribute('data-depth')||16; s.style.translate=(dx*d).toFixed(1)+'px '+(dy*d).toFixed(1)+'px'; });
-  });
-}
+
 function initNav(){
   var links=document.getElementById('navLinks');
   document.getElementById('navToggle').addEventListener('click',function(){ links.classList.toggle('open'); });
   links.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ links.classList.remove('open'); }); });
   document.getElementById('langBtn').addEventListener('click',function(){ lang=lang?0:1; applyLang(); });
 }
+var prog=document.getElementById('progress');
+function onScroll(){ var y=window.scrollY, h=document.documentElement.scrollHeight-window.innerHeight; prog.style.width=(h>0?(y/h*100):0)+'%'; }
 
 document.getElementById('year').textContent=new Date().getFullYear();
 (function(){ var t=document.getElementById('tickerTrack'); if(t) t.innerHTML+=t.innerHTML; })();
 renderMembers(); renderShows(); renderVideos(); renderRep();
-initNav(); initStickers(); applyLang(); observeReveal();
+initNav(); initBg(); applyLang(); observeReveal();
 window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 </script>
 </body>
