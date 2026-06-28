@@ -104,7 +104,8 @@
   @keyframes scroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
 
   /* ---- FLOATING PANELS ---- */
-  .sec{max-width:var(--maxw); margin:58px auto; padding:0 18px; position:relative;}
+  .sec{max-width:var(--maxw); width:100%; min-width:0; margin:58px auto; padding:0 18px; position:relative;}
+  .panel{min-width:0;} .music-grid{min-width:0;}
   .panel{background:var(--paper-2); color:var(--ink); border:5px solid var(--ink); box-shadow:12px 12px 0 var(--sh);
     padding:clamp(26px,4vw,46px); position:relative; border-radius:3px;}
   .panel.ink{background:var(--ink); color:var(--paper-2);} .panel.blue{background:var(--blue); color:var(--paper-2);} .panel.red{background:var(--red); color:var(--paper-2);}
