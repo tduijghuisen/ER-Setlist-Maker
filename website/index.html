@@ -85,13 +85,11 @@
   .hero{padding:92px 20px 30px; max-width:var(--maxw); margin:0 auto;}
   .hero-panel{position:relative; overflow:hidden; border:5px solid var(--ink); box-shadow:12px 12px 0 var(--ink);
     background:var(--blue);}
-  .hero-rays{position:absolute; inset:0; z-index:0;
-    background:repeating-conic-gradient(from 0deg at 64% 42%, var(--yellow) 0deg 9deg, var(--red) 9deg 18deg);
-    opacity:.9;}
-  .hero-grid{position:relative; z-index:2; display:grid; grid-template-columns:1.05fr 1fr; gap:0; align-items:stretch;}
-  .hero-art{position:relative; min-height:430px; border-right:5px solid var(--ink); overflow:hidden;}
-  .hero-art img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top;}
-  .hero-copy{background:var(--ink); color:var(--paper-2); padding:34px 30px; display:flex; flex-direction:column; justify-content:center; gap:14px;}
+  .hero-banner{line-height:0; border-bottom:5px solid var(--ink);}
+  .hero-banner img{width:100%; height:auto; display:block;}
+  .hero-copy{background:var(--ink); color:var(--paper-2); padding:24px 30px;
+    display:flex; align-items:center; justify-content:space-between; gap:18px 26px; flex-wrap:wrap;}
+  .hero-titles{display:flex; flex-direction:column; gap:8px;}
   .hero-copy h1{font-family:'Bangers',sans-serif; font-weight:400; margin:0; line-height:.86;
     font-size:clamp(46px,7vw,92px); color:var(--paper-2); letter-spacing:.01em;
     text-shadow:4px 4px 0 var(--red), 6px 6px 0 rgba(0,0,0,.5);}
@@ -105,13 +103,6 @@
   .cbtn-y{background:var(--yellow);} .cbtn-y:hover{background:#ffd84e;}
   .cbtn-r{background:var(--red); color:var(--paper-2);} .cbtn-r:hover{background:var(--red-2);}
   .cbtn-b{background:var(--blue); color:var(--paper-2);} .cbtn-b:hover{background:var(--blue-2);}
-  /* floating sound-words */
-  .pow{position:absolute; z-index:3; font-family:'Bangers',sans-serif; color:var(--paper-2);
-    -webkit-text-stroke:2px var(--ink); paint-order:stroke fill; pointer-events:none;}
-  .pow.p1{top:14px; left:14px; font-size:clamp(28px,5vw,56px); color:var(--blue); transform:rotate(-12deg);}
-  .pow.p2{bottom:18%; left:40%; font-size:clamp(22px,3.6vw,40px); color:var(--yellow); transform:rotate(8deg);}
-  .pow.p3{top:20px; right:18px; font-size:clamp(26px,4.4vw,50px); color:var(--red); transform:rotate(10deg);}
-
   /* ---- TICKER ---- */
   .ticker{background:var(--red); color:var(--paper-2); border-top:var(--bd) solid var(--ink); border-bottom:var(--bd) solid var(--ink);
     overflow:hidden; white-space:nowrap; margin-top:26px;}
@@ -231,8 +222,7 @@
     .nav-links.open{display:flex;}
     .nav-links a{border:none; border-bottom:2px solid rgba(0,0,0,.1); padding:14px 20px;}
     .nav-toggle{display:block;} .book{display:none;}
-    .hero-grid{grid-template-columns:1fr;}
-    .hero-art{border-right:none; border-bottom:5px solid var(--ink); min-height:340px;}
+    .hero-copy{flex-direction:column; align-items:flex-start;}
     .about-grid{grid-template-columns:1fr;}
     .music-grid{grid-template-columns:1fr;}
     .video-grid{grid-template-columns:1fr;}
@@ -267,22 +257,17 @@
 <!-- ===== HERO ===== -->
 <header class="hero" id="top">
   <div class="hero-panel">
-    <div class="hero-rays"></div>
-    <div class="halftone"></div>
-    <span class="pow p1 f-comic">CRASH!</span>
-    <span class="pow p2 f-comic">TWANG!</span>
-    <span class="pow p3 f-comic">ROCK!</span>
-    <div class="hero-grid">
-      <div class="hero-art">
-        <img src="assets/hero-band.jpg" alt="The Explosion Rockets — pop-art illustratie van de band live" />
-      </div>
-      <div class="hero-copy">
+    <div class="hero-banner">
+      <img src="assets/hero.jpg" alt="The Explosion Rockets — pop-art illustratie van de volledige band live op het podium met dansend publiek" />
+    </div>
+    <div class="hero-copy">
+      <div class="hero-titles">
         <h1>THE EXPLOSION ROCKETS</h1>
         <p class="hero-tag" data-i18n="hero_tag">Echte rock 'n roll sinds 1959</p>
-        <div class="hero-btns">
-          <a class="cbtn cbtn-y" href="#shows" data-i18n="hero_cta1">SEE THE SHOWS</a>
-          <a class="cbtn cbtn-r" href="#music" data-i18n="hero_cta2">LISTEN NOW</a>
-        </div>
+      </div>
+      <div class="hero-btns">
+        <a class="cbtn cbtn-y" href="#shows" data-i18n="hero_cta1">SEE THE SHOWS</a>
+        <a class="cbtn cbtn-r" href="#music" data-i18n="hero_cta2">LISTEN NOW</a>
       </div>
     </div>
   </div>
