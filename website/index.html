@@ -91,6 +91,15 @@
   .stamp .ring text{font-family:'Archivo Black',sans-serif; font-size:15px; fill:var(--ink); letter-spacing:1px;}
   .stamp .disc{position:absolute; inset:24px; border-radius:50%; border:3px solid var(--ink); object-fit:cover; width:auto; height:auto;}
   @keyframes spin{to{transform:rotate(360deg);}}
+  /* mouse-reactive comic stickers */
+  .stickers{position:absolute; inset:0; z-index:18; pointer-events:none;}
+  .sticker{position:absolute; width:94px; height:94px; animation:wiggle 3.2s ease-in-out infinite;}
+  .sticker .txt{font-family:'Bangers',sans-serif; font-size:clamp(15px,1.9vw,23px);
+    -webkit-text-stroke:1.4px var(--ink); paint-order:stroke fill;}
+  .sk1{top:5%; left:2%; animation-delay:0s;} .sk1 .fill{background:var(--blue);} .sk1 .txt{color:var(--paper-2);}
+  .sk2{top:26%; right:1%; animation-delay:.5s;} .sk2 .fill{background:var(--red);} .sk2 .txt{color:var(--yellow);}
+  .sk3{bottom:31%; left:31%; animation-delay:1s; width:84px; height:84px;} .sk3 .fill{background:var(--yellow);} .sk3 .txt{color:var(--red);}
+  @keyframes wiggle{0%,100%{rotate:-6deg;}50%{rotate:6deg;}}
   .scroll-cue{position:absolute; left:50%; bottom:-12px; transform:translateX(-50%); z-index:15;
     font-family:'Bangers',sans-serif; font-size:20px; color:var(--ink); background:var(--yellow);
     border:3px solid var(--ink); border-radius:99px; padding:4px 14px; box-shadow:3px 3px 0 var(--ink); animation:bob 1.8s ease-in-out infinite;}
@@ -298,6 +307,11 @@
       <circle cx="66" cy="66" r="64" fill="#FFC81E" stroke="#16130F" stroke-width="3"/>
       <text><textPath href="#circ" startOffset="0">★ ROCK ’N ROLL ★ SINCE 1959 ★ </textPath></text></g>
     </svg>
+    <div class="stickers" id="stickers" aria-hidden="true">
+      <span class="burst sticker sk1" data-depth="24"><span class="fill"></span><span class="txt f-comic">POW!</span></span>
+      <span class="burst sticker sk2" data-depth="-18"><span class="fill"></span><span class="txt f-comic">ZAP!</span></span>
+      <span class="burst sticker sk3" data-depth="32"><span class="fill"></span><span class="txt f-comic">BOOM!</span></span>
+    </div>
     <div class="hero-copy">
       <div class="hero-titles">
         <h1>THE EXPLOSION ROCKETS</h1>
@@ -559,6 +573,20 @@ function onScroll(){
   });
 }
 
+/* ===== CURSOR-PARALLAX STICKERS ===== */
+function initStickers(){
+  var hero=document.getElementById('top'), sks=document.querySelectorAll('.sticker');
+  if(!hero||!sks.length) return;
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  if(!window.matchMedia('(pointer:fine)').matches) return;
+  hero.addEventListener('pointermove',function(e){
+    var r=hero.getBoundingClientRect();
+    var dx=(e.clientX-r.left)/r.width-0.5, dy=(e.clientY-r.top)/r.height-0.5;
+    sks.forEach(function(s){ var d=+s.getAttribute('data-depth')||16;
+      s.style.translate=(dx*d).toFixed(1)+'px '+(dy*d).toFixed(1)+'px'; });
+  });
+}
+
 /* ===== NAV ===== */
 function initNav(){
   var links=document.getElementById('navLinks');
@@ -571,7 +599,7 @@ function initNav(){
 document.getElementById('year').textContent=new Date().getFullYear();
 (function(){ var t=document.getElementById('tickerTrack'); if(t) t.innerHTML+=t.innerHTML; })();
 renderMembers(); renderShows(); renderVideos(); renderRep();
-initNav(); applyLang(); observeReveal();
+initNav(); initStickers(); applyLang(); observeReveal();
 window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 </script>
 </body>
