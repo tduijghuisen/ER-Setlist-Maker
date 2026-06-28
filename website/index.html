@@ -250,7 +250,7 @@
 <body>
 <!-- FIXED VIDEO BACKGROUND -->
 <div class="bgfx" aria-hidden="true">
-  <video class="bgvid" id="bgvid" muted playsinline autoplay preload="auto" poster="assets/bg-desktop.jpg"></video>
+  <video class="bgvid" id="bgvid" muted playsinline autoplay loop preload="auto" poster="assets/bg-desktop.jpg"></video>
   <div class="bgfx-scan"></div>
   <div class="bgfx-veil"></div>
 </div>
@@ -524,17 +524,14 @@ function initBg(){
     ? {src:'assets/video/bg-mobile.mp4', poster:'assets/bg-mobile.jpg'}
     : {src:'assets/video/bg-desktop.mp4', poster:'assets/bg-desktop.jpg'}; }
   var cur='';
-  function load(){ var p=pick(); v.poster=p.poster; if(p.src!==cur){ cur=p.src; v.src=p.src; if(!reduce){ v.play().catch(function(){}); } } }
+  function load(){ var p=pick(); v.poster=p.poster;
+    if(reduce){ return; }                 /* hold the poster frame, no video */
+    if(p.src!==cur){ cur=p.src; v.src=p.src; v.load(); v.play().catch(function(){}); } }
   load();
+  if(reduce) return;
+  v.addEventListener('canplay',function(){ v.play().catch(function(){}); });
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) v.play().catch(function(){}); });
   var rt; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(load,300); });
-  if(reduce) return; // keep poster frame, no motion
-  // ping-pong: play forward, then step backwards, repeat
-  var rev=false, raf=null;
-  function back(){ if(!rev) return; v.currentTime=Math.max(0,v.currentTime-0.04);
-    if(v.currentTime<=0.05){ rev=false; v.play().catch(function(){}); return; } raf=requestAnimationFrame(back); }
-  v.addEventListener('ended',function(){ rev=true; cancelAnimationFrame(raf); raf=requestAnimationFrame(back); });
-  // some browsers need a nudge to start muted autoplay
-  document.addEventListener('visibilitychange',function(){ if(!document.hidden && !rev) v.play().catch(function(){}); });
 }
 
 function initNav(){
