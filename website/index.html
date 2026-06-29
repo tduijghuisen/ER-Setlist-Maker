@@ -143,6 +143,20 @@
   .inst:hover{transform:translateY(-5px) rotate(-1deg); box-shadow:7px 8px 0 var(--red);}
   .inst img{width:100%; aspect-ratio:1/1; object-fit:cover; display:block;}
 
+  /* live photos */
+  .live-feat{margin:0 0 26px; border:5px solid var(--ink); box-shadow:10px 10px 0 var(--sh);
+    overflow:hidden; background:var(--ink); transform:rotate(-1deg);}
+  .live-feat img{width:100%; height:auto; display:block;}
+  .live-duo{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:24px;}
+  .live-shot{margin:0; aspect-ratio:3/2; border:5px solid var(--ink); box-shadow:7px 7px 0 var(--sh);
+    overflow:hidden; background:var(--ink); transition:transform .15s, box-shadow .15s;}
+  .live-shot:nth-child(2){box-shadow:7px 7px 0 var(--blue);}
+  .live-shot:hover{transform:translateY(-5px) rotate(-1deg); box-shadow:10px 11px 0 var(--red);}
+  .live-shot img{width:100%; height:100%; object-fit:cover; display:block;}
+  /* on dark/colour panels the photo frame is cream, like the member cards */
+  .panel.ink .live-feat,.panel.ink .live-shot{border-color:var(--paper-2);}
+  .panel.ink .live-feat{box-shadow:10px 10px 0 var(--red);}
+
   /* history */
   .hist-intro{font-size:clamp(15px,1.9vw,18px); margin:0 0 24px; max-width:760px;}
   .timeline{display:flex; flex-direction:column;}
@@ -261,6 +275,7 @@
     border:3px solid var(--paper-2); font-family:'Archivo Black',sans-serif; font-size:15px; transition:.1s;}
   .socials a:hover{transform:translateY(-3px); background:var(--yellow);}
   .foot-fine{max-width:var(--maxw); margin:22px auto 0; font-family:'Archivo Black',sans-serif; font-style:italic; font-size:12px; color:#cfc4ad; text-align:center;}
+  .photo-credit{margin-top:7px; font-size:11px; opacity:.7; letter-spacing:.04em;}
 
   .reveal{opacity:0; transform:translateY(26px); transition:opacity .6s, transform .6s;}
   .reveal.in{opacity:1; transform:none;}
@@ -335,6 +350,9 @@
     <div class="panel ink reveal">
       <img class="decal" src="assets/stickers/zap.png" alt="" style="top:-28px; right:-10px;" />
       <h2 class="sec-label" data-i18n="about_label">DE BAND</h2>
+      <figure class="live-feat">
+        <img src="assets/live/live-band.jpg" alt="The Explosion Rockets live op het podium" loading="lazy" width="1600" height="1073" />
+      </figure>
       <div class="about-text lang-nl">
         <p class="lead">Vuurwerk op het podium, knallende hits en een zaal die niet meer stil staat. The Explosion Rockets brengen al ruim <strong>40 jaar</strong> dé rock-'n-roll-show van Europa — van Elvis, Chuck Berry en Jerry Lee Lewis tot Buddy Holly en Cliff Richard. Strak gespeeld, vol humor en met een energie die meteen aanslaat.</p>
         <p>Elke show is een feest. Ervaren podiumbeesten, close-harmony zang en een dansvloer die gegarandeerd volloopt, voor publiek van jong tot oud.</p>
@@ -361,6 +379,10 @@
           <a class="cbtn cbtn-y" href="https://shop.ermusicevents.nl/explosion-rockets/" target="_blank" rel="noopener">🛒 WEBSHOP</a>
         </div>
       </div>
+      <div class="live-duo">
+        <figure class="live-shot"><img src="assets/live/live-singer.jpg" alt="The Explosion Rockets — zanger live" loading="lazy" width="1600" height="1073" /></figure>
+        <figure class="live-shot"><img src="assets/live/live-duo.jpg" alt="The Explosion Rockets — live op het podium" loading="lazy" width="1600" height="1073" /></figure>
+      </div>
     </div>
   </section>
 
@@ -378,6 +400,9 @@
     <div class="panel reveal">
       <img class="decal" src="assets/stickers/pow.png" alt="" style="top:-28px; right:-10px;" />
       <h2 class="sec-label" data-i18n="hist_label">GESCHIEDENIS</h2>
+      <figure class="live-feat">
+        <img src="assets/live/live-boemel.jpg" alt="The Explosion Rockets live in De Boemel" loading="lazy" width="1600" height="1073" />
+      </figure>
       <p class="hist-intro" data-i18n="hist_intro">Van The Jet Black Robbers (1959) tot ruim 40 jaar later — met één missie: de muziek van Elvis, Buddy Holly, Cliff Richard, Jerry Lee Lewis en Chuck Berry levend houden.</p>
       <div class="timeline" id="timeline"></div>
       <details class="history-full">
@@ -452,6 +477,9 @@
     <div class="panel reveal">
       <img class="decal" src="assets/stickers/twang.png" alt="" style="top:-26px; right:-8px;" />
       <h2 class="sec-label" data-i18n="shows_label">UPCOMING SHOWS</h2>
+      <figure class="live-feat">
+        <img src="assets/live/live-crowd.jpg" alt="Volle dansvloer bij The Explosion Rockets in De Boemel" loading="lazy" width="1600" height="1073" />
+      </figure>
       <div id="showsList"></div>
       <p class="shows-note" data-i18n="shows_note">★ Data uit het jubileumjaar 2025 — check de socials voor de actuele agenda.</p>
     </div>
@@ -495,6 +523,7 @@
     </div>
   </div>
   <p class="foot-fine">© <span id="year"></span> THE EXPLOSION ROCKETS · ROCK 'N ROLL SINDS 1959 · KEEP ROCKIN'!</p>
+  <p class="foot-fine photo-credit" data-i18n="photo_credit">FOTO'S DOOR TANJA MEIJDAM</p>
 </footer>
 
 <script>
@@ -532,6 +561,7 @@ var I18N = {
   nav_band:['DE BAND','THE BAND'], nav_members:['MANNEN','THE MEN'], nav_music:['MUZIEK','MUSIC'],
   nav_shows:['SHOWS','SHOWS'], nav_video:['VIDEO','VIDEO'], nav_book:['Book us','Book us'], nav_history:['HISTORIE','HISTORY'],
   hist_label:['GESCHIEDENIS','HISTORY'],
+  photo_credit:['FOTO’S DOOR TANJA MEIJDAM','PHOTOS BY TANJA MEIJDAM'],
   hist_intro:['Van The Jet Black Robbers (1959) tot ruim 40 jaar later — met één missie: de muziek van Elvis, Buddy Holly, Cliff Richard, Jerry Lee Lewis en Chuck Berry levend houden.','From The Jet Black Robbers (1959) to 40+ years later — with one mission: keeping the music of Elvis, Buddy Holly, Cliff Richard, Jerry Lee Lewis and Chuck Berry alive.'],
   hist_more:['Lees de volledige geschiedenis','Read the full history'],
   hero_tag:['Rockin’ & Rollin’ since 1959','Rockin’ & Rollin’ since 1959'],
