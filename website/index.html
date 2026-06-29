@@ -723,7 +723,7 @@ function renderMembers(){
   MEMBERS.forEach(function(m,i){
     var d=document.createElement('div'); d.className='member reveal'; d.style.transitionDelay=(i%3*0.08)+'s';
     d.innerHTML='<div class="member-pic">'+
-      '<img src="assets/members/'+m[3]+'.jpg" alt="'+m[0]+' — '+(lang?m[2]:m[1])+'" loading="lazy" /></div>'+
+      '<img src="assets/members/'+m[3]+'.jpg?v=2" alt="'+m[0]+' — '+(lang?m[2]:m[1])+'" loading="lazy" /></div>'+
       '<div class="member-body"><h3>'+m[0]+'</h3><div class="member-role f-comic">'+(lang?m[2]:m[1])+'</div></div>';
     g.appendChild(d);
   });
