@@ -85,6 +85,23 @@
     background:var(--yellow); border:3px solid var(--ink); box-shadow:4px 4px 0 var(--sh); padding:7px 15px;}
   .nextshow b{font-family:'Bangers',sans-serif; font-style:normal; letter-spacing:.04em; color:var(--red-2); font-size:16px;}
   .nextshow:hover{background:#ffd84e;}
+  .nextwrap{margin-top:2px; display:inline-flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center;}
+  .nextwrap .nextshow{margin-top:0;}
+  .nextshow-thumb{padding:0; margin:0; background:none; border:0; cursor:zoom-in; line-height:0; display:block; transition:transform .12s;}
+  .nextshow-thumb img{height:100px; width:auto; display:block; border:3px solid var(--paper-2); box-shadow:4px 4px 0 var(--sh);}
+  .nextshow-thumb:hover{transform:rotate(-2deg) scale(1.04);}
+  .nextshow-thumb:active{transform:translate(2px,2px);}
+
+  /* lightbox */
+  .lightbox{position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center;
+    background:rgba(22,19,15,.92); padding:24px; cursor:zoom-out;}
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:min(92vw,640px); max-height:90vh; width:auto; height:auto;
+    border:5px solid var(--paper-2); box-shadow:0 0 0 4px var(--ink), 14px 14px 0 var(--sh);}
+  .lightbox-close{position:fixed; top:16px; right:18px; z-index:201; width:48px; height:48px; cursor:pointer;
+    font-family:'Archivo Black',sans-serif; font-size:20px; color:var(--ink); background:var(--yellow);
+    border:4px solid var(--ink); box-shadow:4px 4px 0 var(--sh); line-height:1;}
+  .lightbox-close:hover{background:#ffd84e;} .lightbox-close:active{transform:translate(2px,2px); box-shadow:2px 2px 0 var(--sh);}
   .about-text .lead{font-size:clamp(17px,2.2vw,21px); font-weight:800;}
   .about-text strong{color:var(--ink);}
   .about-text .perks{list-style:none; padding:0; margin:8px 0 20px; display:grid; gap:8px;}
@@ -335,7 +352,9 @@
       <a class="cbtn cbtn-y" href="#shows" data-i18n="hero_cta1">SEE THE SHOWS</a>
       <a class="cbtn cbtn-r" href="#music" data-i18n="hero_cta2">LISTEN NOW</a>
     </div>
-    <a class="nextshow" id="nextShow" href="#shows"></a>
+    <div class="nextwrap" id="nextWrap">
+      <a class="nextshow" id="nextShow" href="#shows"></a>
+    </div>
     <a class="scroll-cue f-comic" href="#about">SCROLL ↓</a>
   </header>
 
@@ -508,6 +527,12 @@
   </section>
 </div>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Sluiten">✕</button>
+  <img id="lightboxImg" src="" alt="" />
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="foot-grid">
@@ -546,7 +571,7 @@ var TIMELINE = [
   ['2025','40 jaar & Sun Studio','40 years & Sun Studio','Veertigjarig jubileum met een groot jubileumconcert en ‘The Sun Sessions’, deels opgenomen in Sun Studio, Memphis.','40th anniversary with a big show and ‘The Sun Sessions’, partly recorded at Sun Studio, Memphis.']
 ];
 var SHOWS = [
-  ['04','JUL','PARELROCK · Tiliander','Oisterwijk',true],
+  ['04','JUL','PARELROCK · Tiliander','Oisterwijk',true,['assets/shows/parelrock-thumb.jpg','assets/shows/parelrock.jpg']],
   ['19','JUL','Rock & Roll Summer Vibes','Oosterhout',false],
   ['26','JUL','Rock & Roll Summer Dance Party','De Boemel',false]
 ];
@@ -592,9 +617,31 @@ function applyLang(){
   renderMembers(); renderTimeline(); renderNextShow();
 }
 function renderNextShow(){
-  var el=document.getElementById('nextShow'); if(!el||!SHOWS.length) return;
+  var el=document.getElementById('nextShow'), wrap=document.getElementById('nextWrap');
+  if(!el||!SHOWS.length) return;
   var s=SHOWS[0], lbl=lang?'NEXT SHOW':'EERSTVOLGENDE SHOW';
   el.innerHTML='<b>'+lbl+'</b><span>'+s[0]+' '+s[1]+' · '+s[2]+' · '+s[3]+'</span>';
+  if(wrap){
+    var old=wrap.querySelector('.nextshow-thumb'); if(old) old.remove();
+    if(s[5]){
+      var alt=(lang?'Flyer ':'Flyer ')+s[2];
+      var btn=document.createElement('button'); btn.type='button'; btn.className='nextshow-thumb';
+      btn.setAttribute('aria-label', lang?'Enlarge show flyer':'Vergroot de flyer');
+      btn.innerHTML='<img src="'+s[5][0]+'" alt="'+alt+'" />';
+      btn.addEventListener('click', function(){ openLightbox(s[5][1], alt); });
+      wrap.insertBefore(btn, el);
+    }
+  }
+}
+function openLightbox(src,alt){
+  var lb=document.getElementById('lightbox'), img=document.getElementById('lightboxImg');
+  if(!lb||!img) return;
+  img.src=src; img.alt=alt||''; lb.classList.add('open'); lb.setAttribute('aria-hidden','false');
+}
+function closeLightbox(){
+  var lb=document.getElementById('lightbox'), img=document.getElementById('lightboxImg');
+  if(!lb) return;
+  lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); if(img) img.src='';
 }
 function renderTimeline(){
   var t=document.getElementById('timeline'); if(!t) return; t.innerHTML='';
@@ -678,6 +725,12 @@ function initBg(){
   var rt; window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(load,300); });
 }
 
+function initLightbox(){
+  var lb=document.getElementById('lightbox'); if(!lb) return;
+  lb.addEventListener('click',function(e){ if(e.target!==document.getElementById('lightboxImg')) closeLightbox(); });
+  var c=document.getElementById('lightboxClose'); if(c) c.addEventListener('click',closeLightbox);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeLightbox(); });
+}
 function initNav(){
   var links=document.getElementById('navLinks');
   document.getElementById('navToggle').addEventListener('click',function(){ links.classList.toggle('open'); });
@@ -691,7 +744,7 @@ function onScroll(){ var y=window.scrollY, h=document.documentElement.scrollHeig
 document.getElementById('year').textContent=new Date().getFullYear();
 (function(){ var t=document.getElementById('tickerTrack'); if(t) t.innerHTML+=t.innerHTML; })();
 renderMembers(); renderTimeline(); renderShows(); renderVideos(); renderRep(); renderNextShow();
-initNav(); initBg(); applyLang(); observeReveal();
+initNav(); initBg(); initLightbox(); applyLang(); observeReveal();
 window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 </script>
 </body>
