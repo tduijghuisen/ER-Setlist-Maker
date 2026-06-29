@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Explosion Rockets · Beheer</title>
+<style>
+  :root{--paper:#F3E9D2;--paper-2:#FFFDF4;--ink:#16130F;--red:#E5342A;--red-2:#B81E16;--yellow:#FFC81E;--blue:#1E83C9;--sh:rgba(0,0,0,.4);}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5;}
+  header{background:var(--ink);color:var(--paper-2);padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:5px solid var(--red);}
+  header h1{font-size:18px;margin:0;letter-spacing:.02em;}
+  header .sp{margin-left:auto;}
+  .wrap{max-width:880px;margin:0 auto;padding:22px 18px 80px;}
+  .card{background:var(--paper-2);border:3px solid var(--ink);box-shadow:6px 6px 0 var(--sh);border-radius:4px;padding:18px;margin:0 0 18px;}
+  h2{font-size:16px;margin:0 0 12px;}
+  label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin:10px 0 4px;color:#5b5343;}
+  input[type=text],input[type=url],input[type=date],input[type=password],textarea{
+    width:100%;padding:10px 12px;border:2px solid var(--ink);border-radius:4px;font:inherit;background:#fff;}
+  textarea{resize:vertical;min-height:46px;}
+  .btn{font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;border:3px solid var(--ink);
+    border-radius:4px;padding:10px 16px;box-shadow:3px 3px 0 var(--sh);transition:.1s;background:var(--yellow);color:var(--ink);}
+  .btn:hover{filter:brightness(1.04);} .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--sh);}
+  .btn.r{background:var(--red);color:#fff;} .btn.b{background:var(--blue);color:#fff;} .btn.g{background:#3aab5a;color:#fff;}
+  .btn.sm{font-size:12px;padding:7px 11px;box-shadow:2px 2px 0 var(--sh);}
+  .btn.ghost{background:#fff;}
+  .row{display:flex;gap:12px;flex-wrap:wrap;}
+  .row>div{flex:1 1 200px;min-width:0;}
+  .show-card{border:2px solid var(--ink);border-radius:4px;padding:14px;margin:0 0 14px;background:#fff;position:relative;}
+  .show-card .head{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .show-card .badge{font-weight:800;font-size:12px;background:var(--ink);color:#fff;padding:3px 8px;border-radius:99px;}
+  .show-card .past{background:#8a8madd;}
+  .flyerline{display:flex;gap:14px;align-items:flex-start;margin-top:6px;}
+  .flyerline img{height:96px;width:auto;border:2px solid var(--ink);border-radius:3px;display:block;background:#eee;}
+  .muted{color:#6b6354;font-size:12px;}
+  .status{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:12px 18px;font-size:14px;
+    transform:translateY(110%);transition:.2s;z-index:50;}
+  .status.show{transform:none;} .status.err{background:var(--red-2);}
+  .hide{display:none!important;}
+  details.help{margin-top:10px;} details.help summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--blue);}
+  details.help ol{margin:8px 0 0;padding-left:20px;font-size:13px;} details.help a{color:var(--blue);}
+  code{background:#eee;padding:1px 5px;border-radius:3px;font-size:12px;}
+  .tokstate{font-size:12px;}
+  .pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;border:2px solid var(--ink);}
+  .pill.ok{background:#d6f5dd;} .pill.no{background:#ffd9d6;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎸 The Explosion Rockets · Beheer</h1>
+  <span class="sp"></span>
+  <span class="tokstate" id="tokState"></span>
+  <button class="btn sm ghost hide" id="logoutBtn" type="button">Uitloggen</button>
+</header>
+
+<div class="wrap">
+
+  <!-- LOGIN -->
+  <div class="card" id="gate">
+    <h2>Inloggen</h2>
+    <label for="pw">Wachtwoord</label>
+    <input type="password" id="pw" autocomplete="current-password" />
+    <p id="pwerr" style="color:var(--red-2);font-size:13px;min-height:18px;margin:6px 0 0;"></p>
+    <button class="btn" id="loginBtn" type="button">Inloggen</button>
+    <p class="muted" style="margin-top:12px;">Lichte beveiliging voor deze beheerpagina. De echte schrijfbeveiliging zit in je GitHub-token.</p>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="hide">
+
+    <!-- TOKEN SETUP -->
+    <div class="card" id="tokenCard">
+      <h2>GitHub-token</h2>
+      <p class="muted">Eenmalig instellen. De token blijft alleen in deze browser (localStorage) en wordt nooit op de site geplaatst.</p>
+      <label for="tok">Token</label>
+      <input type="password" id="tok" placeholder="github_pat_…" autocomplete="off" />
+      <div class="row" style="margin-top:10px;">
+        <div style="flex:0 0 auto;"><button class="btn" id="saveTokBtn" type="button">Token opslaan</button></div>
+        <div style="flex:0 0 auto;"><button class="btn ghost sm" id="clearTokBtn" type="button">Token wissen</button></div>
+      </div>
+      <details class="help">
+        <summary>Hoe maak ik een token aan?</summary>
+        <ol>
+          <li>Ga naar <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → Fine-grained tokens</a> (ingelogd als eigenaar van de repo).</li>
+          <li>Bij <em>Repository access</em>: kies <strong>Only select repositories</strong> → <code>ER-Setlist-Maker</code>.</li>
+          <li>Bij <em>Permissions → Repository permissions</em>: zet <strong>Contents</strong> op <strong>Read and write</strong>.</li>
+          <li>Maak de token aan, kopieer hem (<code>github_pat_…</code>) en plak hierboven.</li>
+        </ol>
+      </details>
+    </div>
+
+    <!-- AGENDA -->
+    <div class="card" id="agendaCard">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h2 style="margin:0;">Agenda · optredens</h2>
+        <span class="sp" style="margin-left:auto;"></span>
+        <button class="btn ghost sm" id="reloadBtn" type="button">Opnieuw laden</button>
+        <button class="btn g" id="addBtn" type="button">+ Optreden</button>
+      </div>
+      <p class="muted" style="margin-top:6px;">Voorbije optredens (datum in het verleden) verdwijnen automatisch uit “Upcoming shows” en verschijnen onder “Bekijk historie”. De site sorteert alles op datum.</p>
+      <div id="list" style="margin-top:14px;"></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+        <button class="btn r" id="saveBtn" type="button">💾 Publiceren</button>
+        <button class="btn ghost sm" id="pwBtn" type="button">Wachtwoord wijzigen</button>
+      </div>
+      <p class="muted" style="margin-top:8px;">Na publiceren werkt de site over ±1 minuut bij (GitHub Pages bouwt opnieuw).</p>
+    </div>
+
+  </div>
+</div>
+
+<div class="status" id="status"></div>
+
+<script>
+var REPO={owner:'tduijghuisen',name:'ER-Setlist-Maker',branch:'main'};
+var IMG_DIR='assets/shows/';            /* site-root relative (repo: website/ + this) */
+var JSON_PATH='website/data/shows.json';
+var ADMIN_PATH='website/data/admin.json';
+var shows=[];
+
+/* ---------- helpers ---------- */
+function $(id){return document.getElementById(id);}
+function statusMsg(msg,err){var s=$('status');s.textContent=msg;s.className='status show'+(err?' err':'');if(!err&&msg){clearTimeout(statusMsg._t);statusMsg._t=setTimeout(function(){s.className='status';},4000);}}
+async function sha256hex(str){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join('');}
+function b64enc(str){return btoa(unescape(encodeURIComponent(str)));}
+function b64dec(b64){return decodeURIComponent(escape(atob((b64||'').replace(/\s/g,''))));}
+function token(){return localStorage.getItem('er_gh_token')||'';}
+function slug(s){return (s||'flyer').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40)||'flyer';}
+function esc(x){return (''+(x==null?'':x)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ---------- GitHub API ---------- */
+function ghHeaders(){return {'Authorization':'Bearer '+token(),'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};}
+async function ghGet(path){
+  var r=await fetch('https://api.github.com/repos/'+REPO.owner+'/'+REPO.name+'/contents/'+path+'?ref='+REPO.branch+'&t='+Date.now(),{headers:ghHeaders(),cache:'no-store'});
+  if(r.status===404)return {sha:null,content:null};
+  if(!r.ok)throw new Error('GET '+path+' → '+r.status);
+  var j=await r.json();return {sha:j.sha,content:j.content?b64dec(j.content):null};
+}
+async function ghPut(path,b64,message,sha){
+  var body={message:message,content:b64,branch:REPO.branch};if(sha)body.sha=sha;
+  var r=await fetch('https://api.github.com/repos/'+REPO.owner+'/'+REPO.name+'/contents/'+path,{method:'PUT',headers:ghHeaders(),body:JSON.stringify(body)});
+  if(!r.ok)throw new Error('PUT '+path+' → '+r.status+' '+(await r.text()).slice(0,140));
+  return await r.json();
+}
+
+/* ---------- image resize ---------- */
+function fileToResized(file){
+  return new Promise(function(res,rej){
+    var url=URL.createObjectURL(file),img=new Image();
+    img.onload=function(){
+      function draw(maxW,maxH){
+        var w=img.naturalWidth,h=img.naturalHeight,scale=Math.min(1,maxW/w,maxH/h);
+        var cw=Math.max(1,Math.round(w*scale)),ch=Math.max(1,Math.round(h*scale));
+        var c=document.createElement('canvas');c.width=cw;c.height=ch;
+        var ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,cw,ch);ctx.drawImage(img,0,0,cw,ch);
+        return c.toDataURL('image/jpeg',0.82);
+      }
+      var full=draw(1000,1000),thumb=draw(99999,240);
+      URL.revokeObjectURL(url);res({full:full,thumb:thumb});
+    };
+    img.onerror=function(){rej(new Error('Kon afbeelding niet lezen'));};
+    img.src=url;
+  });
+}
+
+/* ---------- auth ---------- */
+async function doLogin(){
+  $('pwerr').textContent='';
+  try{
+    var r=await fetch('../data/admin.json?t='+Date.now(),{cache:'no-store'});var cfg=await r.json();
+    var h=await sha256hex($('pw').value);
+    if(h===cfg.pwhash){sessionStorage.setItem('er_authed','1');showApp();}
+    else $('pwerr').textContent='Onjuist wachtwoord.';
+  }catch(e){$('pwerr').textContent='Kon beveiliging niet laden: '+e.message;}
+}
+function showApp(){
+  $('gate').classList.add('hide');$('app').classList.remove('hide');$('logoutBtn').classList.remove('hide');
+  refreshTokState();
+  if(token())loadEditor();
+}
+function refreshTokState(){
+  var has=!!token();
+  $('tokState').innerHTML=has?'<span class="pill ok">token ✓</span>':'<span class="pill no">geen token</span>';
+  $('tokenCard').classList.toggle('hide',has);
+  $('agendaCard').classList.toggle('hide',!has);
+  if(has)$('tok').value='';
+}
+
+/* ---------- editor ---------- */
+function by(a,b){return (a.date||'').localeCompare(b.date||'');}
+function isPast(d){if(!d)return false;var t=new Date();t.setHours(0,0,0,0);return new Date(d+'T00:00:00').getTime()<t.getTime();}
+function render(){
+  shows.sort(by);
+  var html=shows.map(function(s,i){
+    var past=isPast(s.date);
+    var prev=s._fullData||s.flyer;
+    return '<div class="show-card">'+
+      '<div class="head"><span class="badge">#'+(i+1)+'</span>'+(past?'<span class="badge" style="background:#9a8f78">voorbij</span>':'<span class="badge" style="background:var(--blue)">aankomend</span>')+
+        '<span class="sp" style="margin-left:auto"></span><button class="btn r sm" type="button" onclick="delShow('+i+')">Verwijderen</button></div>'+
+      '<div class="row">'+
+        '<div><label>Datum</label><input type="date" value="'+esc(s.date)+'" onchange="upd('+i+',\'date\',this.value)"></div>'+
+        '<div><label>Locatie</label><input type="text" value="'+esc(s.location)+'" placeholder="Plaats / zaal" oninput="upd('+i+',\'location\',this.value)"></div>'+
+      '</div>'+
+      '<label>Omschrijving (naam van het optreden)</label><input type="text" value="'+esc(s.description)+'" placeholder="bv. Rock & Roll Summer Vibes" oninput="upd('+i+',\'description\',this.value)">'+
+      '<label>Ticketlink (leeg = geen knop)</label><input type="url" value="'+esc(s.ticket)+'" placeholder="https://… (leeg laten bij gratis entree)" oninput="upd('+i+',\'ticket\',this.value)">'+
+      '<label>Flyer</label>'+
+      '<div class="flyerline">'+
+        (prev?'<img src="'+esc(prev)+'" alt="flyer">':'<span class="muted">Nog geen flyer.</span>')+
+        '<div><input type="file" accept="image/*" onchange="pickFlyer('+i+',this)"><p class="muted">Wordt automatisch verkleind (volledige versie + thumbnail).</p></div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  $('list').innerHTML=html||'<p class="muted">Nog geen optredens. Klik op “+ Optreden”.</p>';
+}
+function upd(i,k,v){shows[i][k]=v;}
+function delShow(i){if(confirm('Dit optreden verwijderen?')){shows.splice(i,1);render();}}
+function addShow(){shows.push({date:'',description:'',location:'',ticket:'',flyer:'',thumb:''});render();window.scrollTo(0,document.body.scrollHeight);}
+async function pickFlyer(i,input){
+  var f=input.files&&input.files[0];if(!f)return;
+  statusMsg('Flyer verwerken…');
+  try{
+    var out=await fileToResized(f);
+    shows[i]._fullData=out.full;shows[i]._thumbData=out.thumb;
+    var base=IMG_DIR+slug(shows[i].description||shows[i].location||'flyer')+'-'+(shows[i].date||'')+'-'+Date.now().toString(36);
+    shows[i].flyer=base+'.jpg';shows[i].thumb=base+'-thumb.jpg';
+    render();statusMsg('Flyer klaar — vergeet niet te publiceren.');
+  }catch(e){statusMsg(e.message,true);}
+}
+
+async function loadEditor(){
+  statusMsg('Agenda laden…');
+  try{var r=await ghGet(JSON_PATH);shows=r.content?JSON.parse(r.content):[];render();statusMsg('Agenda geladen.');}
+  catch(e){statusMsg('Laden mislukt: '+e.message,true);}
+}
+async function save(){
+  if(!token()){statusMsg('Stel eerst een GitHub-token in.',true);return;}
+  for(var k=0;k<shows.length;k++){if(!shows[k].date){statusMsg('Optreden #'+(k+1)+' heeft geen datum.',true);return;}}
+  statusMsg('Publiceren…');
+  try{
+    for(var i=0;i<shows.length;i++){
+      var s=shows[i];
+      if(s._fullData){
+        await ghPut('website/'+s.flyer,s._fullData.split(',')[1],'CMS: flyer '+s.flyer,null);
+        await ghPut('website/'+s.thumb,s._thumbData.split(',')[1],'CMS: flyer thumb '+s.thumb,null);
+        delete s._fullData;delete s._thumbData;
+      }
+    }
+    var clean=shows.map(function(s){return {date:s.date,description:s.description,location:s.location,flyer:s.flyer,thumb:s.thumb,ticket:s.ticket};}).sort(by);
+    var cur=await ghGet(JSON_PATH);
+    await ghPut(JSON_PATH,b64enc(JSON.stringify(clean,null,2)+'\n'),'CMS: agenda bijgewerkt',cur.sha);
+    statusMsg('Gepubliceerd! De site werkt over ±1 min bij.');
+  }catch(e){statusMsg('Fout bij publiceren: '+e.message,true);}
+}
+async function changePw(){
+  var np=prompt('Nieuw wachtwoord (min. 6 tekens):');if(np==null)return;
+  if(np.length<6){statusMsg('Wachtwoord te kort.',true);return;}
+  if(!token()){statusMsg('Stel eerst een GitHub-token in.',true);return;}
+  statusMsg('Wachtwoord wijzigen…');
+  try{
+    var h=await sha256hex(np);var cur=await ghGet(ADMIN_PATH);
+    await ghPut(ADMIN_PATH,b64enc(JSON.stringify({pwhash:h},null,2)+'\n'),'CMS: wachtwoord gewijzigd',cur.sha);
+    statusMsg('Wachtwoord gewijzigd (geldt na de site-rebuild).');
+  }catch(e){statusMsg('Fout: '+e.message,true);}
+}
+
+/* ---------- wire up ---------- */
+$('loginBtn').addEventListener('click',doLogin);
+$('pw').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+$('logoutBtn').addEventListener('click',function(){sessionStorage.removeItem('er_authed');location.reload();});
+$('saveTokBtn').addEventListener('click',function(){var t=$('tok').value.trim();if(!t){statusMsg('Plak eerst een token.',true);return;}localStorage.setItem('er_gh_token',t);refreshTokState();loadEditor();statusMsg('Token opgeslagen.');});
+$('clearTokBtn').addEventListener('click',function(){localStorage.removeItem('er_gh_token');refreshTokState();statusMsg('Token gewist.');});
+$('reloadBtn').addEventListener('click',loadEditor);
+$('addBtn').addEventListener('click',addShow);
+$('saveBtn').addEventListener('click',save);
+$('pwBtn').addEventListener('click',changePw);
+if(sessionStorage.getItem('er_authed')==='1')showApp();
+</script>
+</body>
+</html>

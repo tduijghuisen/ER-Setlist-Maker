@@ -1,0 +1,34 @@
+[
+  {
+    "date": "2026-07-04",
+    "description": "PARELROCK · Tiliander",
+    "location": "Oisterwijk",
+    "flyer": "assets/shows/parelrock.jpg",
+    "thumb": "assets/shows/parelrock-thumb.jpg",
+    "ticket": ""
+  },
+  {
+    "date": "2026-07-19",
+    "description": "Rock & Roll Summer Vibes",
+    "location": "Oosterhout",
+    "flyer": "assets/shows/summervibes.jpg",
+    "thumb": "assets/shows/summervibes-thumb.jpg",
+    "ticket": ""
+  },
+  {
+    "date": "2026-07-26",
+    "description": "Rock & Roll Summer Dance Party",
+    "location": "De Boemel · Tilburg",
+    "flyer": "assets/shows/danceparty.jpg",
+    "thumb": "assets/shows/danceparty-thumb.jpg",
+    "ticket": ""
+  },
+  {
+    "date": "2026-08-01",
+    "description": "Jailhouse Rock Festival",
+    "location": "Rosport (LU)",
+    "flyer": "assets/shows/jailhouse.jpg",
+    "thumb": "assets/shows/jailhouse-thumb.jpg",
+    "ticket": ""
+  }
+]
