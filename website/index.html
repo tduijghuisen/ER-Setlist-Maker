@@ -80,15 +80,15 @@
     font-family:'Bangers',sans-serif; font-size:20px; color:var(--ink); background:var(--yellow);
     border:3px solid var(--ink); border-radius:99px; padding:4px 16px; box-shadow:3px 3px 0 var(--sh); animation:bob 1.8s ease-in-out infinite;}
   @keyframes bob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,7px);}}
-  .nextshow{margin-top:2px; display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center;
-    font-family:'Archivo Black',sans-serif; font-style:italic; font-size:13px; color:var(--ink); text-decoration:none;
-    background:var(--yellow); border:3px solid var(--ink); box-shadow:4px 4px 0 var(--sh); padding:7px 15px;}
-  .nextshow b{font-family:'Bangers',sans-serif; font-style:normal; letter-spacing:.04em; color:var(--red-2); font-size:16px;}
+  .nextwrap{margin-top:2px; display:inline-flex; justify-content:center;}
+  .nextshow{display:inline-flex; align-items:center; gap:13px;
+    background:var(--yellow); border:3px solid var(--ink); box-shadow:4px 4px 0 var(--sh); padding:9px 16px;}
   .nextshow:hover{background:#ffd84e;}
-  .nextwrap{margin-top:2px; display:inline-flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center;}
-  .nextwrap .nextshow{margin-top:0;}
-  .nextshow-thumb{padding:0; margin:0; background:none; border:0; cursor:zoom-in; line-height:0; display:block; transition:transform .12s;}
-  .nextshow-thumb img{height:100px; width:auto; display:block; border:3px solid var(--paper-2); box-shadow:4px 4px 0 var(--sh);}
+  .nextshow-text{display:flex; flex-direction:column; gap:3px; text-align:left;
+    font-family:'Archivo Black',sans-serif; font-style:italic; font-size:13px; color:var(--ink); text-decoration:none;}
+  .nextshow-text b{font-family:'Bangers',sans-serif; font-style:normal; letter-spacing:.04em; color:var(--red-2); font-size:16px;}
+  .nextshow-thumb{padding:0; margin:0; background:none; border:0; cursor:zoom-in; line-height:0; display:block; flex:0 0 auto; transition:transform .12s;}
+  .nextshow-thumb img{height:100px; width:auto; display:block; border:3px solid var(--ink); box-shadow:3px 3px 0 var(--sh);}
   .nextshow-thumb:hover{transform:rotate(-2deg) scale(1.04);}
   .nextshow-thumb:active{transform:translate(2px,2px);}
 
@@ -353,7 +353,7 @@
       <a class="cbtn cbtn-r" href="#music" data-i18n="hero_cta2">LISTEN NOW</a>
     </div>
     <div class="nextwrap" id="nextWrap">
-      <a class="nextshow" id="nextShow" href="#shows"></a>
+      <div class="nextshow" id="nextShow"></div>
     </div>
     <a class="scroll-cue f-comic" href="#about">SCROLL ↓</a>
   </header>
@@ -617,20 +617,17 @@ function applyLang(){
   renderMembers(); renderTimeline(); renderNextShow();
 }
 function renderNextShow(){
-  var el=document.getElementById('nextShow'), wrap=document.getElementById('nextWrap');
-  if(!el||!SHOWS.length) return;
+  var box=document.getElementById('nextShow'); if(!box||!SHOWS.length) return;
   var s=SHOWS[0], lbl=lang?'NEXT SHOW':'EERSTVOLGENDE SHOW';
-  el.innerHTML='<b>'+lbl+'</b><span>'+s[0]+' '+s[1]+' · '+s[2]+' · '+s[3]+'</span>';
-  if(wrap){
-    var old=wrap.querySelector('.nextshow-thumb'); if(old) old.remove();
-    if(s[5]){
-      var alt=(lang?'Flyer ':'Flyer ')+s[2];
-      var btn=document.createElement('button'); btn.type='button'; btn.className='nextshow-thumb';
-      btn.setAttribute('aria-label', lang?'Enlarge show flyer':'Vergroot de flyer');
-      btn.innerHTML='<img src="'+s[5][0]+'" alt="'+alt+'" />';
-      btn.addEventListener('click', function(){ openLightbox(s[5][1], alt); });
-      wrap.insertBefore(btn, el);
-    }
+  var alt='Flyer '+s[2], html='';
+  if(s[5]){
+    html+='<button type="button" class="nextshow-thumb" aria-label="'+(lang?'Enlarge show flyer':'Vergroot de flyer')+'">'
+        + '<img src="'+s[5][0]+'" alt="'+alt+'" /></button>';
+  }
+  html+='<a class="nextshow-text" href="#shows"><b>'+lbl+'</b><span>'+s[0]+' '+s[1]+' · '+s[2]+' · '+s[3]+'</span></a>';
+  box.innerHTML=html;
+  if(s[5]){
+    box.querySelector('.nextshow-thumb').addEventListener('click', function(){ openLightbox(s[5][1], alt); });
   }
 }
 function openLightbox(src,alt){
