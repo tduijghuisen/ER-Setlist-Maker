@@ -81,9 +81,17 @@
     border:3px solid var(--ink); border-radius:99px; padding:4px 16px; box-shadow:3px 3px 0 var(--sh); animation:bob 1.8s ease-in-out infinite;}
   @keyframes bob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,7px);}}
   .nextwrap{margin-top:2px; display:inline-flex; justify-content:center;}
-  .nextshow{display:inline-flex; align-items:center; gap:13px;
-    background:var(--yellow); border:3px solid var(--ink); box-shadow:4px 4px 0 var(--sh); padding:9px 16px;}
+  .nextshow{position:relative; overflow:hidden; display:inline-flex; align-items:center; gap:13px;
+    background:var(--yellow); border:3px solid var(--ink); box-shadow:5px 5px 0 var(--red); padding:9px 16px;
+    animation:nextbob 3.2s ease-in-out infinite, nextshadow 4s ease-in-out infinite;}
+  /* glint that periodically sweeps across the chip */
+  .nextshow::after{content:''; position:absolute; top:0; bottom:0; left:-40%; width:38%; pointer-events:none;
+    background:linear-gradient(100deg, transparent, rgba(255,255,255,.7), transparent); transform:skewX(-18deg);
+    animation:nextshine 4.5s ease-in-out infinite;}
   .nextshow:hover{background:#ffd84e;}
+  @keyframes nextbob{0%,100%{transform:translateY(0) rotate(-.6deg);}50%{transform:translateY(-4px) rotate(.6deg);}}
+  @keyframes nextshadow{0%,100%{box-shadow:5px 5px 0 var(--red);}50%{box-shadow:5px 5px 0 var(--blue);}}
+  @keyframes nextshine{0%,58%{left:-40%;}82%,100%{left:120%;}}
   .nextshow-text{display:flex; flex-direction:column; gap:3px; text-align:left;
     font-family:'Archivo Black',sans-serif; font-style:italic; font-size:13px; color:var(--ink); text-decoration:none;}
   .nextshow-text b{font-family:'Bangers',sans-serif; font-style:normal; letter-spacing:.04em; color:var(--red-2); font-size:16px;}
