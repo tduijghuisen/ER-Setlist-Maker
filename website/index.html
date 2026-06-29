@@ -276,8 +276,14 @@
   .show.hl .show-date{background:var(--ink);}
   .show-date .dd{font-family:'Bangers',sans-serif; font-size:26px; line-height:.85;}
   .show-date .mm{font-family:'Archivo Black',sans-serif; font-size:11px; font-style:italic;}
+  .show-info{display:flex; align-items:center; gap:13px; min-width:0;}
+  .show-info-txt{min-width:0;}
   .show-info b{font-family:'Archivo Black',sans-serif; font-size:clamp(15px,2.4vw,20px); display:block; line-height:1.1; color:var(--ink);}
   .show-info span{font-weight:700; font-size:12px; color:var(--red-2);}
+  .show-flyer{flex:0 0 auto; padding:0; margin:0; background:none; border:0; cursor:zoom-in; line-height:0; transition:transform .12s;}
+  .show-flyer img{height:66px; width:auto; display:block; border:3px solid var(--ink); box-shadow:3px 3px 0 var(--sh);}
+  .show-flyer:hover{transform:rotate(-2deg) scale(1.05);}
+  .show-flyer:active{transform:translate(2px,2px);}
   .ticket{font-family:'Bangers',sans-serif; font-size:19px; color:var(--ink); white-space:nowrap; background:var(--yellow);
     border:3px solid var(--ink); padding:8px 16px; box-shadow:4px 4px 0 var(--sh); transition:.1s;}
   .ticket:hover{background:#ffd84e;} .ticket:active{transform:translate(2px,2px); box-shadow:2px 2px 0 var(--sh);}
@@ -597,8 +603,9 @@ var TIMELINE = [
 ];
 var SHOWS = [
   ['04','JUL','PARELROCK · Tiliander','Oisterwijk',true,['assets/shows/parelrock-thumb.jpg','assets/shows/parelrock.jpg']],
-  ['19','JUL','Rock & Roll Summer Vibes','Oosterhout',false],
-  ['26','JUL','Rock & Roll Summer Dance Party','De Boemel',false]
+  ['19','JUL','Rock & Roll Summer Vibes','Oosterhout',false,['assets/shows/summervibes-thumb.jpg','assets/shows/summervibes.jpg']],
+  ['26','JUL','Rock & Roll Summer Dance Party','De Boemel · Tilburg',false,['assets/shows/danceparty-thumb.jpg','assets/shows/danceparty.jpg']],
+  ['01','AUG','Jailhouse Rock Festival','Rosport (LU)',false,['assets/shows/jailhouse-thumb.jpg','assets/shows/jailhouse.jpg']]
 ];
 var VIDEOS = [
   ['VYpoGYxb6hw','40th Anniversary Show'],['j76BaMPWigw','The Explosion Rockets · LIVE'],
@@ -688,10 +695,15 @@ function renderShows(){
   var l=document.getElementById('showsList'); l.innerHTML='';
   SHOWS.forEach(function(s){
     var d=document.createElement('div'); d.className='show'+(s[4]?' hl':'');
+    var flyer = s[5] ? '<button type="button" class="show-flyer" aria-label="'+(lang?'Enlarge flyer':'Vergroot de flyer')+'"><img src="'+s[5][0]+'" alt="Flyer '+s[2]+'" loading="lazy" /></button>' : '';
     d.innerHTML='<div class="show-date"><div class="dd">'+s[0]+'</div><div class="mm">'+s[1]+'</div></div>'+
-      '<div class="show-info"><b>'+s[2]+'</b><span>'+s[3]+'</span></div>'+
+      '<div class="show-info">'+flyer+'<div class="show-info-txt"><b>'+s[2]+'</b><span>'+s[3]+'</span></div></div>'+
       '<a class="ticket" href="https://explosionrockets.com/#upcoming-events" target="_blank" rel="noopener">TICKETS</a>';
     l.appendChild(d);
+  });
+  l.querySelectorAll('.show').forEach(function(row,i){
+    var btn=row.querySelector('.show-flyer'), s=SHOWS[i];
+    if(btn && s[5]){ btn.addEventListener('click', function(){ openLightbox(s[5][1], 'Flyer '+s[2]); }); }
   });
 }
 function renderVideos(){
