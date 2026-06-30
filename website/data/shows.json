@@ -3,48 +3,48 @@
     "date": "2026-07-04",
     "description": "The Explosion Rockets live (Parelrock)",
     "location": "Tiliander · Oisterwijk",
-    "flyer": "assets/shows/parelrock.jpg",
-    "thumb": "assets/shows/parelrock-thumb.jpg",
+    "flyer": "assets/shows/2026-07-04-parelrock.jpg",
+    "thumb": "assets/shows/2026-07-04-parelrock-thumb.jpg",
     "ticket": "https://www.ticketkantoor.nl/shop/parelrock"
   },
   {
     "date": "2026-07-19",
     "description": "Rock & Roll Summer Vibes",
     "location": "Hatsiekedeeplein · Oosterhout",
-    "flyer": "assets/shows/summervibes.jpg",
-    "thumb": "assets/shows/summervibes-thumb.jpg",
+    "flyer": "assets/shows/2026-07-19-oosterhout.jpg",
+    "thumb": "assets/shows/2026-07-19-oosterhout-thumb.jpg",
     "ticket": ""
   },
   {
     "date": "2026-07-26",
     "description": "The Explosion Rockets live at De Boemel Buiten",
     "location": "De Boemel · Tilburg",
-    "flyer": "assets/shows/danceparty.jpg",
-    "thumb": "assets/shows/danceparty-thumb.jpg",
+    "flyer": "assets/shows/2026-07-26-boemel-tilburg.jpg",
+    "thumb": "assets/shows/2026-07-26-boemel-tilburg-thumb.jpg",
     "ticket": ""
   },
   {
     "date": "2026-07-31",
     "description": "The Explosion Rockets @ Jailhouse Rock Festival",
     "location": "Sauerpark · Rosport (Luxemburg)",
-    "flyer": "assets/shows/jailhouse.jpg",
-    "thumb": "assets/shows/jailhouse-thumb.jpg",
+    "flyer": "assets/shows/2026-07-31-jailhouse-rosport.jpg",
+    "thumb": "assets/shows/2026-07-31-jailhouse-rosport-thumb.jpg",
     "ticket": ""
   },
   {
     "date": "2026-08-08",
     "description": "The Explosion Rockets at Summershelter Festival",
     "location": "Magdeburg · Duitsland",
-    "flyer": "",
-    "thumb": "",
+    "flyer": "assets/shows/2026-08-08-magdeburg.jpg",
+    "thumb": "assets/shows/2026-08-08-magdeburg-thumb.jpg",
     "ticket": ""
   },
   {
     "date": "2026-08-15",
     "description": "Bog & Roll Festival",
     "location": "Centrum · Veendam",
-    "flyer": "",
-    "thumb": "",
+    "flyer": "assets/shows/2026-08-15-bog-roll-veendam.jpg",
+    "thumb": "assets/shows/2026-08-15-bog-roll-veendam-thumb.jpg",
     "ticket": ""
   },
   {
@@ -59,32 +59,32 @@
     "date": "2026-09-06",
     "description": "Akercity Rock & Roll Weekend — 5th Anniversary",
     "location": "Wilhelminaplein · Akersloot (NH)",
-    "flyer": "",
-    "thumb": "",
+    "flyer": "assets/shows/2026-09-06-akercity-akersloot.jpg",
+    "thumb": "assets/shows/2026-09-06-akercity-akersloot-thumb.jpg",
     "ticket": ""
   },
   {
     "date": "2026-09-26",
     "description": "'Blue Suede Shoes!' Dance Party",
     "location": "Zaal Hercules · Diessen",
-    "flyer": "",
-    "thumb": "",
+    "flyer": "assets/shows/2026-09-26-diessen.jpg",
+    "thumb": "assets/shows/2026-09-26-diessen-thumb.jpg",
     "ticket": "https://www.ticketkantoor.nl/shop/HerculesDiessen"
   },
   {
     "date": "2026-10-11",
     "description": "Elvis & the Legends of Rock and Roll · Elvis Dag",
     "location": "Het Wapen van Steenbergen · Steenbergen",
-    "flyer": "",
-    "thumb": "",
+    "flyer": "assets/shows/2026-10-11-steenbergen.jpg",
+    "thumb": "assets/shows/2026-10-11-steenbergen-thumb.jpg",
     "ticket": "https://weeztix.shop/qrvnww4b"
   },
   {
     "date": "2026-10-18",
     "description": "20 jaar Explosion Rockets in De Post — jubileum",
     "location": "De Post · Midwoud (NH)",
-    "flyer": "",
-    "thumb": "",
+    "flyer": "assets/shows/2026-10-18-de-post-midwoud.jpg",
+    "thumb": "assets/shows/2026-10-18-de-post-midwoud-thumb.jpg",
     "ticket": ""
   },
   {
@@ -107,8 +107,8 @@
     "date": "2026-11-22",
     "description": "The Golden Hits of Rock and Roll",
     "location": "Babbelz · Oosterhout",
-    "flyer": "",
-    "thumb": "",
+    "flyer": "assets/shows/2026-11-22-babbelz-oosterhout.jpg",
+    "thumb": "assets/shows/2026-11-22-babbelz-oosterhout-thumb.jpg",
     "ticket": ""
   },
   {
@@ -131,8 +131,8 @@
     "date": "2027-02-27",
     "description": "The Explosion Rockets ft. Pete Storm (Johnny Cash Tribute)",
     "location": "De Rots · Boxtel",
-    "flyer": "",
-    "thumb": "",
+    "flyer": "assets/shows/2027-02-27-pete-storm-boxtel.jpg",
+    "thumb": "assets/shows/2027-02-27-pete-storm-boxtel-thumb.jpg",
     "ticket": ""
   },
   {
