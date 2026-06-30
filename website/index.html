@@ -805,7 +805,7 @@ function renderShows(){
   var sp=splitShows(), up=sp.up, past=sp.past;
   l.innerHTML = up.length ? up.slice(0,4).map(function(s,i){ return showRowHtml(s, i===0); }).join('')
     : '<p class="shows-empty">'+(lang?'No upcoming shows announced right now — check back soon!':'Op dit moment geen aankomende shows aangekondigd — kom snel terug!')+'</p>';
-  fillFold('showsMore', up.slice(4), (lang?'Show all upcoming shows':'Toon alle aankomende shows')+' ('+up.length+')');
+  fillFold('showsMore', up.slice(4), (lang?'Show all upcoming shows':'Toon alle aankomende shows'));
   fillFold('showsArchive', past, (lang?'View past shows':'Bekijk historie')+' ('+past.length+')');
 }
 function renderVideos(){
