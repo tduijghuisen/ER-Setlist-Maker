@@ -1,34 +1,162 @@
 [
   {
     "date": "2026-07-04",
-    "description": "PARELROCK · Tiliander",
-    "location": "Oisterwijk",
+    "description": "The Explosion Rockets live (Parelrock)",
+    "location": "Tiliander · Oisterwijk",
     "flyer": "assets/shows/parelrock.jpg",
     "thumb": "assets/shows/parelrock-thumb.jpg",
-    "ticket": ""
+    "ticket": "https://www.ticketkantoor.nl/shop/parelrock"
   },
   {
     "date": "2026-07-19",
     "description": "Rock & Roll Summer Vibes",
-    "location": "Oosterhout",
+    "location": "Hatsiekedeeplein · Oosterhout",
     "flyer": "assets/shows/summervibes.jpg",
     "thumb": "assets/shows/summervibes-thumb.jpg",
     "ticket": ""
   },
   {
     "date": "2026-07-26",
-    "description": "Rock & Roll Summer Dance Party",
+    "description": "The Explosion Rockets live at De Boemel Buiten",
     "location": "De Boemel · Tilburg",
     "flyer": "assets/shows/danceparty.jpg",
     "thumb": "assets/shows/danceparty-thumb.jpg",
     "ticket": ""
   },
   {
-    "date": "2026-08-01",
-    "description": "Jailhouse Rock Festival",
-    "location": "Rosport (LU)",
+    "date": "2026-07-31",
+    "description": "The Explosion Rockets @ Jailhouse Rock Festival",
+    "location": "Sauerpark · Rosport (Luxemburg)",
     "flyer": "assets/shows/jailhouse.jpg",
     "thumb": "assets/shows/jailhouse-thumb.jpg",
+    "ticket": ""
+  },
+  {
+    "date": "2026-08-08",
+    "description": "The Explosion Rockets at Summershelter Festival",
+    "location": "Magdeburg · Duitsland",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2026-08-15",
+    "description": "Bog & Roll Festival",
+    "location": "Centrum · Veendam",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2026-08-30",
+    "description": "The Explosion Rockets at Plein Musique",
+    "location": "Burchtplein · Wassenaar",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2026-09-06",
+    "description": "Akercity Rock & Roll Weekend — 5th Anniversary",
+    "location": "Wilhelminaplein · Akersloot (NH)",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2026-09-26",
+    "description": "'Blue Suede Shoes!' Dance Party",
+    "location": "Zaal Hercules · Diessen",
+    "flyer": "",
+    "thumb": "",
+    "ticket": "https://www.ticketkantoor.nl/shop/HerculesDiessen"
+  },
+  {
+    "date": "2026-10-11",
+    "description": "Elvis & the Legends of Rock and Roll · Elvis Dag",
+    "location": "Het Wapen van Steenbergen · Steenbergen",
+    "flyer": "",
+    "thumb": "",
+    "ticket": "https://weeztix.shop/qrvnww4b"
+  },
+  {
+    "date": "2026-10-18",
+    "description": "20 jaar Explosion Rockets in De Post — jubileum",
+    "location": "De Post · Midwoud (NH)",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2026-10-24",
+    "description": "Besloten evenement",
+    "location": "",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2026-11-08",
+    "description": "The Explosion Rockets @ 'De Club' Eindhoven",
+    "location": "De Club · Eindhoven",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2026-11-22",
+    "description": "The Golden Hits of Rock and Roll",
+    "location": "Babbelz · Oosterhout",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2026-11-29",
+    "description": "Wendy's Party",
+    "location": "De Rijper Eilanden · De Rijp",
+    "flyer": "",
+    "thumb": "",
+    "ticket": "https://www.ticketkantoor.nl/shop/DeRijp"
+  },
+  {
+    "date": "2027-01-24",
+    "description": "The Explosion Rockets live @ Theater 't Plein",
+    "location": "Theater 't Plein · Udenhout",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2027-02-27",
+    "description": "The Explosion Rockets ft. Pete Storm (Johnny Cash Tribute)",
+    "location": "De Rots · Boxtel",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2027-04-18",
+    "description": "The Explosion Rockets 2 — 'Het Witte Schaap'",
+    "location": "Het Witte Schaap · Breda",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2027-08-29",
+    "description": "The Explosion Rockets live at American Vintage Unlimited Outdoor!",
+    "location": "American Vintage Unlimited · Rijen",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
+  },
+  {
+    "date": "2027-09-04",
+    "description": "The Explosion Rockets @ Bournemouth",
+    "location": "Bournemouth · Engeland",
+    "flyer": "",
+    "thumb": "",
     "ticket": ""
   }
 ]
