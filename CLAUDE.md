@@ -4,20 +4,25 @@ Context for working on this repo. Read this first.
 
 ## What this is
 A spectacular **pop-art / comic-book** one-page website for the Dutch rock-'n-roll band
-**The Explosion Rockets**, living in **`/website/`**.
+**The Explosion Rockets**, living in the **repo root**.
 
-- **`website/index.html`** — the whole site (self-contained: inline CSS + JS, no build step).
-- **`website/assets/`** — images, stickers, icons, album art, background videos.
-- **`/index.html`** (repo root) — an OLD, unrelated "Setlist Maker" app. **Ignore it.**
+- **`index.html`** (repo root) — the whole site (self-contained: inline CSS + JS, no build step).
+- **`assets/`** — images, stickers, icons, album art, background videos, flyers (`assets/shows/`).
+- **`data/shows.json`** — the tour agenda (managed via `/admin`).
+- **`admin/`** — small CMS that commits agenda + flyers via the GitHub API.
+- **`CNAME`** — binds the custom domain `explosionrockets.com` to GitHub Pages.
 
-Live (GitHub Pages, served from `main`): https://tduijghuisen.github.io/ER-Setlist-Maker/website/
+  (The OLD "Setlist Maker" app that used to sit at the repo root was removed — it's in git history.)
+
+Live (GitHub Pages, served from `main` root): **https://explosionrockets.com**
+(also https://tduijghuisen.github.io/ER-Setlist-Maker/).
 
 ## Git / deploy workflow
 - Develop on branch **`claude/explosion-rockets-redesign-apxss6`**.
 - Pages publishes from **`main`**, so after committing on the feature branch:
   `git checkout main && git merge --ff-only <feature> && git push origin main`, then switch back.
 - Push with `-u origin <branch>`. Don't open PRs unless asked.
-- **Always run git from the repo root** (a `cd website` first makes `git add website/` fail).
+- **Always run git from the repo root.**
 
 ## Design system (pop-art comic)
 CSS variables in `:root`:

@@ -114,9 +114,9 @@
 
 <script>
 var REPO={owner:'tduijghuisen',name:'ER-Setlist-Maker',branch:'main'};
-var IMG_DIR='assets/shows/';            /* site-root relative (repo: website/ + this) */
-var JSON_PATH='website/data/shows.json';
-var ADMIN_PATH='website/data/admin.json';
+var IMG_DIR='assets/shows/';            /* site-root relative (repo root) */
+var JSON_PATH='data/shows.json';
+var ADMIN_PATH='data/admin.json';
 var shows=[];
 
 /* ---------- helpers ---------- */
@@ -241,8 +241,8 @@ async function save(){
     for(var i=0;i<shows.length;i++){
       var s=shows[i];
       if(s._fullData){
-        await ghPut('website/'+s.flyer,s._fullData.split(',')[1],'CMS: flyer '+s.flyer,null);
-        await ghPut('website/'+s.thumb,s._thumbData.split(',')[1],'CMS: flyer thumb '+s.thumb,null);
+        await ghPut(s.flyer,s._fullData.split(',')[1],'CMS: flyer '+s.flyer,null);
+        await ghPut(s.thumb,s._thumbData.split(',')[1],'CMS: flyer thumb '+s.thumb,null);
         delete s._fullData;delete s._thumbData;
       }
     }
