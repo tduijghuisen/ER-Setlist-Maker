@@ -339,6 +339,9 @@
     -webkit-text-stroke:1.5px var(--ink); paint-order:stroke fill; text-align:center;}
   .booking p{font-weight:700; max-width:560px; margin:0 auto 22px; text-align:center;}
   .booking .b-cta{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+  .book-contact{font-weight:700; font-size:14px; text-align:center; margin:16px auto 0; color:var(--ink);}
+  .book-contact a{color:var(--red-2); text-decoration:underline; text-underline-offset:2px;}
+  .book-contact a:hover{color:var(--red);}
 
   /* footer */
   footer{position:relative; z-index:1; background:var(--ink); color:var(--paper-2); padding:38px 20px 30px; border-top:var(--bd) solid var(--red);}
@@ -595,8 +598,9 @@
       <h2 class="f-comic" data-i18n="book_title">BOEK DE BAND!</h2>
       <p data-i18n="book_p">Festival, rock-'n-roll-weekend of ander rock-'n-roll-evenement? The Explosion Rockets brengen 40 jaar podiumervaring mee, onafgebroken sinds 1985 — en een dansvloer die niet meer stilstaat.</p>
       <div class="b-cta">
-        <a class="cbtn cbtn-r" href="mailto:info@explosionrockets.com" data-i18n="book_cta1">✉ BOEKINGSAANVRAAG</a>
+        <a class="cbtn cbtn-r" href="mailto:fv.esch@home.nl,info@explosionrockets.com?subject=Boekingsaanvraag%20The%20Explosion%20Rockets" data-i18n="book_cta1">✉ BOEKINGSAANVRAAG</a>
       </div>
+      <p class="book-contact" data-i18n="book_contact">Of mail ons direct: <a href="mailto:info@explosionrockets.com">info@explosionrockets.com</a></p>
     </div>
   </section>
 </div>
@@ -716,7 +720,8 @@ var I18N = {
   video_label:['VIDEO','VIDEO'],
   book_title:['BOEK DE BAND!','BOOK THE BAND!'],
   book_p:['Festival, rock-’n-roll-weekend of ander rock-’n-roll-evenement? The Explosion Rockets brengen 40 jaar podiumervaring mee, onafgebroken sinds 1985 — en een dansvloer die niet meer stilstaat.','Festival, rock ’n roll weekend or another rock ’n roll event? The Explosion Rockets bring 40 years of stage experience, non-stop since 1985 — and a dance floor that won’t sit down.'],
-  book_cta1:['✉ BOEKINGSAANVRAAG','✉ BOOKING REQUEST']
+  book_cta1:['✉ BOEKINGSAANVRAAG','✉ BOOKING REQUEST'],
+  book_contact:['Of mail ons direct: <a href="mailto:info@explosionrockets.com">info@explosionrockets.com</a>','Or email us directly: <a href="mailto:info@explosionrockets.com">info@explosionrockets.com</a>']
 };
 var lang = 0;
 function applyLang(){
