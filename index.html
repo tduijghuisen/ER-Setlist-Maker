@@ -89,8 +89,9 @@
   .single-sticker.open .ss-play{background:var(--ink);}
   .ss-kick{display:block; font-family:'Archivo Black',sans-serif; font-style:italic; font-size:10px; letter-spacing:.03em; color:var(--red-2); text-transform:uppercase;}
   .ss-title{display:block; font-family:'Bangers',sans-serif; font-size:22px; line-height:.95; letter-spacing:.02em; color:var(--ink);}
-  .single-player{width:min(560px,92vw); margin:20px auto 0;}
-  .single-player iframe{display:block; width:100%; height:152px; border:4px solid var(--ink); box-shadow:6px 6px 0 var(--sh);}
+  .single-player{width:min(560px,92vw); margin:20px auto 0; background:var(--paper-2);
+    border:4px solid var(--ink); box-shadow:6px 6px 0 var(--sh); padding:10px;}
+  .single-player iframe{display:block; width:100%; height:152px; border:0; border-radius:12px;}
   .cbtn{font-family:'Bangers',sans-serif; font-size:clamp(20px,2.6vw,26px); letter-spacing:.05em;
     border:4px solid var(--ink); padding:11px 24px; cursor:pointer; box-shadow:5px 5px 0 var(--sh); transition:.1s; color:var(--ink);}
   .cbtn:active{transform:translate(3px,3px); box-shadow:2px 2px 0 var(--sh);}
@@ -390,6 +391,8 @@
     .socials{flex:1 1 100%; justify-content:center;}
   }
   @media(max-width:520px){
+    .single-sticker{flex-basis:100%; justify-content:center; transform:none;}
+    .single-sticker:hover{transform:translateY(-2px);} .single-sticker:active{transform:translate(2px,2px);}
     .stats{grid-template-columns:1fr 1fr;} .instruments{grid-template-columns:repeat(2,1fr);}
     .members-grid{grid-template-columns:1fr 1fr;}
     .show{grid-template-columns:64px 1fr auto;}
@@ -442,7 +445,7 @@
         <span class="ss-txt"><span class="ss-kick">Play our new single</span><span class="ss-title">Blue Blue Day</span></span>
       </button>
     </div>
-    <div class="single-player" id="singlePlayer" hidden></div>
+    <div class="single-player" id="singlePlayer" hidden><div id="singleEmbed"></div></div>
     <div class="nextwrap" id="nextWrap" style="display:none">
       <span class="next-live" aria-hidden="true">LIVE</span>
       <div class="nextshow" id="nextShow"></div>
@@ -922,24 +925,34 @@ document.getElementById('year').textContent=new Date().getFullYear();
 (function(){ var t=document.getElementById('tickerTrack'); if(t) t.innerHTML+=t.innerHTML; })();
 renderVideos(); renderRep();
 function initSingle(){
-  var btn=document.getElementById('singleBtn'), box=document.getElementById('singlePlayer');
-  if(!btn||!box) return;
-  btn.addEventListener('click', function(){
-    var opening=box.hasAttribute('hidden');
-    if(opening){
-      if(!box.dataset.loaded){
-        var f=document.createElement('iframe');
-        f.src='https://open.spotify.com/embed/track/3bQxqZRiLG0LlMp257Kw3D?utm_source=generator&theme=0';
-        f.width='100%'; f.height='152'; f.setAttribute('frameborder','0'); f.loading='lazy'; f.allowFullscreen=true;
-        f.allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
-        f.title='Blue Blue Day — The Explosion Rockets op Spotify';
-        box.appendChild(f); box.dataset.loaded='1';
-      }
-      box.removeAttribute('hidden');
-    } else { box.setAttribute('hidden',''); }
-    btn.classList.toggle('open', opening);
-    btn.setAttribute('aria-expanded', opening?'true':'false');
-  });
+  var btn=document.getElementById('singleBtn'), box=document.getElementById('singlePlayer'), host=document.getElementById('singleEmbed');
+  if(!btn||!box||!host) return;
+  var ctrl=null, apiLoading=false;
+  function loadApi(cb){
+    if(window.SpotifyIframeApi){ cb(window.SpotifyIframeApi); return; }
+    (window.__spCbs=window.__spCbs||[]).push(cb);
+    if(apiLoading) return; apiLoading=true;
+    window.onSpotifyIframeApiReady=function(API){
+      window.SpotifyIframeApi=API; (window.__spCbs||[]).forEach(function(f){ f(API); }); window.__spCbs=[];
+    };
+    var s=document.createElement('script'); s.src='https://open.spotify.com/embed/iframe-api/v1'; s.async=true;
+    document.body.appendChild(s);
+  }
+  function openPlayer(){
+    box.removeAttribute('hidden'); btn.classList.add('open'); btn.setAttribute('aria-expanded','true');
+    if(ctrl){ ctrl.play(); return; }
+    loadApi(function(API){
+      API.createController(host, {uri:'spotify:track:3bQxqZRiLG0LlMp257Kw3D', width:'100%', height:152}, function(c){
+        ctrl=c;
+        c.addListener('ready', function(){ try{ c.play(); }catch(e){} });   /* start playing on click */
+      });
+    });
+  }
+  function closePlayer(){
+    box.setAttribute('hidden',''); btn.classList.remove('open'); btn.setAttribute('aria-expanded','false');
+    if(ctrl){ try{ ctrl.pause(); }catch(e){} }
+  }
+  btn.addEventListener('click', function(){ if(box.hasAttribute('hidden')) openPlayer(); else closePlayer(); });
 }
 initNav(); initBg(); initLightbox(); initSingle(); applyLang(); loadShows(); observeReveal();
 window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
