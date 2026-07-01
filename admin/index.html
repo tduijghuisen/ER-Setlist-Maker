@@ -26,6 +26,11 @@
   .btn.r{background:var(--red);color:#fff;} .btn.b{background:var(--blue);color:#fff;} .btn.g{background:#3aab5a;color:#fff;}
   .btn.sm{font-size:12px;padding:7px 11px;box-shadow:2px 2px 0 var(--sh);}
   .btn.ghost{background:#fff;}
+  .tabs{display:flex;gap:8px;margin:0 0 18px;flex-wrap:wrap;}
+  .tab{font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;border:3px solid var(--ink);border-radius:4px;
+    padding:9px 16px;background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--sh);transition:.1s;}
+  .tab.active{background:var(--ink);color:var(--paper-2);}
+  .tab:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--sh);}
   .row{display:flex;gap:12px;flex-wrap:wrap;}
   .row>div{flex:1 1 200px;min-width:0;}
   .show-card{border:2px solid var(--ink);border-radius:4px;padding:14px;margin:0 0 14px;background:#fff;position:relative;}
@@ -89,6 +94,12 @@
           <li>Maak de token aan, kopieer hem (<code>github_pat_…</code>) en plak hierboven.</li>
         </ol>
       </details>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs hide" id="tabs">
+      <button class="tab active" id="tabAgenda" type="button">🎤 Agenda</button>
+      <button class="tab" id="tabVideos" type="button">📺 Video's</button>
     </div>
 
     <!-- AGENDA -->
@@ -198,13 +209,21 @@ function showApp(){
   refreshTokState();
   if(token())loadEditor();
 }
+var currentTab='agenda';
+function showTab(t){
+  currentTab=t;
+  $('agendaCard').classList.toggle('hide',t!=='agenda');
+  $('videoCard').classList.toggle('hide',t!=='videos');
+  $('tabAgenda').classList.toggle('active',t==='agenda');
+  $('tabVideos').classList.toggle('active',t==='videos');
+}
 function refreshTokState(){
   var has=!!token();
   $('tokState').innerHTML=has?'<span class="pill ok">token ✓</span>':'<span class="pill no">geen token</span>';
   $('tokenCard').classList.toggle('hide',has);
-  $('agendaCard').classList.toggle('hide',!has);
-  $('videoCard').classList.toggle('hide',!has);
-  if(has)$('tok').value='';
+  $('tabs').classList.toggle('hide',!has);
+  if(has){$('tok').value='';showTab(currentTab);}
+  else{$('agendaCard').classList.add('hide');$('videoCard').classList.add('hide');}
 }
 
 /* ---------- editor ---------- */
@@ -340,6 +359,8 @@ $('pwBtn').addEventListener('click',changePw);
 $('reloadVidBtn').addEventListener('click',loadEditor);
 $('addVidBtn').addEventListener('click',addVid);
 $('saveVidBtn').addEventListener('click',saveVideos);
+$('tabAgenda').addEventListener('click',function(){showTab('agenda');});
+$('tabVideos').addEventListener('click',function(){showTab('videos');});
 if(sessionStorage.getItem('er_authed')==='1')showApp();
 </script>
 </body>
