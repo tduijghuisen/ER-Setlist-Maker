@@ -108,6 +108,22 @@
       <p class="muted" style="margin-top:8px;">Na publiceren werkt de site over ±1 minuut bij (GitHub Pages bouwt opnieuw).</p>
     </div>
 
+    <!-- VIDEOS -->
+    <div class="card hide" id="videoCard">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h2 style="margin:0;">Video's · YouTube</h2>
+        <span class="sp" style="margin-left:auto;"></span>
+        <button class="btn ghost sm" id="reloadVidBtn" type="button">Opnieuw laden</button>
+        <button class="btn g" id="addVidBtn" type="button">+ Video</button>
+      </div>
+      <p class="muted" style="margin-top:6px;">Plak een YouTube-link of het video-ID. De volgorde hier bepaalt de volgorde op de site.</p>
+      <div id="vidList" style="margin-top:14px;"></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+        <button class="btn r" id="saveVidBtn" type="button">💾 Video's publiceren</button>
+      </div>
+      <p class="muted" style="margin-top:8px;">Na publiceren werkt de site over ±1 minuut bij.</p>
+    </div>
+
   </div>
 </div>
 
@@ -117,8 +133,10 @@
 var REPO={owner:'tduijghuisen',name:'ER-Setlist-Maker',branch:'main'};
 var IMG_DIR='assets/shows/';            /* site-root relative (repo root) */
 var JSON_PATH='data/shows.json';
+var VIDEOS_PATH='data/videos.json';
 var ADMIN_PATH='data/admin.json';
 var shows=[];
+var videos=[];
 
 /* ---------- helpers ---------- */
 function $(id){return document.getElementById(id);}
@@ -185,6 +203,7 @@ function refreshTokState(){
   $('tokState').innerHTML=has?'<span class="pill ok">token ✓</span>':'<span class="pill no">geen token</span>';
   $('tokenCard').classList.toggle('hide',has);
   $('agendaCard').classList.toggle('hide',!has);
+  $('videoCard').classList.toggle('hide',!has);
   if(has)$('tok').value='';
 }
 
@@ -231,8 +250,12 @@ async function pickFlyer(i,input){
 }
 
 async function loadEditor(){
-  statusMsg('Agenda laden…');
-  try{var r=await ghGet(JSON_PATH);shows=r.content?JSON.parse(r.content):[];render();statusMsg('Agenda geladen.');}
+  statusMsg('Laden…');
+  try{
+    var r=await ghGet(JSON_PATH);shows=r.content?JSON.parse(r.content):[];render();
+    var rv=await ghGet(VIDEOS_PATH);videos=rv.content?JSON.parse(rv.content):[];renderVids();
+    statusMsg('Agenda & video’s geladen.');
+  }
   catch(e){statusMsg('Laden mislukt: '+e.message,true);}
 }
 async function save(){
@@ -266,6 +289,44 @@ async function changePw(){
   }catch(e){statusMsg('Fout: '+e.message,true);}
 }
 
+/* ---------- videos ---------- */
+function ytId(s){s=(''+(s||'')).trim();var m=s.match(/(?:youtu\.be\/|[?&]v=|embed\/|shorts\/|\/v\/)([A-Za-z0-9_-]{11})/);if(m)return m[1];if(/^[A-Za-z0-9_-]{11}$/.test(s))return s;return s;}
+function renderVids(){
+  var html=videos.map(function(v,i){
+    var id=(v[0]||''),title=(v[1]||'');
+    return '<div class="show-card">'+
+      '<div class="head"><span class="badge">#'+(i+1)+'</span>'+
+        '<span class="sp" style="margin-left:auto"></span>'+
+        '<button class="btn ghost sm" type="button" title="Omhoog" onclick="moveVid('+i+',-1)">▲</button>'+
+        '<button class="btn ghost sm" type="button" title="Omlaag" onclick="moveVid('+i+',1)">▼</button>'+
+        '<button class="btn r sm" type="button" onclick="delVid('+i+')">Verwijderen</button></div>'+
+      '<div class="flyerline">'+
+        (id?'<img src="https://i.ytimg.com/vi/'+esc(id)+'/hqdefault.jpg" alt="thumb" onerror="this.style.visibility=\'hidden\'">':'<span class="muted">Nog geen video-ID.</span>')+
+        '<div style="flex:1 1 200px;min-width:0;">'+
+          '<label>Titel</label><input type="text" value="'+esc(title)+'" placeholder="bv. Blue Blue Day · Promo" oninput="updVid('+i+',1,this.value)">'+
+          '<label>YouTube-link of ID</label><input type="text" value="'+esc(id)+'" placeholder="https://youtu.be/… of het 11-teken ID" onchange="setVidId('+i+',this.value)">'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  $('vidList').innerHTML=html||'<p class="muted">Nog geen video’s. Klik op “+ Video”.</p>';
+}
+function updVid(i,k,v){videos[i][k]=v;}
+function setVidId(i,v){videos[i][0]=ytId(v);renderVids();}
+function addVid(){videos.push(['','']);renderVids();window.scrollTo(0,document.body.scrollHeight);}
+function delVid(i){if(confirm('Deze video verwijderen?')){videos.splice(i,1);renderVids();}}
+function moveVid(i,d){var j=i+d;if(j<0||j>=videos.length)return;var t=videos[i];videos[i]=videos[j];videos[j]=t;renderVids();}
+async function saveVideos(){
+  if(!token()){statusMsg('Stel eerst een GitHub-token in.',true);return;}
+  var clean=videos.map(function(v){return [ytId(v[0]||''),(v[1]||'').trim()];}).filter(function(v){return v[0];});
+  statusMsg('Video’s publiceren…');
+  try{
+    var cur=await ghGet(VIDEOS_PATH);
+    await ghPut(VIDEOS_PATH,b64enc(JSON.stringify(clean,null,2)+'\n'),'CMS: video’s bijgewerkt',cur.sha);
+    statusMsg('Video’s gepubliceerd! De site werkt over ±1 min bij.');
+  }catch(e){statusMsg('Fout bij publiceren: '+e.message,true);}
+}
+
 /* ---------- wire up ---------- */
 $('loginBtn').addEventListener('click',doLogin);
 $('pw').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
@@ -276,6 +337,9 @@ $('reloadBtn').addEventListener('click',loadEditor);
 $('addBtn').addEventListener('click',addShow);
 $('saveBtn').addEventListener('click',save);
 $('pwBtn').addEventListener('click',changePw);
+$('reloadVidBtn').addEventListener('click',loadEditor);
+$('addVidBtn').addEventListener('click',addVid);
+$('saveVidBtn').addEventListener('click',saveVideos);
 if(sessionStorage.getItem('er_authed')==='1')showApp();
 </script>
 </body>

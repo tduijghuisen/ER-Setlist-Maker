@@ -839,6 +839,11 @@ function renderShows(){
   fillFold('showsMore', up.slice(4), (lang?'Show all upcoming shows':'Toon alle aankomende shows'));
   fillFold('showsArchive', past, (lang?'View past shows':'Bekijk historie')+' ('+past.length+')');
 }
+function loadVideos(){
+  fetch('data/videos.json',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+    if(Array.isArray(d)&&d.length){ VIDEOS=d; renderVideos(); }
+  }).catch(function(){});
+}
 function renderVideos(){
   var g=document.getElementById('videoGrid'); g.innerHTML='';
   VIDEOS.forEach(function(v){
@@ -954,7 +959,7 @@ function initSingle(){
   }
   btn.addEventListener('click', function(){ if(box.hasAttribute('hidden')) openPlayer(); else closePlayer(); });
 }
-initNav(); initBg(); initLightbox(); initSingle(); applyLang(); loadShows(); observeReveal();
+initNav(); initBg(); initLightbox(); initSingle(); applyLang(); loadShows(); loadVideos(); observeReveal();
 window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 </script>
 </body>
