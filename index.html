@@ -340,8 +340,9 @@
   .booking p{font-weight:700; max-width:560px; margin:0 auto 22px; text-align:center;}
   .booking .b-cta{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
   .booking .book-contact{font-weight:700; font-size:14px; text-align:center; margin:32px auto 0; color:var(--ink);}
-  .book-contact a{color:var(--red-2); text-decoration:underline; text-underline-offset:2px;}
-  .book-contact a:hover{color:var(--red);}
+  .booking .book-phone{font-weight:700; font-size:14px; text-align:center; margin:6px auto 0; color:var(--ink);}
+  .book-contact a, .book-phone a{color:var(--red-2); text-decoration:underline; text-underline-offset:2px;}
+  .book-contact a:hover, .book-phone a:hover{color:var(--red);}
 
   /* footer */
   footer{position:relative; z-index:1; background:var(--ink); color:var(--paper-2); padding:38px 20px 30px; border-top:var(--bd) solid var(--red);}
@@ -601,6 +602,7 @@
         <a class="cbtn cbtn-r" href="mailto:fv.esch@home.nl,info@explosionrockets.com?subject=Boekingsaanvraag%20The%20Explosion%20Rockets" data-i18n="book_cta1">✉ BOEKINGSAANVRAAG</a>
       </div>
       <p class="book-contact" data-i18n="book_contact">Of mail ons direct: <a href="mailto:info@explosionrockets.com?cc=fv.esch@home.nl">info@explosionrockets.com</a></p>
+      <p class="book-phone" data-i18n="book_phone">Telefonisch en via WhatsApp zijn we bereikbaar via <a href="tel:+31629100702">+31 6 29100702</a> (Frans van Esch)</p>
     </div>
   </section>
 </div>
@@ -721,7 +723,8 @@ var I18N = {
   book_title:['BOEK DE BAND!','BOOK THE BAND!'],
   book_p:['Festival, rock-’n-roll-weekend of ander rock-’n-roll-evenement? The Explosion Rockets brengen 40 jaar podiumervaring mee, onafgebroken sinds 1985 — en een dansvloer die niet meer stilstaat.','Festival, rock ’n roll weekend or another rock ’n roll event? The Explosion Rockets bring 40 years of stage experience, non-stop since 1985 — and a dance floor that won’t sit down.'],
   book_cta1:['✉ BOEKINGSAANVRAAG','✉ BOOKING REQUEST'],
-  book_contact:['Of mail ons direct: <a href="mailto:info@explosionrockets.com?cc=fv.esch@home.nl">info@explosionrockets.com</a>','Or email us directly: <a href="mailto:info@explosionrockets.com?cc=fv.esch@home.nl">info@explosionrockets.com</a>']
+  book_contact:['Of mail ons direct: <a href="mailto:info@explosionrockets.com?cc=fv.esch@home.nl">info@explosionrockets.com</a>','Or email us directly: <a href="mailto:info@explosionrockets.com?cc=fv.esch@home.nl">info@explosionrockets.com</a>'],
+  book_phone:['Telefonisch en via WhatsApp zijn we bereikbaar via <a href="tel:+31629100702">+31 6 29100702</a> (Frans van Esch)','By phone and WhatsApp we’re reachable at <a href="tel:+31629100702">+31 6 29100702</a> (Frans van Esch)']
 };
 var lang = 0;
 function applyLang(){
