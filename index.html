@@ -79,6 +79,7 @@
   .hero2 .tag{font-family:'Bangers',sans-serif; font-size:clamp(24px,5vw,46px); color:var(--paper-2);
     -webkit-text-stroke:1.5px var(--ink); paint-order:stroke fill; text-shadow:3px 3px 0 var(--red);}
   .hero-btns{display:flex; gap:14px; flex-wrap:wrap; justify-content:center; align-items:center;}
+  .hero-single{display:flex; justify-content:center; margin-top:16px;}
   .single-sticker{position:relative; display:inline-flex; align-items:center; gap:11px; cursor:pointer; text-align:left;
     background:var(--paper-2); border:4px solid var(--ink); box-shadow:5px 5px 0 var(--sh);
     padding:8px 16px 8px 9px; transform:rotate(-3deg); transition:.12s;}
@@ -391,7 +392,7 @@
     .socials{flex:1 1 100%; justify-content:center;}
   }
   @media(max-width:520px){
-    .single-sticker{flex-basis:100%; justify-content:center; transform:none;}
+    .single-sticker{transform:none;}
     .single-sticker:hover{transform:translateY(-2px);} .single-sticker:active{transform:translate(2px,2px);}
     .stats{grid-template-columns:1fr 1fr;} .instruments{grid-template-columns:repeat(2,1fr);}
     .members-grid{grid-template-columns:1fr 1fr;}
@@ -440,6 +441,8 @@
     <div class="hero-btns">
       <a class="cbtn cbtn-y" href="#shows" data-i18n="hero_cta1">SEE THE SHOWS</a>
       <a class="cbtn cbtn-r" href="#music" data-i18n="hero_cta2">LISTEN NOW</a>
+    </div>
+    <div class="hero-single">
       <button type="button" class="single-sticker" id="singleBtn" aria-expanded="false" aria-controls="singlePlayer">
         <span class="ss-play" aria-hidden="true">▶</span>
         <span class="ss-txt"><span class="ss-kick">Play our new single</span><span class="ss-title">Blue Blue Day</span></span>
