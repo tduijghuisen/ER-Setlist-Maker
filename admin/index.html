@@ -17,7 +17,8 @@
   h2{font-size:16px;margin:0 0 12px;}
   label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin:10px 0 4px;color:#5b5343;}
   input[type=text],input[type=url],input[type=date],input[type=password],textarea{
-    width:100%;padding:10px 12px;border:2px solid var(--ink);border-radius:4px;font:inherit;background:#fff;}
+    width:100%;max-width:100%;min-width:0;padding:10px 12px;border:2px solid var(--ink);border-radius:4px;font:inherit;background:#fff;}
+  input[type=date]{-webkit-appearance:none;appearance:none;}
   textarea{resize:vertical;min-height:46px;}
   .btn{font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;border:3px solid var(--ink);
     border-radius:4px;padding:10px 16px;box-shadow:3px 3px 0 var(--sh);transition:.1s;background:var(--yellow);color:var(--ink);}
@@ -194,7 +195,8 @@ function render(){
   shows.sort(by);
   var html=shows.map(function(s,i){
     var past=isPast(s.date);
-    var prev=s._fullData||s.flyer;
+    var prevRaw=s._thumbData||s._fullData||s.thumb||s.flyer||'';
+    var prev=prevRaw&&prevRaw.slice(0,5)!=='data:'?'../'+prevRaw:prevRaw;
     return '<div class="show-card">'+
       '<div class="head"><span class="badge">#'+(i+1)+'</span>'+(past?'<span class="badge" style="background:#9a8f78">voorbij</span>':'<span class="badge" style="background:var(--blue)">aankomend</span>')+
         '<span class="sp" style="margin-left:auto"></span><button class="btn r sm" type="button" onclick="delShow('+i+')">Verwijderen</button></div>'+
