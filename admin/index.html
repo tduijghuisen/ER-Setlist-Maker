@@ -37,7 +37,9 @@
   .show-card .head{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;}
   .show-card .badge{font-weight:800;font-size:12px;background:var(--ink);color:#fff;padding:3px 8px;border-radius:99px;}
   .show-card .past{background:#8a8madd;}
-  .flyerline{display:flex;gap:14px;align-items:flex-start;margin-top:6px;}
+  .flyerline{display:flex;gap:14px;align-items:flex-start;margin-top:6px;flex-wrap:wrap;}
+  .flyerline>div{flex:1 1 160px;min-width:0;}
+  .flyerline input[type=file]{max-width:100%;}
   .flyerline img{height:96px;width:auto;border:2px solid var(--ink);border-radius:3px;display:block;background:#eee;}
   .muted{color:#6b6354;font-size:12px;}
   .status{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:12px 18px;font-size:14px;
