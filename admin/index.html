@@ -65,6 +65,7 @@
   .setname{cursor:pointer;} .settoggle{flex:0 0 auto;}
   .pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;border:2px solid var(--ink);color:var(--ink);}
   .pill.ok{background:#d6f5dd;} .pill.no{background:#ffd9d6;}
+  .pill.err{background:#e5342a;color:#fff;} .pill.chk{background:#fff3cf;}
 </style>
 </head>
 <body>
@@ -261,13 +262,24 @@ async function doLogin(){
     else $('pwerr').textContent='Onjuist wachtwoord.';
   }catch(e){$('pwerr').textContent='Kon beveiliging niet laden: '+e.message;}
 }
-function showApp(){
+async function showApp(){
   $('gate').classList.add('hide');$('app').classList.remove('hide');$('logoutBtn').classList.remove('hide');
   $('tabs').classList.remove('hide');
-  refreshTokState();
-  loadRepertoire();            /* public fetch — view/export works without a token */
-  if(token())loadEditor();     /* agenda + videos need the token */
   showTab(currentTab);
+  await loadAllData();
+}
+/* Load every tab's data, but only after confirming the token is valid.
+   With no/invalid token nothing is shown — all tabs stay locked. */
+async function loadAllData(){
+  var ok=await validateToken();
+  if(ok){ loadEditor(); loadRepertoire(); }
+  else {
+    shows=[];videos=[];repertoire=[];setlists=[];
+    render();renderVids();renderSongs();renderSetlists();
+    statusMsg(token()
+      ? 'Token ongeldig — GitHub weigert hem. Vul rechtsboven een geldige token in om de gegevens te laden.'
+      : 'Vul rechtsboven een GitHub-token in om de gegevens te laden.', true);
+  }
 }
 var currentTab='agenda';
 var TAB_CARDS={agenda:'agendaCard',videos:'videoCard',repertoire:'repertoireCard',setlists:'setlistCard'};
@@ -277,12 +289,31 @@ function showTab(t){
   Object.keys(TAB_CARDS).forEach(function(k){$(TAB_CARDS[k]).classList.toggle('hide',k!==t);});
   Object.keys(TAB_BTNS).forEach(function(k){$(TAB_BTNS[k]).classList.toggle('active',k===t);});
 }
+var tokValid=null; /* null = not yet checked, true = accepted by GitHub, false = rejected */
+function dataLocked(){return !token()||tokValid===false;}
 function refreshTokState(){
-  var has=!!token();
-  $('tokState').innerHTML=has?'<span class="pill ok" title="Klik om de token te vervangen">token ✓ · vervangen</span>':'<span class="pill no">geen token</span>';
-  $('tokState').style.cursor=has?'pointer':'';
-  $('tokenCard').classList.toggle('hide',has);
-  if(has)$('tok').value='';
+  var has=!!token(),el=$('tokState');
+  if(!has){ el.innerHTML='<span class="pill no">geen token</span>'; el.style.cursor=''; }
+  else if(tokValid===false){ el.innerHTML='<span class="pill err" title="Klik om de token te vervangen">token ✕ ongeldig · vervangen</span>'; el.style.cursor='pointer'; }
+  else if(tokValid===true){ el.innerHTML='<span class="pill ok" title="Klik om de token te vervangen">token ✓ · vervangen</span>'; el.style.cursor='pointer'; }
+  else { el.innerHTML='<span class="pill chk" title="Klik om de token te vervangen">token · controleren…</span>'; el.style.cursor='pointer'; }
+  /* Show the token card whenever there is no token OR the token was rejected. */
+  var lock=!has||tokValid===false;
+  $('tokenCard').classList.toggle('hide',!lock);
+  if(!lock)$('tok').value='';
+}
+/* Ask GitHub whether the stored token is accepted (and can read repo contents). */
+async function validateToken(){
+  if(!token()){ tokValid=null; refreshTokState(); return false; }
+  tokValid=null; refreshTokState();
+  try{
+    var r=await fetch('https://api.github.com/repos/'+REPO.owner+'/'+REPO.name+'/contents/'+ADMIN_PATH+'?ref='+REPO.branch+'&t='+Date.now(),{headers:ghHeaders(),cache:'no-store'});
+    /* admin.json always exists: a real 200 proves the token is accepted AND can read repo contents.
+       401=bad creds, 403=forbidden, 404=no access for a fine-grained token → all invalid. */
+    tokValid=r.ok;
+  }catch(e){ tokValid=false; }
+  refreshTokState();
+  return tokValid;
 }
 
 /* ---------- editor ---------- */
@@ -418,8 +449,14 @@ function isEmptySong(s){
 function newId(p){return p+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36);}
 function songById(id){for(var i=0;i<repertoire.length;i++)if(repertoire[i].id===id)return repertoire[i];return null;}
 async function loadRepertoire(){
-  try{var r=await fetch('../'+REP_PATH+'?t='+Date.now(),{cache:'no-store'});repertoire=r.ok?await r.json():[];}catch(e){repertoire=[];}
-  try{var s=await fetch('../'+SET_PATH+'?t='+Date.now(),{cache:'no-store'});setlists=s.ok?await s.json():[];}catch(e){setlists=[];}
+  if(!token()){repertoire=[];setlists=[];renderSongs();renderSetlists();return;}
+  try{
+    var r=await ghGet(REP_PATH); repertoire=r.content?JSON.parse(r.content):[];
+    var s=await ghGet(SET_PATH); setlists=s.content?JSON.parse(s.content):[];
+  }catch(e){
+    repertoire=[];setlists=[];renderSongs();renderSetlists();
+    statusMsg('Repertoire laden mislukt: '+e.message,true); return;
+  }
   if(!Array.isArray(repertoire))repertoire=[]; if(!Array.isArray(setlists))setlists=[];
   repertoire.forEach(function(s,i){if(!s.id)s.id='s'+i+Date.now().toString(36);});
   setlists.forEach(function(s,i){if(!s.id)s.id='l'+i+Date.now().toString(36); s._collapsed=true;});
@@ -460,7 +497,7 @@ function renderSongs(){
         '</div>'+
       '</div>';
     }).join('');
-  $('songList').innerHTML=html||'<p class="muted">'+(repEmptyOnly?'Geen onvolledige nummers 🎉':(repFilter?'Geen nummers gevonden.':'Nog geen nummers. Klik op “+ Nummer”.'))+'</p>';
+  $('songList').innerHTML=html||'<p class="muted">'+(dataLocked()?'🔒 Vul rechtsboven een geldige GitHub-token in om het repertoire te laden.':(repEmptyOnly?'Geen onvolledige nummers 🎉':(repFilter?'Geen nummers gevonden.':'Nog geen nummers. Klik op “+ Nummer”.')))+'</p>';
 }
 function updSong(i,k,v){repertoire[i][k]=v;}
 function delSong(i){if(confirm('Dit nummer verwijderen?')){repertoire.splice(i,1);renderSongs();}}
@@ -536,7 +573,7 @@ function renderSetlists(){
       '</div>'+
     '</div>';
   }).join('');
-  $('setList').innerHTML=html||'<p class="muted">Nog geen setlists. Klik op “+ Setlist” of plak een setlist als tekst.</p>';
+  $('setList').innerHTML=html||'<p class="muted">'+(dataLocked()?'🔒 Vul rechtsboven een geldige GitHub-token in om de setlists te laden.':'Nog geen setlists. Klik op “+ Setlist” of plak een setlist als tekst.')+'</p>';
 }
 function toggleSetlist(i){ setlists[i]._collapsed=!setlists[i]._collapsed; renderSetlists(); }
 function resolveMiss(i,idx,sid){ if(!sid)return; setlists[i].songs[idx]=sid; renderSetlists(); }
@@ -640,8 +677,20 @@ $('loginBtn').addEventListener('click',doLogin);
 $('pw').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 $('logoutBtn').addEventListener('click',function(){sessionStorage.removeItem('er_authed');location.reload();});
 $('tokState').addEventListener('click',function(){if(token()){$('tokenCard').classList.remove('hide');$('tok').value='';$('tok').focus();statusMsg('Plak een nieuwe token en klik "Token opslaan".');}});
-$('saveTokBtn').addEventListener('click',function(){var t=$('tok').value.trim();if(!t){statusMsg('Plak eerst een token.',true);return;}localStorage.setItem('er_gh_token',t);refreshTokState();loadEditor();statusMsg('Token opgeslagen.');});
-$('clearTokBtn').addEventListener('click',function(){localStorage.removeItem('er_gh_token');refreshTokState();statusMsg('Token gewist.');});
+$('saveTokBtn').addEventListener('click',async function(){
+  var t=$('tok').value.trim();if(!t){statusMsg('Plak eerst een token.',true);return;}
+  localStorage.setItem('er_gh_token',t);
+  statusMsg('Token controleren…');
+  var ok=await validateToken();
+  if(ok){ loadEditor(); loadRepertoire(); statusMsg('Token opgeslagen en geldig.'); }
+  else { shows=[];videos=[];repertoire=[];setlists=[];render();renderVids();renderSongs();renderSetlists();
+    statusMsg('Token opgeslagen, maar GitHub weigert hem (ongeldig/verlopen of onvoldoende rechten).',true); }
+});
+$('clearTokBtn').addEventListener('click',function(){
+  localStorage.removeItem('er_gh_token');tokValid=null;
+  shows=[];videos=[];repertoire=[];setlists=[];render();renderVids();renderSongs();renderSetlists();
+  refreshTokState();statusMsg('Token gewist.');
+});
 $('reloadBtn').addEventListener('click',loadEditor);
 $('addBtn').addEventListener('click',addShow);
 $('saveBtn').addEventListener('click',save);
