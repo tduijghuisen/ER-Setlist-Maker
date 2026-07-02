@@ -61,6 +61,7 @@
   .setrow.hd{border-bottom:0;margin-top:6px;} .setrow.hd .t{font-weight:800;text-transform:uppercase;letter-spacing:.03em;color:var(--red-2);}
   .setrow.miss .t{color:var(--red-2);}
   .miss-sel{flex:0 0 auto;max-width:150px;padding:4px 6px;border:2px solid var(--ink);border-radius:4px;font:inherit;background:#fff;font-size:12px;}
+  .repchk{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-size:13px;font-weight:700;cursor:pointer;} .repchk input{width:auto;min-width:0;}
   .pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;border:2px solid var(--ink);color:var(--ink);}
   .pill.ok{background:#d6f5dd;} .pill.no{background:#ffd9d6;}
 </style>
@@ -160,6 +161,7 @@
       </div>
       <p class="muted" style="margin-top:6px;">Chord sheets, lyrics en songgegevens. Exporteer per nummer naar PDF. Bewerken/publiceren vereist een GitHub-token; bekijken en exporteren kan zonder.</p>
       <input type="text" id="repSearch" placeholder="Zoek op titel of artiest…" style="margin-top:12px;">
+      <label class="repchk"><input type="checkbox" id="repEmpty"> Alleen onvolledige nummers <span id="repEmptyCount" class="muted"></span></label>
       <div id="songList" style="margin-top:14px;"></div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
         <button class="btn r" id="saveRepBtn" type="button">💾 Repertoire publiceren</button>
@@ -402,7 +404,13 @@ async function saveVideos(){
 
 /* ---------- repertoire & setlists ---------- */
 var REP_PATH='data/repertoire.json', SET_PATH='data/setlists.json';
-var repertoire=[], setlists=[], repFilter='';
+var repertoire=[], setlists=[], repFilter='', repEmptyOnly=false;
+function isEmptySong(s){
+  var c=((s&&s.chords)||'').trim();
+  if(!c || c.indexOf('⚠️')===0) return true;
+  var lines=c.split('\n').map(function(l){return l.trim();}).filter(Boolean);
+  return lines.length>0 && lines.every(function(l){return /^!?\[.*\]\(.*\)$/.test(l);}); /* only media/attachment links */
+}
 function newId(p){return p+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36);}
 function songById(id){for(var i=0;i<repertoire.length;i++)if(repertoire[i].id===id)return repertoire[i];return null;}
 async function loadRepertoire(){
@@ -415,8 +423,10 @@ async function loadRepertoire(){
 }
 function renderSongs(){
   var q=repFilter.toLowerCase();
+  var cntEl=$('repEmptyCount'); if(cntEl) cntEl.textContent='('+repertoire.filter(isEmptySong).length+')';
   var html=repertoire.map(function(s,i){return {s:s,i:i};})
     .filter(function(o){return !q||(((o.s.title||'')+' '+(o.s.artist||'')).toLowerCase().indexOf(q)>=0);})
+    .filter(function(o){return !repEmptyOnly||isEmptySong(o.s);})
     .map(function(o){var s=o.s,i=o.i;
       return '<div class="show-card">'+
         '<div class="head"><span class="badge">'+esc(s.title||'Naamloos')+'</span>'+
@@ -437,7 +447,7 @@ function renderSongs(){
         '<label>Notities (optioneel)</label><textarea oninput="updSong('+i+',\'notes\',this.value)">'+esc(s.notes)+'</textarea>'+
       '</div>';
     }).join('');
-  $('songList').innerHTML=html||'<p class="muted">'+(repFilter?'Geen nummers gevonden.':'Nog geen nummers. Klik op “+ Nummer”.')+'</p>';
+  $('songList').innerHTML=html||'<p class="muted">'+(repEmptyOnly?'Geen onvolledige nummers 🎉':(repFilter?'Geen nummers gevonden.':'Nog geen nummers. Klik op “+ Nummer”.'))+'</p>';
 }
 function updSong(i,k,v){repertoire[i][k]=v;}
 function delSong(i){if(confirm('Dit nummer verwijderen?')){repertoire.splice(i,1);renderSongs();}}
@@ -605,6 +615,7 @@ $('addSetBtn').addEventListener('click',addSetlist);
 $('saveSetBtn').addEventListener('click',saveSetlists);
 $('setPasteBtn').addEventListener('click',createSetlistFromText);
 $('repSearch').addEventListener('input',function(){repFilter=this.value;renderSongs();});
+$('repEmpty').addEventListener('change',function(){repEmptyOnly=this.checked;renderSongs();});
 if(sessionStorage.getItem('er_authed')==='1')showApp();
 </script>
 </body>
