@@ -56,7 +56,11 @@
   .setrow{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #eee;}
   .setrow .t{flex:1 1 auto;min-width:0;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .setrow .k{font-size:12px;color:#6b6354;flex:0 0 auto;font-weight:600;}
-  .setpick{margin-top:10px;} .setpick select{width:100%;max-width:100%;padding:9px 10px;border:2px solid var(--ink);border-radius:4px;font:inherit;background:#fff;}
+  .setpick{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;} .setpick select{flex:1 1 200px;min-width:0;max-width:100%;padding:9px 10px;border:2px solid var(--ink);border-radius:4px;font:inherit;background:#fff;}
+  .setpaste{margin-top:12px;padding:12px;border:2px dashed var(--ink);border-radius:4px;background:#fffdf4;}
+  .setrow.hd{border-bottom:0;margin-top:6px;} .setrow.hd .t{font-weight:800;text-transform:uppercase;letter-spacing:.03em;color:var(--red-2);}
+  .setrow.miss .t{color:var(--red-2);}
+  .miss-sel{flex:0 0 auto;max-width:150px;padding:4px 6px;border:2px solid var(--ink);border-radius:4px;font:inherit;background:#fff;font-size:12px;}
   .pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;border:2px solid var(--ink);color:var(--ink);}
   .pill.ok{background:#d6f5dd;} .pill.no{background:#ffd9d6;}
 </style>
@@ -171,6 +175,13 @@
         <button class="btn g" id="addSetBtn" type="button">+ Setlist</button>
       </div>
       <p class="muted" style="margin-top:6px;">Stel per optreden een setlist samen uit het repertoire en exporteer naar PDF — als overzicht of als volledig boekje met alle chord sheets.</p>
+      <div class="setpaste">
+        <label>Setlist uit tekst plakken</label>
+        <input type="text" id="setPasteName" placeholder="Naam (bv. Parelrock 4 juli)">
+        <textarea id="setPasteText" class="sheet-input" wrap="off" placeholder="SET 1&#10;Guitar Boogie&#10;Shake, Rattle and Roll&#10;…&#10;&#10;SET 2&#10;…" style="min-height:120px;margin-top:6px;"></textarea>
+        <button class="btn g" id="setPasteBtn" type="button" style="margin-top:8px;">Maak setlist uit tekst</button>
+        <p class="muted" style="margin-top:6px;">Regels met “SET 1/2/3” (of Encore/Pauze) worden koppen. Titels worden automatisch aan het repertoire gekoppeld; niet-gevonden titels kun je daarna handmatig koppelen.</p>
+      </div>
       <div id="setList" style="margin-top:14px;"></div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
         <button class="btn r" id="saveSetBtn" type="button">💾 Setlists publiceren</button>
@@ -438,17 +449,27 @@ async function saveRepertoire(){
   try{var cur=await ghGet(REP_PATH);await ghPut(REP_PATH,b64enc(JSON.stringify(clean,null,2)+'\n'),'CMS: repertoire bijgewerkt',cur.sha);statusMsg('Repertoire gepubliceerd!');}
   catch(e){statusMsg('Fout bij publiceren: '+e.message,true);}
 }
+function setItemType(it){ if(it&&typeof it==='object'){ if(it.h!=null)return'h'; if(it.t!=null)return't'; } return 's'; }
 function renderSetlists(){
+  var songOpts='<option value="">+ Nummer toevoegen…</option>'+repertoire.map(function(s){return '<option value="'+esc(s.id)+'">'+esc(s.title||'Naamloos')+(s.key?' ('+esc(s.key)+')':'')+'</option>';}).join('');
   var html=setlists.map(function(sl,i){
-    var rows=(sl.songs||[]).map(function(sid,idx){
-      var s=songById(sid);
-      var label=s?(esc(s.title||'Naamloos')+(s.key?' <span class="k">· '+esc(s.key)+'</span>':'')):'<span class="k">(verwijderd nummer)</span>';
-      return '<div class="setrow"><span class="k">'+(idx+1)+'.</span><span class="t">'+label+'</span>'+
-        '<button class="btn ghost sm" type="button" onclick="moveSetSong('+i+','+idx+',-1)">▲</button>'+
+    var cnt=0;
+    var rows=(sl.songs||[]).map(function(item,idx){
+      var ctrls='<button class="btn ghost sm" type="button" onclick="moveSetSong('+i+','+idx+',-1)">▲</button>'+
         '<button class="btn ghost sm" type="button" onclick="moveSetSong('+i+','+idx+',1)">▼</button>'+
-        '<button class="btn r sm" type="button" onclick="delSetSong('+i+','+idx+')">×</button></div>';
+        '<button class="btn r sm" type="button" onclick="delSetSong('+i+','+idx+')">×</button>';
+      var tp=setItemType(item);
+      if(tp==='h') return '<div class="setrow hd"><span class="t">'+esc(item.h)+'</span>'+ctrls+'</div>';
+      cnt++;
+      if(tp==='t'){
+        var sel='<select class="miss-sel" onchange="resolveMiss('+i+','+idx+',this.value)"><option value="">koppel aan…</option>'+
+          repertoire.map(function(s){return '<option value="'+esc(s.id)+'">'+esc(s.title||'Naamloos')+(s.key?' ('+esc(s.key)+')':'')+'</option>';}).join('')+'</select>';
+        return '<div class="setrow miss"><span class="k">'+cnt+'.</span><span class="t">'+esc(item.t)+' <span class="k">(niet gevonden)</span></span>'+sel+ctrls+'</div>';
+      }
+      var s=songById(item);
+      var label=s?(esc(s.title||'Naamloos')+(s.key?' <span class="k">· '+esc(s.key)+'</span>':'')):'<span class="k">(verwijderd nummer)</span>';
+      return '<div class="setrow"><span class="k">'+cnt+'.</span><span class="t">'+label+'</span>'+ctrls+'</div>';
     }).join('')||'<p class="muted">Nog geen nummers in deze setlist.</p>';
-    var opts='<option value="">+ Nummer toevoegen…</option>'+repertoire.map(function(s){return '<option value="'+esc(s.id)+'">'+esc(s.title||'Naamloos')+(s.key?' ('+esc(s.key)+')':'')+'</option>';}).join('');
     return '<div class="show-card">'+
       '<div class="head"><span class="badge">'+esc(sl.name||'Naamloze setlist')+'</span>'+
         '<span class="sp" style="margin-left:auto"></span>'+
@@ -461,11 +482,14 @@ function renderSetlists(){
       '</div>'+
       '<label>Notities (optioneel)</label><input type="text" value="'+esc(sl.notes)+'" placeholder="bv. 2 sets, pauze na nr. 8" oninput="updSet('+i+',\'notes\',this.value)">'+
       '<label>Nummers</label><div>'+rows+'</div>'+
-      '<div class="setpick"><select onchange="addSetSong('+i+',this.value);this.value=\'\';">'+opts+'</select></div>'+
+      '<div class="setpick"><select onchange="addSetSong('+i+',this.value);this.value=\'\';">'+songOpts+'</select>'+
+        '<button class="btn ghost sm" type="button" onclick="addSetHeader('+i+')">+ Set-kop</button></div>'+
     '</div>';
   }).join('');
-  $('setList').innerHTML=html||'<p class="muted">Nog geen setlists. Klik op “+ Setlist”.</p>';
+  $('setList').innerHTML=html||'<p class="muted">Nog geen setlists. Klik op “+ Setlist” of plak een setlist als tekst.</p>';
 }
+function resolveMiss(i,idx,sid){ if(!sid)return; setlists[i].songs[idx]=sid; renderSetlists(); }
+function addSetHeader(i){ var h=prompt('Naam van de set-kop (bijv. SET 2):'); if(h==null)return; setlists[i].songs.push({h:(h.trim()||'SET')}); renderSetlists(); }
 function updSet(i,k,v){setlists[i][k]=v;}
 function addSetlist(){setlists.push({id:newId('l'),name:'',date:'',notes:'',songs:[]});renderSetlists();window.scrollTo(0,document.body.scrollHeight);}
 function delSetlist(i){if(confirm('Deze setlist verwijderen?')){setlists.splice(i,1);renderSetlists();}}
@@ -480,7 +504,7 @@ async function saveSetlists(){
   catch(e){statusMsg('Fout bij publiceren: '+e.message,true);}
 }
 /* ---------- PDF export (via print) ---------- */
-var PRINT_CSS='*{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#111;margin:0;padding:26px 30px;}h1{font-size:23px;margin:0 0 2px;}.meta{color:#555;font-size:13px;margin:0 0 12px;}.meta a{color:#1E83C9;}pre.sheet{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.4;white-space:pre-wrap;margin:0;}.notes{margin-top:14px;font-size:13px;color:#333;white-space:pre-wrap;}ol.set{font-size:15px;line-height:1.7;padding-left:26px;}ol.set .k{color:#666;font-size:13px;}.song{page-break-before:always;}@media print{@page{margin:15mm;}}';
+var PRINT_CSS='*{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#111;margin:0;padding:26px 30px;}h1{font-size:23px;margin:0 0 2px;}.meta{color:#555;font-size:13px;margin:0 0 12px;}.meta a{color:#1E83C9;}pre.sheet{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.4;white-space:pre-wrap;margin:0;}.notes{margin-top:14px;font-size:13px;color:#333;white-space:pre-wrap;}ol.set{font-size:15px;line-height:1.7;padding-left:26px;margin:4px 0 8px;}ol.set .k{color:#666;font-size:13px;}.setsec{font-size:15px;margin:16px 0 2px;text-transform:uppercase;letter-spacing:.04em;color:#B81E16;}.song{page-break-before:always;}@media print{@page{margin:15mm;}}';
 function printHTML(title,body){
   var w=window.open('','_blank');
   if(!w){statusMsg('Sta pop-ups toe om naar PDF te exporteren.',true);return;}
@@ -499,13 +523,61 @@ function songBlock(s,cls){
 function exportSongPDF(id){var s=songById(id);if(!s)return;printHTML(s.title||'Chord sheet',songBlock(s,''));}
 function exportSetlistPDF(i,withSheets){
   var sl=setlists[i];if(!sl)return;
-  var songs=(sl.songs||[]).map(songById);
   var title=sl.name||'Setlist';
-  var head='<h1>'+esc(title)+'</h1>'+((sl.date||sl.notes)?'<div class="meta">'+[sl.date?esc(sl.date):'',sl.notes?esc(sl.notes):''].filter(Boolean).join('  ·  ')+'</div>':'');
-  var list='<ol class="set">'+songs.map(function(s){return '<li>'+(s?(esc(s.title||'Naamloos')+((s.key||s.duration)?' <span class="k">('+[s.key,s.duration].filter(Boolean).join(', ')+')</span>':'')):'(verwijderd nummer)')+'</li>';}).join('')+'</ol>';
-  var body=head+list;
-  if(withSheets)body+=songs.filter(Boolean).map(function(s){return songBlock(s,'song');}).join('');
+  var body='<h1>'+esc(title)+'</h1>'+((sl.date||sl.notes)?'<div class="meta">'+[sl.date?esc(sl.date):'',sl.notes?esc(sl.notes):''].filter(Boolean).join('  ·  ')+'</div>':'');
+  var items=sl.songs||[], open=false;
+  function closeOl(){ if(open){ body+='</ol>'; open=false; } }
+  items.forEach(function(item){
+    var tp=setItemType(item);
+    if(tp==='h'){ closeOl(); body+='<h2 class="setsec">'+esc(item.h)+'</h2>'; return; }
+    if(!open){ body+='<ol class="set">'; open=true; }
+    if(tp==='t'){ body+='<li>'+esc(item.t)+' <span class="k">(niet in repertoire)</span></li>'; return; }
+    var s=songById(item);
+    body+='<li>'+(s?(esc(s.title||'Naamloos')+((s.key||s.duration)?' <span class="k">('+[s.key,s.duration].filter(Boolean).join(', ')+')</span>':'')):'(verwijderd nummer)')+'</li>';
+  });
+  closeOl();
+  if(withSheets) items.forEach(function(item){ if(setItemType(item)!=='s')return; var s=songById(item); if(s)body+=songBlock(s,'song'); });
   printHTML(title,body);
+}
+/* ---------- setlist from pasted text ---------- */
+var NUMW={one:'1',two:'2',three:'3',four:'4',five:'5',six:'6',seven:'7',eight:'8',nine:'9',ten:'10',eleven:'11',twelve:'12',thirteen:'13',fourteen:'14',fifteen:'15',sixteen:'16',seventeen:'17',eighteen:'18',nineteen:'19',twenty:'20'};
+function normTitle(s){
+  s=(''+(s||'')).toLowerCase().replace(/[’']/g,'').replace(/&/g,'and');
+  s=s.replace(/[a-z]+/g,function(w){return NUMW[w]||w;});
+  return s.replace(/[^a-z0-9]/g,'');
+}
+function lev(a,b){var m=a.length,n=b.length;if(!m)return n;if(!n)return m;var d=[],i,j;for(i=0;i<=m;i++)d[i]=[i];for(j=0;j<=n;j++)d[0][j]=j;for(i=1;i<=m;i++)for(j=1;j<=n;j++){d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a.charAt(i-1)===b.charAt(j-1)?0:1));}return d[m][n];}
+function matchSong(title){
+  var q=normTitle(title); if(!q)return null;
+  var best=null,bestd=1e9;
+  for(var k=0;k<repertoire.length;k++){
+    var n=normTitle(repertoire[k].title); if(!n)continue;
+    if(n===q)return repertoire[k].id;
+    var d=lev(q,n); if(d<bestd){bestd=d;best=repertoire[k].id;}
+  }
+  var thr=Math.min(4,Math.max(2,Math.floor(q.length*0.2)));
+  return (best!==null&&bestd<=thr)?best:null;
+}
+function parseSetlistText(text){
+  var items=[],unmatched=[],matched=0;
+  (text||'').split(/\r?\n/).forEach(function(ln){
+    var t=ln.trim(); if(!t)return;
+    if(/^(set\b|encore\b|toegift\b|pauze\b|bis\b|deel\b|part\b)/i.test(t)){ items.push({h:t}); return; }
+    var id=matchSong(t);
+    if(id){ items.push(id); matched++; } else { items.push({t:t}); unmatched.push(t); }
+  });
+  return {items:items,unmatched:unmatched,matched:matched};
+}
+function createSetlistFromText(){
+  var name=($('setPasteName').value||'').trim(), text=$('setPasteText').value||'';
+  if(!text.trim()){statusMsg('Plak eerst een setlist-tekst.',true);return;}
+  var r=parseSetlistText(text);
+  setlists.push({id:newId('l'),name:name||'Nieuwe setlist',date:'',notes:'',songs:r.items});
+  $('setPasteName').value=''; $('setPasteText').value='';
+  renderSetlists();
+  var msg=r.matched+' nummers gekoppeld'+(r.unmatched.length?(' · '+r.unmatched.length+' niet gevonden: '+r.unmatched.join(', ')):'');
+  statusMsg(msg, r.unmatched.length>0);
+  window.scrollTo(0,document.body.scrollHeight);
 }
 
 /* ---------- wire up ---------- */
@@ -531,6 +603,7 @@ $('saveRepBtn').addEventListener('click',saveRepertoire);
 $('reloadSetBtn').addEventListener('click',loadRepertoire);
 $('addSetBtn').addEventListener('click',addSetlist);
 $('saveSetBtn').addEventListener('click',saveSetlists);
+$('setPasteBtn').addEventListener('click',createSetlistFromText);
 $('repSearch').addEventListener('input',function(){repFilter=this.value;renderSongs();});
 if(sessionStorage.getItem('er_authed')==='1')showApp();
 </script>
