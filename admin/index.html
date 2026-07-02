@@ -279,7 +279,8 @@ function showTab(t){
 }
 function refreshTokState(){
   var has=!!token();
-  $('tokState').innerHTML=has?'<span class="pill ok">token ✓</span>':'<span class="pill no">geen token</span>';
+  $('tokState').innerHTML=has?'<span class="pill ok" title="Klik om de token te vervangen">token ✓ · vervangen</span>':'<span class="pill no">geen token</span>';
+  $('tokState').style.cursor=has?'pointer':'';
   $('tokenCard').classList.toggle('hide',has);
   if(has)$('tok').value='';
 }
@@ -638,6 +639,7 @@ function createSetlistFromText(){
 $('loginBtn').addEventListener('click',doLogin);
 $('pw').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 $('logoutBtn').addEventListener('click',function(){sessionStorage.removeItem('er_authed');location.reload();});
+$('tokState').addEventListener('click',function(){if(token()){$('tokenCard').classList.remove('hide');$('tok').value='';$('tok').focus();statusMsg('Plak een nieuwe token en klik "Token opslaan".');}});
 $('saveTokBtn').addEventListener('click',function(){var t=$('tok').value.trim();if(!t){statusMsg('Plak eerst een token.',true);return;}localStorage.setItem('er_gh_token',t);refreshTokState();loadEditor();statusMsg('Token opgeslagen.');});
 $('clearTokBtn').addEventListener('click',function(){localStorage.removeItem('er_gh_token');refreshTokState();statusMsg('Token gewist.');});
 $('reloadBtn').addEventListener('click',loadEditor);
