@@ -525,15 +525,15 @@ function exportSetlistPDF(i,withSheets){
   var sl=setlists[i];if(!sl)return;
   var title=sl.name||'Setlist';
   var body='<h1>'+esc(title)+'</h1>'+((sl.date||sl.notes)?'<div class="meta">'+[sl.date?esc(sl.date):'',sl.notes?esc(sl.notes):''].filter(Boolean).join('  ·  ')+'</div>':'');
-  var items=sl.songs||[], open=false;
+  var items=sl.songs||[], open=false, n=0;
   function closeOl(){ if(open){ body+='</ol>'; open=false; } }
   items.forEach(function(item){
     var tp=setItemType(item);
     if(tp==='h'){ closeOl(); body+='<h2 class="setsec">'+esc(item.h)+'</h2>'; return; }
-    if(!open){ body+='<ol class="set">'; open=true; }
-    if(tp==='t'){ body+='<li>'+esc(item.t)+' <span class="k">(niet in repertoire)</span></li>'; return; }
+    if(!open){ body+='<ol class="set" start="'+(n+1)+'">'; open=true; }
+    if(tp==='t'){ body+='<li>'+esc(item.t)+' <span class="k">(niet in repertoire)</span></li>'; n++; return; }
     var s=songById(item);
-    body+='<li>'+(s?(esc(s.title||'Naamloos')+((s.key||s.duration)?' <span class="k">('+[s.key,s.duration].filter(Boolean).join(', ')+')</span>':'')):'(verwijderd nummer)')+'</li>';
+    body+='<li>'+(s?(esc(s.title||'Naamloos')+((s.key||s.duration)?' <span class="k">('+[s.key,s.duration].filter(Boolean).join(', ')+')</span>':'')):'(verwijderd nummer)')+'</li>'; n++;
   });
   closeOl();
   if(withSheets) items.forEach(function(item){ if(setItemType(item)!=='s')return; var s=songById(item); if(s)body+=songBlock(s,'song'); });
