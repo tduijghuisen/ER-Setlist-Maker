@@ -63,6 +63,8 @@
   .miss-sel{flex:0 0 auto;max-width:150px;padding:4px 6px;border:2px solid var(--ink);border-radius:4px;font:inherit;background:#fff;font-size:12px;}
   .repchk{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-size:13px;font-weight:700;cursor:pointer;} .repchk input{width:auto;min-width:0;}
   .setname{cursor:pointer;} .settoggle{flex:0 0 auto;}
+  .songname{cursor:pointer;}
+  .song-lastplayed{font-size:12px;color:#6b6354;font-weight:600;margin-top:8px;}
   .pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;border:2px solid var(--ink);color:var(--ink);}
   .pill.ok{background:#d6f5dd;} .pill.no{background:#ffd9d6;}
   .pill.err{background:#e5342a;color:#fff;} .pill.chk{background:#fff3cf;}
@@ -161,7 +163,7 @@
         <button class="btn ghost sm" id="reloadRepBtn" type="button">Opnieuw laden</button>
         <button class="btn g" id="addSongBtn" type="button">+ Nummer</button>
       </div>
-      <p class="muted" style="margin-top:6px;">Chord sheets, lyrics en songgegevens. Exporteer per nummer naar PDF. Bewerken/publiceren vereist een GitHub-token; bekijken en exporteren kan zonder.</p>
+      <p class="muted" style="margin-top:6px;">Chord sheets, lyrics en songgegevens. Klik op een titel om het nummer uit/in te klappen. Exporteer per nummer naar PDF. Laden, bewerken en publiceren vereist een geldige GitHub-token.</p>
       <input type="text" id="repSearch" placeholder="Zoek op titel of artiest…" style="margin-top:12px;">
       <label class="repchk"><input type="checkbox" id="repEmpty"> Alleen onvolledige nummers <span id="repEmptyCount" class="muted"></span></label>
       <div id="songList" style="margin-top:14px;"></div>
@@ -281,11 +283,12 @@ async function loadAllData(){
       : 'Vul rechtsboven een GitHub-token in om de gegevens te laden.', true);
   }
 }
-var currentTab='agenda';
 var TAB_CARDS={agenda:'agendaCard',videos:'videoCard',repertoire:'repertoireCard',setlists:'setlistCard'};
 var TAB_BTNS={agenda:'tabAgenda',videos:'tabVideos',repertoire:'tabRepertoire',setlists:'tabSetlists'};
+/* Remember the active tab so a page reload (e.g. mobile memory-reload) returns here, not to Agenda. */
+var currentTab=(function(){var t=sessionStorage.getItem('er_tab');return TAB_CARDS[t]?t:'agenda';})();
 function showTab(t){
-  currentTab=t;
+  currentTab=t; sessionStorage.setItem('er_tab',t);
   Object.keys(TAB_CARDS).forEach(function(k){$(TAB_CARDS[k]).classList.toggle('hide',k!==t);});
   Object.keys(TAB_BTNS).forEach(function(k){$(TAB_BTNS[k]).classList.toggle('active',k===t);});
 }
@@ -448,6 +451,23 @@ function isEmptySong(s){
 }
 function newId(p){return p+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36);}
 function songById(id){for(var i=0;i<repertoire.length;i++)if(repertoire[i].id===id)return repertoire[i];return null;}
+function fmtDate(d){if(!d)return'';var p=(''+d).split('-');return p.length===3?(p[2]+'-'+p[1]+'-'+p[0]):(''+d);}
+/* Most recent setlist that contains this song id. Dated setlists win (latest date);
+   among undated ones the later position in the list wins. Returns the setlist or null. */
+function lastPlayed(id){
+  var best=null;
+  for(var i=0;i<setlists.length;i++){var sl=setlists[i];
+    var has=(sl.songs||[]).some(function(it){return setItemType(it)==='s'&&it===id;});
+    if(!has)continue;
+    if(!best){best=sl;continue;}
+    var a=sl.date||'',b=best.date||'';
+    if(a&&b){if(a>b)best=sl;}
+    else if(a&&!b){best=sl;}
+    else if(!a&&!b){best=sl;}
+  }
+  return best;
+}
+function toggleSong(i){repertoire[i]._open=!repertoire[i]._open;renderSongs();}
 async function loadRepertoire(){
   if(!token()){repertoire=[];setlists=[];renderSongs();renderSetlists();return;}
   try{
@@ -469,13 +489,20 @@ function renderSongs(){
     .filter(function(o){return !q||(((o.s.title||'')+' '+(o.s.artist||'')).toLowerCase().indexOf(q)>=0);})
     .filter(function(o){return !repEmptyOnly||isEmptySong(o.s);})
     .map(function(o){var s=o.s,i=o.i;
-      var imgPrev=s._thumbData||(s.imageThumb?'../'+s.imageThumb:(s.image?'../'+s.image:''));
-      var imgFull=s._fullData||(s.image?'../'+s.image:imgPrev);
-      return '<div class="show-card">'+
-        '<div class="head"><span class="badge">'+esc(s.title||'Naamloos')+'</span>'+
+      var lp=lastPlayed(s.id);
+      var lpTxt='Laatst gespeeld: '+(lp?esc(lp.name||'Naamloze setlist')+(lp.date?' · '+esc(fmtDate(lp.date)):''):'—');
+      var head='<div class="head">'+
+          '<button class="btn ghost sm settoggle" type="button" onclick="toggleSong('+i+')" aria-label="In-/uitklappen">'+(s._open?'▾':'▸')+'</button>'+
+          '<span class="badge songname" onclick="toggleSong('+i+')" title="Klik om in/uit te klappen">'+esc(s.title||'Naamloos')+'</span>'+
+          (s.artist?'<span class="k">· '+esc(s.artist)+'</span>':'')+
           '<span class="sp" style="margin-left:auto"></span>'+
           '<button class="btn b sm" type="button" onclick="exportSongPDF(\''+s.id+'\')">PDF</button>'+
           '<button class="btn r sm" type="button" onclick="delSong('+i+')">Verwijderen</button></div>'+
+        '<div class="song-lastplayed">'+lpTxt+'</div>';
+      if(!s._open) return '<div class="show-card">'+head+'</div>';
+      var imgPrev=s._thumbData||(s.imageThumb?'../'+s.imageThumb:(s.image?'../'+s.image:''));
+      var imgFull=s._fullData||(s.image?'../'+s.image:imgPrev);
+      return '<div class="show-card">'+head+
         '<div class="row">'+
           '<div><label>Titel</label><input type="text" value="'+esc(s.title)+'" oninput="updSong('+i+',\'title\',this.value)"></div>'+
           '<div><label>Artiest / origineel</label><input type="text" value="'+esc(s.artist)+'" oninput="updSong('+i+',\'artist\',this.value)"></div>'+
@@ -501,7 +528,7 @@ function renderSongs(){
 }
 function updSong(i,k,v){repertoire[i][k]=v;}
 function delSong(i){if(confirm('Dit nummer verwijderen?')){repertoire.splice(i,1);renderSongs();}}
-function addSong(){repertoire.push({id:newId('s'),title:'',artist:'',key:'',bpm:'',duration:'',youtube:'',chords:'',notes:''});repFilter='';if($('repSearch'))$('repSearch').value='';renderSongs();window.scrollTo(0,document.body.scrollHeight);}
+function addSong(){repertoire.push({id:newId('s'),title:'',artist:'',key:'',bpm:'',duration:'',youtube:'',chords:'',notes:'',_open:true});repFilter='';if($('repSearch'))$('repSearch').value='';renderSongs();window.scrollTo(0,document.body.scrollHeight);}
 async function pickSongImage(i,input){
   var f=input.files&&input.files[0]; if(!f) return;
   statusMsg('Afbeelding verwerken…');
