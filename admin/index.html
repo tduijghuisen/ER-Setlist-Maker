@@ -62,6 +62,7 @@
   .setrow.miss .t{color:var(--red-2);}
   .miss-sel{flex:0 0 auto;max-width:150px;padding:4px 6px;border:2px solid var(--ink);border-radius:4px;font:inherit;background:#fff;font-size:12px;}
   .repchk{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-size:13px;font-weight:700;cursor:pointer;} .repchk input{width:auto;min-width:0;}
+  .setname{cursor:pointer;} .settoggle{flex:0 0 auto;}
   .pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;border:2px solid var(--ink);color:var(--ink);}
   .pill.ok{background:#d6f5dd;} .pill.no{background:#ffd9d6;}
 </style>
@@ -418,7 +419,7 @@ async function loadRepertoire(){
   try{var s=await fetch('../'+SET_PATH+'?t='+Date.now(),{cache:'no-store'});setlists=s.ok?await s.json():[];}catch(e){setlists=[];}
   if(!Array.isArray(repertoire))repertoire=[]; if(!Array.isArray(setlists))setlists=[];
   repertoire.forEach(function(s,i){if(!s.id)s.id='s'+i+Date.now().toString(36);});
-  setlists.forEach(function(s,i){if(!s.id)s.id='l'+i+Date.now().toString(36);});
+  setlists.forEach(function(s,i){if(!s.id)s.id='l'+i+Date.now().toString(36); s._collapsed=true;});
   renderSongs(); renderSetlists();
 }
 function renderSongs(){
@@ -481,27 +482,33 @@ function renderSetlists(){
       return '<div class="setrow"><span class="k">'+cnt+'.</span><span class="t">'+label+'</span>'+ctrls+'</div>';
     }).join('')||'<p class="muted">Nog geen nummers in deze setlist.</p>';
     return '<div class="show-card">'+
-      '<div class="head"><span class="badge">'+esc(sl.name||'Naamloze setlist')+'</span>'+
+      '<div class="head">'+
+        '<button class="btn ghost sm settoggle" type="button" onclick="toggleSetlist('+i+')" aria-label="In-/uitklappen">'+(sl._collapsed?'▸':'▾')+'</button>'+
+        '<span class="badge setname" onclick="toggleSetlist('+i+')" title="Klik om in/uit te klappen">'+esc(sl.name||'Naamloze setlist')+'</span>'+
+        '<span class="k">· '+cnt+' nr.</span>'+
         '<span class="sp" style="margin-left:auto"></span>'+
         '<button class="btn b sm" type="button" onclick="exportSetlistPDF('+i+',false)">PDF overzicht</button>'+
         '<button class="btn b sm" type="button" onclick="exportSetlistPDF('+i+',true)">PDF boekje</button>'+
         '<button class="btn r sm" type="button" onclick="delSetlist('+i+')">Verwijderen</button></div>'+
-      '<div class="row">'+
-        '<div><label>Naam</label><input type="text" value="'+esc(sl.name)+'" placeholder="bv. Parelrock Oisterwijk" oninput="updSet('+i+',\'name\',this.value)"></div>'+
-        '<div><label>Datum (optioneel)</label><input type="date" value="'+esc(sl.date)+'" onchange="updSet('+i+',\'date\',this.value)"></div>'+
+      '<div class="set-body'+(sl._collapsed?' hide':'')+'">'+
+        '<div class="row">'+
+          '<div><label>Naam</label><input type="text" value="'+esc(sl.name)+'" placeholder="bv. Parelrock Oisterwijk" oninput="updSet('+i+',\'name\',this.value)"></div>'+
+          '<div><label>Datum (optioneel)</label><input type="date" value="'+esc(sl.date)+'" onchange="updSet('+i+',\'date\',this.value)"></div>'+
+        '</div>'+
+        '<label>Notities (optioneel)</label><input type="text" value="'+esc(sl.notes)+'" placeholder="bv. 2 sets, pauze na nr. 8" oninput="updSet('+i+',\'notes\',this.value)">'+
+        '<label>Nummers</label><div>'+rows+'</div>'+
+        '<div class="setpick"><select onchange="addSetSong('+i+',this.value);this.value=\'\';">'+songOpts+'</select>'+
+          '<button class="btn ghost sm" type="button" onclick="addSetHeader('+i+')">+ Set-kop</button></div>'+
       '</div>'+
-      '<label>Notities (optioneel)</label><input type="text" value="'+esc(sl.notes)+'" placeholder="bv. 2 sets, pauze na nr. 8" oninput="updSet('+i+',\'notes\',this.value)">'+
-      '<label>Nummers</label><div>'+rows+'</div>'+
-      '<div class="setpick"><select onchange="addSetSong('+i+',this.value);this.value=\'\';">'+songOpts+'</select>'+
-        '<button class="btn ghost sm" type="button" onclick="addSetHeader('+i+')">+ Set-kop</button></div>'+
     '</div>';
   }).join('');
   $('setList').innerHTML=html||'<p class="muted">Nog geen setlists. Klik op “+ Setlist” of plak een setlist als tekst.</p>';
 }
+function toggleSetlist(i){ setlists[i]._collapsed=!setlists[i]._collapsed; renderSetlists(); }
 function resolveMiss(i,idx,sid){ if(!sid)return; setlists[i].songs[idx]=sid; renderSetlists(); }
 function addSetHeader(i){ var h=prompt('Naam van de set-kop (bijv. SET 2):'); if(h==null)return; setlists[i].songs.push({h:(h.trim()||'SET')}); renderSetlists(); }
 function updSet(i,k,v){setlists[i][k]=v;}
-function addSetlist(){setlists.push({id:newId('l'),name:'',date:'',notes:'',songs:[]});renderSetlists();window.scrollTo(0,document.body.scrollHeight);}
+function addSetlist(){setlists.push({id:newId('l'),name:'',date:'',notes:'',songs:[],_collapsed:false});renderSetlists();window.scrollTo(0,document.body.scrollHeight);}
 function delSetlist(i){if(confirm('Deze setlist verwijderen?')){setlists.splice(i,1);renderSetlists();}}
 function addSetSong(i,sid){if(!sid)return;setlists[i].songs=setlists[i].songs||[];setlists[i].songs.push(sid);renderSetlists();}
 function delSetSong(i,idx){setlists[i].songs.splice(idx,1);renderSetlists();}
@@ -582,7 +589,7 @@ function createSetlistFromText(){
   var name=($('setPasteName').value||'').trim(), text=$('setPasteText').value||'';
   if(!text.trim()){statusMsg('Plak eerst een setlist-tekst.',true);return;}
   var r=parseSetlistText(text);
-  setlists.push({id:newId('l'),name:name||'Nieuwe setlist',date:'',notes:'',songs:r.items});
+  setlists.push({id:newId('l'),name:name||'Nieuwe setlist',date:'',notes:'',songs:r.items,_collapsed:false});
   $('setPasteName').value=''; $('setPasteText').value='';
   renderSetlists();
   var msg=r.matched+' nummers gekoppeld'+(r.unmatched.length?(' · '+r.unmatched.length+' niet gevonden: '+r.unmatched.join(', ')):'');
