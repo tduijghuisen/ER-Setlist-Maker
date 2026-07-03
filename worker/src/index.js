@@ -171,6 +171,17 @@ export default {
       return json({ ok: true, service: "er-cms", msg: "Worker live." }, 200, origin);
     }
 
+    // Temporary diagnostic — reports what the Worker sees at runtime WITHOUT leaking secrets.
+    if (path === "/auth/debug") {
+      const cid = env.GOOGLE_CLIENT_ID || "";
+      const sec = env.GOOGLE_CLIENT_SECRET || "";
+      return json({
+        client_id_set: !!cid, client_id_len: cid.length, client_id_tail: cid.slice(-32), client_id_has_space: /\s/.test(cid),
+        secret_set: !!sec, secret_len: sec.length, secret_prefix: sec.slice(0, 7), secret_has_space: /\s/.test(sec),
+        github_token_set: !!env.GITHUB_TOKEN, session_secret_set: !!env.SESSION_SECRET, allowed_emails_count: allowedEmails(env).length,
+      }, 200, origin);
+    }
+
     /* ----- Google OAuth: start ----- */
     if (path === "/auth/login") {
       const redirect = safeRedirect(url.searchParams.get("redirect") || "");
