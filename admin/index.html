@@ -532,7 +532,7 @@ function renderSuggestions(){
   var el=$('setSuggestChips'); if(!el)return;
   var pool=eligibleUnplayed();
   for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=pool[i];pool[i]=pool[j];pool[j]=t;} /* Fisher–Yates */
-  var pick=pool.slice(0,12);
+  var pick=pool.slice(0,20);
   el.innerHTML=pick.map(function(s){
     var pd=lastPlayedDate(s.id),meta=pd?('laatst gespeeld '+fmtDate(pd)):'nog nooit gespeeld';
     return '<button class="chip" type="button" title="'+esc(meta)+'" onclick="addSuggestion(\''+esc(s.id)+'\')">'+esc(s.title||'Naamloos')+'</button>';
