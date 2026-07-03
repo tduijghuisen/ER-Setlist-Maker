@@ -2335,6 +2335,15 @@
     "parts": {
       "bass": {
         "chords": "intro (grondtoon/lage kwart)\n\n> A | A |\n>\n\nv1 (grondtoon/lage kwart)\n\n> A | A | A | A | A | A |\n>\n\n> D | E | A | A |\n>\n\nv2 (grondtoon/lage kwart)\n\n> A | A | A | A | A | A |\n>\n\n> D | E | A | A |\n>\n\nbridge (grondtoon)\n\n> E | C | F | E |\n>\n\n> C | F | B | E |\n>\n\n> B |de d c b | A | A |                    (A grondtoon/lage kwart)\n>\n\nv3 (grondtoon/lage kwart)\n\n> A | A | A | A | A | A |\n>\n\n> D | E | A | A |\n>\n\nsolo (grondtoon/lage kwart)\n\n> A | A | A | A | A | A |\n>\n\n> D | E | A | A |\n>\n\nbridge (grondtoon)\n\n> E | C | F | E |\n>\n\n> C | F | B | E |\n>\n\n> B |de d c b | A | A |                    (A grondtoon/lage kwart)\n>\n\nv4 (grondtoon/lage kwart)\n\n> A | A | A | A | A | A |\n>\n\n> D | E | A | A |    blijven hangen in A dan E en slot op A\n>"
+      },
+      "drums": {
+        "images": [
+          {
+            "image": "assets/repertoire/f-b-i-drums-dc18bc.jpg",
+            "imageThumb": "assets/repertoire/f-b-i-drums-dc18bc-thumb.jpg",
+            "label": "F.B.I. - The Shadows"
+          }
+        ]
       }
     }
   },
@@ -5566,10 +5575,26 @@
     "notes": "",
     "parts": {
       "vocals": {
-        "chords": "🎤 Songtekst (lyrics): https://www.letras.com/roy-orbison/501220/"
+        "chords": "🎤 Songtekst (lyrics): https://www.letras.com/roy-orbison/501220/",
+        "images": [
+          {
+            "image": "assets/repertoire/ooby-dooby-vocals-b4c3f3.jpg",
+            "imageThumb": "assets/repertoire/ooby-dooby-vocals-b4c3f3-thumb.jpg",
+            "label": "Ooby Dooby - Roy Orbison"
+          }
+        ]
       },
       "bass": {
         "chords": "Ooby Dooby - Roy Orbison\n\n -\nHey Baby, jump over here;\n\nWhen you do the Ooby Dooby I gotta be there;\n\nA                              E           E\nOoby Dooby, Ooby Dooby, Ooby Dooby, Ooby Dooby,\n        B7                   A7\nOoby Dooby Ooby Dooby Ooby Dooby\n          E\nOoby doo wah, doo wah, doo wah, doo wah.\n\nE -\nWell, you wiggle to the left, you wiggle to the right;\n\nYou do the Ooby Dooby with all your might;\n\nA                              E           E\nOoby Dooby, Ooby Dooby, Ooby Dooby, Ooby Dooby,\n        B7                   A7\nOoby Dooby Ooby Dooby Ooby Dooby\n          E\nOoby doo wah, doo wah, doo wah, doo wah.\n\nSOLO (BLUESSCHEMA MET BREAKS)\n\nE -\nWell, you wiggle an' you shake like a big rattlesnake;\n\nYou do the Ooby Dooby till you think you're gonna break.\n\nA                              E           E\nOoby Dooby, Ooby Dooby, Ooby Dooby, Ooby Dooby,\n        B7                   A7\nOoby Dooby Ooby Dooby Ooby Dooby\n          E\nOoby doo wah, doo wah, doo wah, doo wah.\n\nSOLO (BLUESSCHEMA MET BREAKS)\n\nE -\nI'm movin' and struttin' 'cause now I know\n\nHow to do the Ooby Dooby, baby, let's go.\n\nA                              E           E\nOoby Dooby, Ooby Dooby, Ooby Dooby, Ooby Dooby,\n        B7                   A7\nOoby Dooby Ooby Dooby Ooby Dooby\n\t      E    een maat en dan meteen  BAS OUTRO:  e d bag E\nOoby doo wah, doo wah, doo wah, doo wah."
+      },
+      "drums": {
+        "images": [
+          {
+            "image": "assets/repertoire/ooby-dooby-drums-2afb2b.jpg",
+            "imageThumb": "assets/repertoire/ooby-dooby-drums-2afb2b-thumb.jpg",
+            "label": "Ooby Dooby - Roy Orbison"
+          }
+        ]
       }
     }
   },
@@ -7054,10 +7079,26 @@
     "notes": "",
     "parts": {
       "vocals": {
-        "chords": "🎤 Songtekst (lyrics): https://www.classic-country-song-lyrics.com/sweetlittlesixteenlyricschords.html"
+        "chords": "🎤 Songtekst (lyrics): https://www.classic-country-song-lyrics.com/sweetlittlesixteenlyricschords.html",
+        "images": [
+          {
+            "image": "assets/repertoire/sweet-little-sixteen-vocals-0b2842.jpg",
+            "imageThumb": "assets/repertoire/sweet-little-sixteen-vocals-0b2842-thumb.jpg",
+            "label": "Sweet Little Sixteen - Chuck Berry"
+          }
+        ]
       },
       "bass": {
         "chords": "176  bpm          ”Sweet Little Sixteen”   Chuck Berry\n\nIntro gitaar !               Zang\n\n– [  –  |   –  [[:   A    |    A    |    D    |   D   |\n\n|    A    |    A    |    D    |    D   |\n\n|   G   |   G   |  D    |  D    |\n\n|   A   |   A   |    D   |    D  ]\n\n[  A   |  A  – – –  |   D   |   D  – – –  |\n|  A    |  A  – – –  |   D  |   D  – – –  |\n| G    |  G  – – –  |    D  |   D  – – –  |\n\n|  A    |  A  – – –  |   D  |   D  – – – :]]\n\nMommy/Daddy gaat naar G ipv A\n\n---\n\nChuck/Earl versie"
+      },
+      "drums": {
+        "images": [
+          {
+            "image": "assets/repertoire/sweet-little-sixteen-drums-27f096.jpg",
+            "imageThumb": "assets/repertoire/sweet-little-sixteen-drums-27f096-thumb.jpg",
+            "label": "Sweet little sixteen - Chuck Berry"
+          }
+        ]
       }
     }
   },
@@ -8763,7 +8804,7 @@
   },
   {
     "id": "s1ff1de77400",
-    "title": "24",
+    "title": "36-24-36",
     "artist": "The Shadows",
     "key": "",
     "bpm": "",
@@ -8785,7 +8826,7 @@
   {
     "id": "s04f4f2254ca",
     "title": "A Big Hunk O' Love",
-    "artist": "",
+    "artist": "Elvis Presley",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -8826,7 +8867,7 @@
   },
   {
     "id": "s5b0dd07d676",
-    "title": "A Voice in the wilderness",
+    "title": "A Voice In The Wilderness",
     "artist": "Cliff Richard",
     "key": "",
     "bpm": "",
@@ -8847,8 +8888,8 @@
   },
   {
     "id": "s0a388e67b82",
-    "title": "All I have to do is dream",
-    "artist": "",
+    "title": "All I Have To Do Is Dream",
+    "artist": "The Everly Brothers",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -8868,7 +8909,7 @@
   },
   {
     "id": "s8b0a246d55a",
-    "title": "All by myself",
+    "title": "All By Myself",
     "artist": "Shakin' Stevens",
     "key": "",
     "bpm": "",
@@ -8910,8 +8951,8 @@
   },
   {
     "id": "s040bd77f8ee",
-    "title": "Are you lonesome tonight",
-    "artist": "",
+    "title": "Are You Lonesome Tonight",
+    "artist": "Elvis Presley",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -8931,7 +8972,7 @@
   },
   {
     "id": "sd58aa29b0c1",
-    "title": "Ave Maria no Morro",
+    "title": "Ave Maria No Morro",
     "artist": "De Maskers",
     "key": "",
     "bpm": "",
@@ -8973,8 +9014,8 @@
   },
   {
     "id": "s910955a907e",
-    "title": "Be",
-    "artist": "Bop",
+    "title": "Be-Bop-A-Lula",
+    "artist": "Gene Vincent",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -8994,8 +9035,8 @@
   },
   {
     "id": "sf5e1feaa9ee",
-    "title": "Beach boy blues",
-    "artist": "",
+    "title": "Beach Boy Blues",
+    "artist": "Elvis Presley",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9015,7 +9056,7 @@
   },
   {
     "id": "s075c89dcbca",
-    "title": "Because I love you",
+    "title": "Because I Love You",
     "artist": "",
     "key": "",
     "bpm": "",
@@ -9036,7 +9077,7 @@
   },
   {
     "id": "s8a5ad87b9dd",
-    "title": "Beneath still waters",
+    "title": "Beneath Still Waters",
     "artist": "",
     "key": "",
     "bpm": "",
@@ -9057,7 +9098,7 @@
   },
   {
     "id": "s6a5511d6606",
-    "title": "Black eyes",
+    "title": "Black Eyes",
     "artist": "",
     "key": "",
     "bpm": "",
@@ -9099,8 +9140,8 @@
   },
   {
     "id": "sb4794740479",
-    "title": "Born to Lose",
-    "artist": "Shakin' Arrows 2",
+    "title": "Born To Lose",
+    "artist": "Shakin' Arrows",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9130,7 +9171,7 @@
   {
     "id": "s804aa194da1",
     "title": "Bumble Boogie",
-    "artist": "B.Bumble & The Stingers",
+    "artist": "B. Bumble & The Stingers",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9176,8 +9217,8 @@
   },
   {
     "id": "s730322999cb",
-    "title": "Devoted to you",
-    "artist": "",
+    "title": "Devoted To You",
+    "artist": "The Everly Brothers",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9192,13 +9233,22 @@
             "label": "Devoted to you"
           }
         ]
+      },
+      "vocals": {
+        "images": [
+          {
+            "image": "assets/repertoire/devoted-toyou-vocals-278211.jpg",
+            "imageThumb": "assets/repertoire/devoted-toyou-vocals-278211-thumb.jpg",
+            "label": "Devoted toYou - The Everly Brothers"
+          }
+        ]
       }
     }
   },
   {
     "id": "s38aff953e34",
-    "title": "Don't leave me now",
-    "artist": "",
+    "title": "Don't Leave Me Now",
+    "artist": "Elvis Presley",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9282,7 +9332,7 @@
   {
     "id": "sbc04f1045b3",
     "title": "El Camino Real",
-    "artist": "Lee Dresser & the Krazy Kats",
+    "artist": "Lee Dresser & The Krazy Kats",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9310,29 +9360,8 @@
     }
   },
   {
-    "id": "s227a1756b2f",
-    "title": "F.B.I.",
-    "artist": "The Shadows",
-    "key": "",
-    "bpm": "",
-    "duration": "",
-    "youtube": "",
-    "notes": "NOG NIET MET MENNO EN TEUN GESPEELD",
-    "parts": {
-      "drums": {
-        "images": [
-          {
-            "image": "assets/repertoire/f-b-i-drums-dc18bc.jpg",
-            "imageThumb": "assets/repertoire/f-b-i-drums-dc18bc-thumb.jpg",
-            "label": "F.B.I. - The Shadows"
-          }
-        ]
-      }
-    }
-  },
-  {
     "id": "sc2d91b48a93",
-    "title": "Find me a golden street",
+    "title": "Find Me A Golden Street",
     "artist": "",
     "key": "",
     "bpm": "",
@@ -9446,8 +9475,8 @@
   },
   {
     "id": "s17b75d7c13b",
-    "title": "Got a lot 'o living to do",
-    "artist": "",
+    "title": "Got A Lot O' Livin' To Do",
+    "artist": "Elvis Presley",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9468,7 +9497,7 @@
   {
     "id": "sfe8f8450160",
     "title": "Green Onions",
-    "artist": "Booker T & The MG's",
+    "artist": "Booker T. & The MG's",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9488,7 +9517,7 @@
   },
   {
     "id": "seb682fb6a23",
-    "title": "Guitar man",
+    "title": "Guitar Man",
     "artist": "Elvis Presley",
     "key": "",
     "bpm": "",
@@ -9530,8 +9559,8 @@
   },
   {
     "id": "sb9c8ed2c104",
-    "title": "I beg of you",
-    "artist": "Elvis",
+    "title": "I Beg Of You",
+    "artist": "Elvis Presley",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9572,8 +9601,8 @@
   },
   {
     "id": "s95b02d77910",
-    "title": "I'm walking Carl Perkens",
-    "artist": "",
+    "title": "I'm Walking",
+    "artist": "Carl Perkins",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9593,7 +9622,7 @@
   },
   {
     "id": "sc0142c9c2a7",
-    "title": "Ik hou van Cliff",
+    "title": "Ik Hou Van Cliff",
     "artist": "",
     "key": "",
     "bpm": "",
@@ -9614,7 +9643,7 @@
   },
   {
     "id": "s294dd7e56ab",
-    "title": "Is it wrong",
+    "title": "Is It Wrong",
     "artist": "",
     "key": "",
     "bpm": "",
@@ -9723,6 +9752,15 @@
             "label": "Judy - Elvis Presley"
           }
         ]
+      },
+      "vocals": {
+        "images": [
+          {
+            "image": "assets/repertoire/judy-elvis-vocals-d08f4a.jpg",
+            "imageThumb": "assets/repertoire/judy-elvis-vocals-d08f4a-thumb.jpg",
+            "label": "Judy-Elvis"
+          }
+        ]
       }
     }
   },
@@ -9763,7 +9801,7 @@
   },
   {
     "id": "s458c5a0f057",
-    "title": "Little B.(beknopt)",
+    "title": "Little 'B'",
     "artist": "The Shadows",
     "key": "",
     "bpm": "",
@@ -9814,8 +9852,8 @@
   },
   {
     "id": "s268cac2cd50",
-    "title": "Lonesome town",
-    "artist": "",
+    "title": "Lonesome Town",
+    "artist": "Ricky Nelson",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9892,7 +9930,7 @@
   },
   {
     "id": "sf50248d628d",
-    "title": "Love letters in the sand",
+    "title": "Love Letters In The Sand",
     "artist": "Pat Boone",
     "key": "",
     "bpm": "",
@@ -9913,8 +9951,8 @@
   },
   {
     "id": "s2dd8501e37b",
-    "title": "Man of mystery",
-    "artist": "",
+    "title": "Man Of Mystery",
+    "artist": "The Shadows",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9935,7 +9973,7 @@
   {
     "id": "sb6abbd07e14",
     "title": "Maybellene",
-    "artist": "",
+    "artist": "Chuck Berry",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -9997,7 +10035,7 @@
   },
   {
     "id": "saa416c90828",
-    "title": "My Baby is Number One B.M.R",
+    "title": "My Baby Is Number One",
     "artist": "",
     "key": "",
     "bpm": "",
@@ -10018,7 +10056,7 @@
   },
   {
     "id": "sed809204d81",
-    "title": "My baby left me",
+    "title": "My Baby Left Me",
     "artist": "Elvis Presley",
     "key": "",
     "bpm": "",
@@ -10039,8 +10077,8 @@
   },
   {
     "id": "saca9c5bbd5e",
-    "title": "My ding-a-ling",
-    "artist": "",
+    "title": "My Ding-A-Ling",
+    "artist": "Chuck Berry",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10088,36 +10126,6 @@
             "image": "assets/repertoire/oh-baby-don-t-drums-c8ead4.jpg",
             "imageThumb": "assets/repertoire/oh-baby-don-t-drums-c8ead4-thumb.jpg",
             "label": "Oh Baby Don't - Shakin' Stevens"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "id": "sf56f6056eae",
-    "title": "Ooby Dooby",
-    "artist": "Roy Orbison",
-    "key": "",
-    "bpm": "",
-    "duration": "",
-    "youtube": "",
-    "notes": "NOG NIET MET MENNO EN TEUN GESPEELD",
-    "parts": {
-      "vocals": {
-        "images": [
-          {
-            "image": "assets/repertoire/ooby-dooby-vocals-b4c3f3.jpg",
-            "imageThumb": "assets/repertoire/ooby-dooby-vocals-b4c3f3-thumb.jpg",
-            "label": "Ooby Dooby - Roy Orbison"
-          }
-        ]
-      },
-      "drums": {
-        "images": [
-          {
-            "image": "assets/repertoire/ooby-dooby-drums-2afb2b.jpg",
-            "imageThumb": "assets/repertoire/ooby-dooby-drums-2afb2b-thumb.jpg",
-            "label": "Ooby Dooby - Roy Orbison"
           }
         ]
       }
@@ -10197,7 +10205,7 @@
   },
   {
     "id": "s0e61f554ee8",
-    "title": "Ram bunk Shuch",
+    "title": "Ram-Bunk-Shush",
     "artist": "The Ventures",
     "key": "",
     "bpm": "",
@@ -10218,8 +10226,8 @@
   },
   {
     "id": "s7af9965e9a9",
-    "title": "Razzle dazzle",
-    "artist": "",
+    "title": "Razzle Dazzle",
+    "artist": "Bill Haley",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10239,7 +10247,7 @@
   },
   {
     "id": "sfaf09f205a4",
-    "title": "Record hop",
+    "title": "Record Hop",
     "artist": "Tielman Brothers",
     "key": "",
     "bpm": "",
@@ -10290,7 +10298,7 @@
   },
   {
     "id": "s93adad466e3",
-    "title": "Right or wrong",
+    "title": "Right Or Wrong",
     "artist": "Wanda Jackson",
     "key": "",
     "bpm": "",
@@ -10311,8 +10319,8 @@
   },
   {
     "id": "s1e831ea5c81",
-    "title": "Rock A Hula Baby",
-    "artist": "Elvis Presley 2",
+    "title": "Rock-A-Hula Baby",
+    "artist": "Elvis Presley",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10333,7 +10341,7 @@
   {
     "id": "sa6993b7f690",
     "title": "Rock Around The Clock",
-    "artist": "E.R. + S.O.T",
+    "artist": "Bill Haley",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10482,7 +10490,7 @@
   {
     "id": "s17cc714b6e6",
     "title": "Sleepwalk",
-    "artist": "",
+    "artist": "Santo & Johnny",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10502,7 +10510,7 @@
   },
   {
     "id": "s7c349ad9037",
-    "title": "Slippin. and slidin'",
+    "title": "Slippin' And Slidin'",
     "artist": "Buddy Holly",
     "key": "",
     "bpm": "",
@@ -10523,7 +10531,7 @@
   },
   {
     "id": "s6b466434f65",
-    "title": "Spring is Nearly Here",
+    "title": "Spring Is Nearly Here",
     "artist": "The Shadows",
     "key": "",
     "bpm": "",
@@ -10554,7 +10562,7 @@
   },
   {
     "id": "s4ddac3e8556",
-    "title": "Stuck on you",
+    "title": "Stuck On You",
     "artist": "Elvis Presley",
     "key": "",
     "bpm": "",
@@ -10568,36 +10576,6 @@
             "image": "assets/repertoire/stuck-on-you-drums-0bf794.jpg",
             "imageThumb": "assets/repertoire/stuck-on-you-drums-0bf794-thumb.jpg",
             "label": "Stuck on you - Elvis Presley"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "id": "sa4b890d884f",
-    "title": "Sweet little sixteen",
-    "artist": "Chuck Berry",
-    "key": "",
-    "bpm": "",
-    "duration": "",
-    "youtube": "",
-    "notes": "NOG NIET MET MENNO EN TEUN GESPEELD",
-    "parts": {
-      "vocals": {
-        "images": [
-          {
-            "image": "assets/repertoire/sweet-little-sixteen-vocals-0b2842.jpg",
-            "imageThumb": "assets/repertoire/sweet-little-sixteen-vocals-0b2842-thumb.jpg",
-            "label": "Sweet Little Sixteen - Chuck Berry"
-          }
-        ]
-      },
-      "drums": {
-        "images": [
-          {
-            "image": "assets/repertoire/sweet-little-sixteen-drums-27f096.jpg",
-            "imageThumb": "assets/repertoire/sweet-little-sixteen-drums-27f096-thumb.jpg",
-            "label": "Sweet little sixteen - Chuck Berry"
           }
         ]
       }
@@ -10627,7 +10605,7 @@
   {
     "id": "s9f6ccad17e4",
     "title": "The French Song",
-    "artist": "Lucille Star",
+    "artist": "Lucille Starr",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10669,7 +10647,7 @@
   {
     "id": "sb0b4bd70832",
     "title": "The Happy Organ",
-    "artist": "Dave Baby Cortez",
+    "artist": "Dave 'Baby' Cortez",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10689,7 +10667,7 @@
   },
   {
     "id": "sb6f918c4926",
-    "title": "The Rise and Fall of Flingel Bunt",
+    "title": "The Rise And Fall Of Flingel Bunt",
     "artist": "The Shadows",
     "key": "",
     "bpm": "",
@@ -10710,7 +10688,7 @@
   },
   {
     "id": "s4f5f7570e06",
-    "title": "The Shape I'm in",
+    "title": "The Shape I'm In",
     "artist": "Johnny Restivo",
     "key": "",
     "bpm": "",
@@ -10731,7 +10709,7 @@
   },
   {
     "id": "sfa1c69553df",
-    "title": "The girl of my best friend",
+    "title": "The Girl Of My Best Friend",
     "artist": "Elvis Presley",
     "key": "",
     "bpm": "",
@@ -10752,7 +10730,7 @@
   },
   {
     "id": "se78670a740b",
-    "title": "The hucklebug",
+    "title": "The Hucklebuck",
     "artist": "The Royal Showband",
     "key": "",
     "bpm": "",
@@ -10773,7 +10751,7 @@
   },
   {
     "id": "s0121104a243",
-    "title": "The third man",
+    "title": "The Third Man",
     "artist": "",
     "key": "",
     "bpm": "",
@@ -10794,7 +10772,7 @@
   },
   {
     "id": "s8466967a842",
-    "title": "Theme from Shane",
+    "title": "Theme From Shane",
     "artist": "The Shadows",
     "key": "",
     "bpm": "",
@@ -10815,8 +10793,8 @@
   },
   {
     "id": "sccb8bc35f7f",
-    "title": "Traveling light",
-    "artist": "",
+    "title": "Travellin' Light",
+    "artist": "Cliff Richard",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10837,7 +10815,7 @@
   {
     "id": "s49b5674f945",
     "title": "Visions",
-    "artist": "",
+    "artist": "Cliff Richard",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10857,7 +10835,7 @@
   },
   {
     "id": "s77c94e31e15",
-    "title": "Wait and See",
+    "title": "Wait And See",
     "artist": "Shakin' Stevens",
     "key": "",
     "bpm": "",
@@ -10899,8 +10877,8 @@
   },
   {
     "id": "s6ddda821ec3",
-    "title": "Willie and the Handjive",
-    "artist": "",
+    "title": "Willie And The Hand Jive",
+    "artist": "Johnny Otis",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10941,7 +10919,7 @@
   },
   {
     "id": "sd7a58061aa1",
-    "title": "Woo hoo",
+    "title": "Woo Hoo",
     "artist": "The Dynamic Rockers",
     "key": "",
     "bpm": "",
@@ -10962,8 +10940,8 @@
   },
   {
     "id": "sa024f9ab1c3",
-    "title": "Words of Love",
-    "artist": "Buddy Holly 2",
+    "title": "Words Of Love",
+    "artist": "Buddy Holly",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10984,7 +10962,7 @@
   {
     "id": "s5f4d278445a",
     "title": "Yakety Yak",
-    "artist": "",
+    "artist": "The Coasters",
     "key": "",
     "bpm": "",
     "duration": "",
@@ -10997,27 +10975,6 @@
             "image": "assets/repertoire/yakety-yak-drums-572c54.jpg",
             "imageThumb": "assets/repertoire/yakety-yak-drums-572c54-thumb.jpg",
             "label": "Yakety Yak"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "id": "s91cd2c53d72",
-    "title": "Devoted toYou",
-    "artist": "The Everly Brothers",
-    "key": "",
-    "bpm": "",
-    "duration": "",
-    "youtube": "",
-    "notes": "NOG NIET MET MENNO EN TEUN GESPEELD",
-    "parts": {
-      "vocals": {
-        "images": [
-          {
-            "image": "assets/repertoire/devoted-toyou-vocals-278211.jpg",
-            "imageThumb": "assets/repertoire/devoted-toyou-vocals-278211-thumb.jpg",
-            "label": "Devoted toYou - The Everly Brothers"
           }
         ]
       }
@@ -11045,29 +11002,8 @@
     }
   },
   {
-    "id": "s19fcff65b02",
-    "title": "Judy-Elvis",
-    "artist": "",
-    "key": "",
-    "bpm": "",
-    "duration": "",
-    "youtube": "",
-    "notes": "NOG NIET MET MENNO EN TEUN GESPEELD",
-    "parts": {
-      "vocals": {
-        "images": [
-          {
-            "image": "assets/repertoire/judy-elvis-vocals-d08f4a.jpg",
-            "imageThumb": "assets/repertoire/judy-elvis-vocals-d08f4a-thumb.jpg",
-            "label": "Judy-Elvis"
-          }
-        ]
-      }
-    }
-  },
-  {
     "id": "sa28cc9d59f1",
-    "title": "Love's Made a Fool of You",
+    "title": "Love's Made A Fool Of You",
     "artist": "Buddy Holly",
     "key": "",
     "bpm": "",
@@ -11109,7 +11045,7 @@
   },
   {
     "id": "sa23a0a70f9c",
-    "title": "The First in Line",
+    "title": "The First In Line",
     "artist": "The Everly Brothers",
     "key": "",
     "bpm": "",
@@ -11130,8 +11066,8 @@
   },
   {
     "id": "s2c8073acf25",
-    "title": "Why-Worry-Everly-Brothers",
-    "artist": "",
+    "title": "Why Worry",
+    "artist": "The Everly Brothers",
     "key": "",
     "bpm": "",
     "duration": "",
