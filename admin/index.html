@@ -70,6 +70,12 @@
   .song-lastplayed{font-size:12px;color:#6b6354;font-weight:600;margin-top:8px;}
   .song-yt{position:relative;margin:8px 0 4px;max-width:520px;aspect-ratio:16/9;border:2px solid var(--ink);border-radius:4px;overflow:hidden;box-shadow:3px 3px 0 var(--sh);}
   .song-yt iframe{position:absolute;inset:0;width:100%;height:100%;display:block;border:0;}
+  .parttabs{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 6px;border-top:2px dashed #d8cdb4;padding-top:12px;}
+  .parttab{font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;border:2px solid var(--ink);background:#fff;border-radius:99px;padding:5px 11px;}
+  .parttab.filled:not(.active){background:#eef6fc;}
+  .parttab.active{background:var(--ink);color:var(--paper-2);}
+  .partpane{margin-top:4px;}
+  .bookpick{font-family:inherit;font-size:12px;font-weight:800;border:3px solid var(--ink);border-radius:4px;padding:6px 9px;background:var(--blue);color:#fff;cursor:pointer;max-width:150px;box-shadow:2px 2px 0 var(--sh);}
   .setsuggest{margin-top:10px;padding:12px;border:2px dashed var(--blue);border-radius:4px;background:#eef6fc;}
   .setsuggest .shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
   .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
@@ -420,13 +426,38 @@ async function saveVideos(){
 /* ---------- repertoire & setlists ---------- */
 var REP_PATH='data/repertoire.json', SET_PATH='data/setlists.json';
 var repertoire=[], setlists=[], repFilter='', repEmptyOnly=false;
-function isEmptySong(s){
-  if(s && (s.image || s._fullData)) return false;
-  var c=((s&&s.chords)||'').trim();
-  if(!c || c.indexOf('⚠️')===0) return true;
-  var lines=c.split('\n').map(function(l){return l.trim();}).filter(Boolean);
-  return lines.length>0 && lines.every(function(l){return /^!?\[.*\]\(.*\)$/.test(l);}); /* only media/attachment links */
+/* Per-role parts: each has its own chords/text + image; title/artist/key/bpm/youtube/notes stay uniform. */
+var PART_DEFS=[
+  {key:'vocals',label:'Zang',icon:'🎤'},
+  {key:'lead',label:'Leadgitaar',icon:'🎸'},
+  {key:'rhythm',label:'Slaggitaar',icon:'🎸'},
+  {key:'keys',label:'Toetsen',icon:'🎹'},
+  {key:'bass',label:'Bas',icon:'🎸'},
+  {key:'drums',label:'Drums',icon:'🥁'}
+];
+function partLabel(k){for(var i=0;i<PART_DEFS.length;i++)if(PART_DEFS[i].key===k)return PART_DEFS[i].label;return k;}
+/* Ensure every song has a parts object with all 6 keys; migrate any legacy top-level fields into Bas. */
+function normalizeSong(s){
+  if(!s.parts||typeof s.parts!=='object')s.parts={};
+  if(s.chords||s.image||s.imageThumb){
+    var b=s.parts.bass||{};
+    if(s.chords&&!b.chords)b.chords=s.chords;
+    if(s.image&&!b.image){b.image=s.image;b.imageThumb=s.imageThumb||'';}
+    s.parts.bass=b; delete s.chords; delete s.image; delete s.imageThumb;
+  }
+  PART_DEFS.forEach(function(p){if(!s.parts[p.key])s.parts[p.key]={};});
+  return s;
 }
+function partIsEmpty(p){
+  if(p&&(p.image||p._fullData))return false;
+  var c=((p&&p.chords)||'').trim();
+  if(!c||c.indexOf('⚠️')===0)return true;
+  var lines=c.split('\n').map(function(l){return l.trim();}).filter(Boolean);
+  return lines.length>0&&lines.every(function(l){return /^!?\[.*\]\(.*\)$/.test(l);}); /* only media/attachment links */
+}
+/* A song is "incomplete" when no role/part has any real content. */
+function isEmptySong(s){ if(!s||!s.parts)return true; return PART_DEFS.every(function(p){return partIsEmpty(s.parts[p.key]);}); }
+function firstFilledPart(s){ for(var i=0;i<PART_DEFS.length;i++){ if(!partIsEmpty(s.parts&&s.parts[PART_DEFS[i].key]))return PART_DEFS[i].key; } return 'vocals'; }
 function newId(p){return p+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36);}
 function songById(id){for(var i=0;i<repertoire.length;i++)if(repertoire[i].id===id)return repertoire[i];return null;}
 function fmtDate(d){if(!d)return'';var p=(''+d).split('-');return p.length===3?(p[2]+'-'+p[1]+'-'+p[0]):(''+d);}
@@ -501,7 +532,7 @@ async function loadRepertoire(){
     statusMsg('Repertoire laden mislukt: '+e.message,true); return;
   }
   if(!Array.isArray(repertoire))repertoire=[]; if(!Array.isArray(setlists))setlists=[];
-  repertoire.forEach(function(s,i){if(!s.id)s.id='s'+i+Date.now().toString(36);});
+  repertoire.forEach(function(s,i){if(!s.id)s.id='s'+i+Date.now().toString(36); normalizeSong(s);});
   setlists.forEach(function(s,i){if(!s.id)s.id='l'+i+Date.now().toString(36); s._collapsed=true;});
   renderSongs(); renderSetlists(); renderSuggestions();
 }
@@ -512,6 +543,8 @@ function renderSongs(){
     .filter(function(o){return !q||(((o.s.title||'')+' '+(o.s.artist||'')).toLowerCase().indexOf(q)>=0);})
     .filter(function(o){return !repEmptyOnly||isEmptySong(o.s);})
     .map(function(o){var s=o.s,i=o.i;
+      if(!s.parts)normalizeSong(s);
+      var ap=s._part&&s.parts[s._part]?s._part:firstFilledPart(s);
       var lp=lastPlayed(s.id);
       var lpTxt='Laatst gespeeld: '+(lp?esc(lp.name||'Naamloze setlist')+(lp.date?' · '+esc(fmtDate(lp.date)):''):'—');
       var head='<div class="head">'+
@@ -519,14 +552,19 @@ function renderSongs(){
           '<span class="badge songname" onclick="toggleSong('+i+')" title="Klik om in/uit te klappen">'+esc(s.title||'Naamloos')+'</span>'+
           (s.artist?'<span class="k">· '+esc(s.artist)+'</span>':'')+
           '<div class="headbtns">'+
-            '<button class="btn b sm" type="button" onclick="exportSongPDF(\''+s.id+'\')">PDF</button>'+
+            '<button class="btn b sm" type="button" onclick="exportSongPDF(\''+s.id+'\',\''+ap+'\')">PDF</button>'+
             '<button class="btn r sm" type="button" onclick="delSong('+i+')">Verwijderen</button>'+
           '</div></div>'+
         '<div class="song-lastplayed">'+lpTxt+'</div>';
       if(!s._open) return '<div class="show-card">'+head+'</div>';
-      var imgPrev=s._thumbData||(s.imageThumb?'../'+s.imageThumb:(s.image?'../'+s.image:''));
-      var imgFull=s._fullData||(s.image?'../'+s.image:imgPrev);
       var yid=ytId(s.youtube||''); var validYt=/^[A-Za-z0-9_-]{11}$/.test(yid);
+      var pt=s.parts[ap]||{};
+      var imgPrev=pt._thumbData||(pt.imageThumb?'../'+pt.imageThumb:(pt.image?'../'+pt.image:''));
+      var imgFull=pt._fullData||(pt.image?'../'+pt.image:imgPrev);
+      var tabs='<div class="parttabs">'+PART_DEFS.map(function(p){
+        var filled=!partIsEmpty(s.parts[p.key]);
+        return '<button class="parttab'+(p.key===ap?' active':'')+(filled?' filled':'')+'" type="button" onclick="setSongPart('+i+',\''+p.key+'\')">'+p.icon+' '+esc(p.label)+(filled?' ●':'')+'</button>';
+      }).join('')+'</div>';
       return '<div class="show-card">'+head+
         '<div class="row">'+
           '<div><label>Titel</label><input type="text" value="'+esc(s.title)+'" oninput="updSong('+i+',\'title\',this.value)"></div>'+
@@ -539,50 +577,57 @@ function renderSongs(){
         '</div>'+
         '<label>YouTube-link (optioneel)</label><input type="url" value="'+esc(s.youtube)+'" placeholder="https://youtu.be/…" oninput="updSong('+i+',\'youtube\',this.value)" onchange="renderSongs()">'+
         (validYt?'<div class="song-yt"><iframe src="https://www.youtube.com/embed/'+yid+'" title="YouTube-video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>':'')+
-        '<label>Chord sheet (chords + lyrics)</label><textarea class="sheet-input" wrap="off" oninput="updSong('+i+',\'chords\',this.value)">'+esc(s.chords)+'</textarea>'+
-        '<label>Notities (optioneel)</label><textarea oninput="updSong('+i+',\'notes\',this.value)">'+esc(s.notes)+'</textarea>'+
-        '<label>Bladmuziek / lead sheet (afbeelding, optioneel)</label>'+
-        '<div class="flyerline">'+
-          (imgPrev?'<a href="'+esc(imgFull)+'" target="_blank" rel="noopener"><img src="'+esc(imgPrev)+'" alt="sheet"></a>':'<span class="muted">Geen afbeelding.</span>')+
-          '<div style="flex:1 1 160px;min-width:0;"><input type="file" accept="image/*" onchange="pickSongImage('+i+',this)">'+
-            (s.image||s._fullData?'<button class="btn ghost sm" type="button" style="margin-top:6px" onclick="delSongImage('+i+')">Afbeelding verwijderen</button>':'')+
-            '<p class="muted">Wordt automatisch verkleind (volledige versie + thumbnail).</p></div>'+
+        '<label>Notities (optioneel, gedeeld)</label><textarea oninput="updSong('+i+',\'notes\',this.value)">'+esc(s.notes)+'</textarea>'+
+        tabs+
+        '<div class="partpane">'+
+          '<label>Chord sheet / tekst — '+esc(partLabel(ap))+'</label><textarea class="sheet-input" wrap="off" oninput="updPart('+i+',\''+ap+'\',\'chords\',this.value)">'+esc(pt.chords||'')+'</textarea>'+
+          '<label>Bladmuziek / afbeelding — '+esc(partLabel(ap))+'</label>'+
+          '<div class="flyerline">'+
+            (imgPrev?'<a href="'+esc(imgFull)+'" target="_blank" rel="noopener"><img src="'+esc(imgPrev)+'" alt="sheet"></a>':'<span class="muted">Geen afbeelding.</span>')+
+            '<div style="flex:1 1 160px;min-width:0;"><input type="file" accept="image/*" onchange="pickSongImage('+i+',\''+ap+'\',this)">'+
+              (pt.image||pt._fullData?'<button class="btn ghost sm" type="button" style="margin-top:6px" onclick="delSongImage('+i+',\''+ap+'\')">Afbeelding verwijderen</button>':'')+
+              '<p class="muted">Wordt automatisch verkleind (volledige versie + thumbnail).</p></div>'+
+          '</div>'+
         '</div>'+
       '</div>';
     }).join('');
   $('songList').innerHTML=html||'<p class="muted">'+(dataLocked()?'🔒 Log in om het repertoire te laden.':(repEmptyOnly?'Geen onvolledige nummers 🎉':(repFilter?'Geen nummers gevonden.':'Nog geen nummers. Klik op “+ Nummer”.')))+'</p>';
 }
 function updSong(i,k,v){repertoire[i][k]=v;}
+function updPart(i,part,field,v){var s=repertoire[i];s.parts=s.parts||{};s.parts[part]=s.parts[part]||{};s.parts[part][field]=v;}
+function setSongPart(i,k){repertoire[i]._part=k;renderSongs();}
 function delSong(i){if(confirm('Dit nummer verwijderen?')){repertoire.splice(i,1);renderSongs();statusMsg('Nummer verwijderd — klik op “💾 Repertoire publiceren” om het definitief op te slaan.',true);}}
-function addSong(){repertoire.push({id:newId('s'),title:'',artist:'',key:'',bpm:'',duration:'',youtube:'',chords:'',notes:'',_open:true});repFilter='';if($('repSearch'))$('repSearch').value='';renderSongs();window.scrollTo(0,document.body.scrollHeight);}
-async function pickSongImage(i,input){
+function addSong(){var parts={};PART_DEFS.forEach(function(p){parts[p.key]={};});repertoire.push({id:newId('s'),title:'',artist:'',key:'',bpm:'',duration:'',youtube:'',notes:'',parts:parts,_open:true,_part:'vocals'});repFilter='';if($('repSearch'))$('repSearch').value='';renderSongs();window.scrollTo(0,document.body.scrollHeight);}
+async function pickSongImage(i,part,input){
   var f=input.files&&input.files[0]; if(!f) return;
   statusMsg('Afbeelding verwerken…');
   try{
     var out=await fileToResized(f,1600);
-    var s=repertoire[i]; s._fullData=out.full; s._thumbData=out.thumb;
-    var base='assets/repertoire/'+slug(s.title||'sheet')+'-'+Date.now().toString(36);
-    s.image=base+'.jpg'; s.imageThumb=base+'-thumb.jpg';
+    var s=repertoire[i]; s.parts=s.parts||{}; var p=s.parts[part]=s.parts[part]||{};
+    p._fullData=out.full; p._thumbData=out.thumb;
+    var base='assets/repertoire/'+slug(s.title||'sheet')+'-'+part+'-'+Date.now().toString(36);
+    p.image=base+'.jpg'; p.imageThumb=base+'-thumb.jpg';
     renderSongs(); statusMsg('Afbeelding klaar — vergeet niet te publiceren.');
   }catch(e){statusMsg(e.message,true);}
 }
-function delSongImage(i){var s=repertoire[i]; delete s._fullData; delete s._thumbData; s.image=''; s.imageThumb=''; renderSongs();}
+function delSongImage(i,part){var p=repertoire[i].parts&&repertoire[i].parts[part]; if(!p)return; delete p._fullData; delete p._thumbData; p.image=''; p.imageThumb=''; renderSongs();}
 async function saveRepertoire(){
   if(!session()){statusMsg('Log eerst in om te publiceren.',true);return;}
   statusMsg('Repertoire publiceren…');
   try{
-    /* Gather any newly-uploaded images + the repertoire JSON into a single commit. */
+    /* Gather any newly-uploaded per-part images + the repertoire JSON into a single commit. */
     var files=[];
-    for(var i=0;i<repertoire.length;i++){var s=repertoire[i];
-      if(s._fullData){
-        files.push({path:s.image,base64:s._fullData.split(',')[1]});
-        files.push({path:s.imageThumb,base64:s._thumbData.split(',')[1]});
-      }
-    }
-    var clean=repertoire.map(function(s){var o={id:s.id,title:(s.title||'').trim(),artist:(s.artist||'').trim(),key:(s.key||'').trim(),bpm:(s.bpm||'').trim(),duration:(s.duration||'').trim(),youtube:(s.youtube||'').trim(),chords:s.chords||'',notes:s.notes||''};if(s.image){o.image=s.image;o.imageThumb=s.imageThumb||'';}return o;});
+    repertoire.forEach(function(s){ if(!s.parts)return; PART_DEFS.forEach(function(pd){var p=s.parts[pd.key];
+      if(p&&p._fullData){ files.push({path:p.image,base64:p._fullData.split(',')[1]}); files.push({path:p.imageThumb,base64:p._thumbData.split(',')[1]}); }
+    });});
+    var clean=repertoire.map(function(s){
+      var parts={};
+      PART_DEFS.forEach(function(pd){var p=(s.parts&&s.parts[pd.key])||{}; var o={}; var c=(p.chords||''); if(c)o.chords=c; if(p.image){o.image=p.image;o.imageThumb=p.imageThumb||'';} if(Object.keys(o).length)parts[pd.key]=o;});
+      return {id:s.id,title:(s.title||'').trim(),artist:(s.artist||'').trim(),key:(s.key||'').trim(),bpm:(s.bpm||'').trim(),duration:(s.duration||'').trim(),youtube:(s.youtube||'').trim(),notes:s.notes||'',parts:parts};
+    });
     files.push({path:REP_PATH,base64:b64enc(JSON.stringify(clean,null,2)+'\n')});
     await apiCommit(files,'CMS: repertoire bijgewerkt ('+files.length+' bestand'+(files.length===1?'':'en')+')');
-    for(var j=0;j<repertoire.length;j++){delete repertoire[j]._fullData; delete repertoire[j]._thumbData;}
+    repertoire.forEach(function(s){ if(!s.parts)return; PART_DEFS.forEach(function(pd){var p=s.parts[pd.key]; if(p){delete p._fullData; delete p._thumbData;}}); });
     statusMsg('Repertoire gepubliceerd in één commit — de site werkt over ±1 min bij.');
   }
   catch(e){ if(String(e.message)==='unauthorized'){logout();return;} statusMsg('Fout bij publiceren: '+e.message,true); }
@@ -623,8 +668,8 @@ function renderSetlists(){
         '<span class="badge setname" onclick="toggleSetlist('+i+')" title="Klik om in/uit te klappen">'+esc(sl.name||'Naamloze setlist')+'</span>'+
         '<span class="k">· '+cnt+' nr.</span>'+
         '<div class="headbtns">'+
-          '<button class="btn b sm" type="button" onclick="exportSetlistPDF('+i+',false)">PDF overzicht</button>'+
-          '<button class="btn b sm" type="button" onclick="exportSetlistPDF('+i+',true)">PDF boekje</button>'+
+          '<button class="btn b sm" type="button" onclick="exportSetlistPDF('+i+',\'\')">📋 Lijst</button>'+
+          '<select class="bookpick" title="PDF-boekje per instrument" onchange="if(this.value){exportSetlistPDF('+i+',this.value);this.value=\'\';}"><option value="">🎶 Boekje…</option>'+PART_DEFS.map(function(p){return '<option value="'+p.key+'">'+p.icon+' '+esc(p.label)+'</option>';}).join('')+'</select>'+
           '<button class="btn r sm" type="button" onclick="delSetlist('+i+')">Verwijderen</button>'+
         '</div></div>'+
       '<div class="set-body'+(sl._collapsed?' hide':'')+'">'+
@@ -667,22 +712,26 @@ function printHTML(title,body){
   w.document.close();
 }
 function songMeta(s){var b=[];if(s.key)b.push('Toonsoort: '+esc(s.key));if(s.bpm)b.push(esc(s.bpm)+' BPM');if(s.duration)b.push(esc(s.duration));if(s.youtube)b.push('<a href="'+esc(s.youtube)+'">YouTube</a>');return b.join('  ·  ');}
-function songBlock(s,cls){
-  var chords=s.chords||'';
+function songBlock(s,cls,part){
+  var p=(s.parts&&s.parts[part])||{};
+  var chords=p.chords||'';
   var showChords=chords.trim() && chords.indexOf('⚠️')!==0;
-  var imgURL=s._fullData || (s.image ? (/^https?:/.test(s.image)?s.image:(location.origin+'/'+s.image)) : '');
+  var imgURL=p._fullData || (p.image ? (/^https?:/.test(p.image)?p.image:(location.origin+'/'+p.image)) : '');
   return '<div class="'+(cls||'')+'"><h1>'+esc(s.title||'Naamloos')+'</h1>'+
     (s.artist?'<div class="meta">'+esc(s.artist)+'</div>':'')+
     (songMeta(s)?'<div class="meta">'+songMeta(s)+'</div>':'')+
     (showChords?'<pre class="sheet">'+esc(chords)+'</pre>':'')+
     (imgURL?'<img class="sheet-img" src="'+esc(imgURL)+'">':'')+
+    (!showChords&&!imgURL?'<div class="meta"><em>Geen sheet voor '+esc(partLabel(part))+'.</em></div>':'')+
     (s.notes?'<div class="notes"><b>Notities:</b>\n'+esc(s.notes)+'</div>':'')+'</div>';
 }
-function exportSongPDF(id){var s=songById(id);if(!s)return;printHTML(s.title||'Chord sheet',songBlock(s,''));}
-function exportSetlistPDF(i,withSheets){
+function exportSongPDF(id,part){var s=songById(id);if(!s)return;part=part||firstFilledPart(s);printHTML((s.title||'Chord sheet')+' — '+partLabel(part),songBlock(s,'',part));}
+/* part falsy => kale lijst (alleen volgorde); part set => boekje met de sheets van dat instrument. */
+function exportSetlistPDF(i,part){
   var sl=setlists[i];if(!sl)return;
   var title=sl.name||'Setlist';
-  var body='<h1>'+esc(title)+'</h1>'+((sl.date||sl.notes)?'<div class="meta">'+[sl.date?esc(sl.date):'',sl.notes?esc(sl.notes):''].filter(Boolean).join('  ·  ')+'</div>':'');
+  var docTitle=title+(part?' — '+partLabel(part):'');
+  var body='<h1>'+esc(docTitle)+'</h1>'+((sl.date||sl.notes)?'<div class="meta">'+[sl.date?esc(sl.date):'',sl.notes?esc(sl.notes):''].filter(Boolean).join('  ·  ')+'</div>':'');
   var items=sl.songs||[], open=false, n=0;
   function closeOl(){ if(open){ body+='</ol>'; open=false; } }
   items.forEach(function(item){
@@ -694,8 +743,8 @@ function exportSetlistPDF(i,withSheets){
     body+='<li>'+(s?(esc(s.title||'Naamloos')+((s.key||s.duration)?' <span class="k">('+[s.key,s.duration].filter(Boolean).join(', ')+')</span>':'')):'(verwijderd nummer)')+'</li>'; n++;
   });
   closeOl();
-  if(withSheets) items.forEach(function(item){ if(setItemType(item)!=='s')return; var s=songById(item); if(s)body+=songBlock(s,'song'); });
-  printHTML(title,body);
+  if(part) items.forEach(function(item){ if(setItemType(item)!=='s')return; var s=songById(item); if(s)body+=songBlock(s,'song',part); });
+  printHTML(docTitle,body);
 }
 /* ---------- setlist from pasted text ---------- */
 var NUMW={one:'1',two:'2',three:'3',four:'4',five:'5',six:'6',seven:'7',eight:'8',nine:'9',ten:'10',eleven:'11',twelve:'12',thirteen:'13',fourteen:'14',fifteen:'15',sixteen:'16',seventeen:'17',eighteen:'18',nineteen:'19',twenty:'20'};
