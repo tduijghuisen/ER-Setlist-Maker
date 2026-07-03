@@ -75,6 +75,8 @@
   .parttab.filled:not(.active){background:#eef6fc;}
   .parttab.active{background:var(--ink);color:var(--paper-2);}
   .partpane{margin-top:4px;}
+  .openlink{display:inline-block;margin:6px 0 4px;font-weight:800;font-size:13px;color:#fff;background:var(--blue);border:2px solid var(--ink);border-radius:4px;padding:6px 11px;text-decoration:none;box-shadow:2px 2px 0 var(--sh);}
+  .openlink:hover{background:var(--blue-2);}
   .bookpick{font-family:inherit;font-size:12px;font-weight:800;border:3px solid var(--ink);border-radius:4px;padding:6px 9px;background:var(--blue);color:#fff;cursor:pointer;max-width:150px;box-shadow:2px 2px 0 var(--sh);}
   .setsuggest{margin-top:10px;padding:12px;border:2px dashed var(--blue);border-radius:4px;background:#eef6fc;}
   .setsuggest .shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
@@ -561,6 +563,7 @@ function renderSongs(){
       var pt=s.parts[ap]||{};
       var imgPrev=pt._thumbData||(pt.imageThumb?'../'+pt.imageThumb:(pt.image?'../'+pt.image:''));
       var imgFull=pt._fullData||(pt.image?'../'+pt.image:imgPrev);
+      var ptUrl=(pt.chords||'').match(/https?:\/\/[^\s]+/);
       var tabs='<div class="parttabs">'+PART_DEFS.map(function(p){
         var filled=!partIsEmpty(s.parts[p.key]);
         return '<button class="parttab'+(p.key===ap?' active':'')+(filled?' filled':'')+'" type="button" onclick="setSongPart('+i+',\''+p.key+'\')">'+p.icon+' '+esc(p.label)+(filled?' ●':'')+'</button>';
@@ -581,6 +584,7 @@ function renderSongs(){
         tabs+
         '<div class="partpane">'+
           '<label>Chord sheet / tekst — '+esc(partLabel(ap))+'</label><textarea class="sheet-input" wrap="off" oninput="updPart('+i+',\''+ap+'\',\'chords\',this.value)">'+esc(pt.chords||'')+'</textarea>'+
+          (ptUrl?'<a class="openlink" href="'+esc(ptUrl[0])+'" target="_blank" rel="noopener">↗ Open songtekst in nieuw tabblad</a>':'')+
           '<label>Bladmuziek / afbeelding — '+esc(partLabel(ap))+'</label>'+
           '<div class="flyerline">'+
             (imgPrev?'<a href="'+esc(imgFull)+'" target="_blank" rel="noopener"><img src="'+esc(imgPrev)+'" alt="sheet"></a>':'<span class="muted">Geen afbeelding.</span>')+
