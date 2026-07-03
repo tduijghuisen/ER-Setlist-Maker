@@ -553,7 +553,7 @@ function renderSongs(){
   $('songList').innerHTML=html||'<p class="muted">'+(dataLocked()?'🔒 Log in om het repertoire te laden.':(repEmptyOnly?'Geen onvolledige nummers 🎉':(repFilter?'Geen nummers gevonden.':'Nog geen nummers. Klik op “+ Nummer”.')))+'</p>';
 }
 function updSong(i,k,v){repertoire[i][k]=v;}
-function delSong(i){if(confirm('Dit nummer verwijderen?')){repertoire.splice(i,1);renderSongs();}}
+function delSong(i){if(confirm('Dit nummer verwijderen?')){repertoire.splice(i,1);renderSongs();statusMsg('Nummer verwijderd — klik op “💾 Repertoire publiceren” om het definitief op te slaan.',true);}}
 function addSong(){repertoire.push({id:newId('s'),title:'',artist:'',key:'',bpm:'',duration:'',youtube:'',chords:'',notes:'',_open:true});repFilter='';if($('repSearch'))$('repSearch').value='';renderSongs();window.scrollTo(0,document.body.scrollHeight);}
 async function pickSongImage(i,input){
   var f=input.files&&input.files[0]; if(!f) return;
