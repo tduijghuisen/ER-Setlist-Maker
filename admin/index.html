@@ -265,10 +265,11 @@ function consumeAuthHash(){
     history.replaceState(null,'',location.pathname+location.search);
   }else if(h.indexOf('error=')>=0){
     var em=h.match(/error=([^&]+)/),code=em?em[1]:'';
+    var dm=h.match(/detail=([^&]+)/),detail=dm?decodeURIComponent(dm[1]):'';
     history.replaceState(null,'',location.pathname+location.search);
     pendingAuthError=code==='notallowed'
       ? 'Dit Google-account staat niet op de toegestane lijst. Vraag de beheerder om je toe te voegen.'
-      : 'Inloggen mislukt ('+code+'). Probeer het opnieuw.';
+      : 'Inloggen mislukt ('+code+(detail?' — '+detail:'')+'). Probeer het opnieuw.';
   }
 }
 function showLogin(){

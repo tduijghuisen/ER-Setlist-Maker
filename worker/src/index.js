@@ -203,8 +203,11 @@ export default {
           grant_type: "authorization_code",
         }),
       });
-      const tok = await tokRes.json();
-      if (!tok.id_token) return Response.redirect(redirect + "#error=token", 302);
+      const tok = await tokRes.json().catch(() => ({}));
+      if (!tok.id_token) {
+        const detail = encodeURIComponent(((tok.error || "geen id_token") + (tok.error_description ? ": " + tok.error_description : "")).slice(0, 180));
+        return Response.redirect(redirect + "#error=token&detail=" + detail, 302);
+      }
       let claims;
       try {
         claims = JSON.parse(dec.decode(b64urlBytes(tok.id_token.split(".")[1])));
