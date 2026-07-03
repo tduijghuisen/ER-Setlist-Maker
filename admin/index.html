@@ -42,6 +42,21 @@
   .flyerline>div{flex:1 1 160px;min-width:0;}
   .flyerline input[type=file]{max-width:100%;}
   .flyerline img{height:96px;width:auto;border:2px solid var(--ink);border-radius:3px;display:block;background:#eee;}
+  /* Per-part image gallery (multiple sheets per role: fast/slow versions, extra pages) */
+  .sheetgal{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 4px;}
+  .sheetgal figure{margin:0;width:118px;border:2px solid var(--ink);border-radius:4px;overflow:hidden;background:#fff;box-shadow:2px 2px 0 var(--sh);}
+  .sheetgal button.thumb{display:block;width:100%;border:0;padding:0;background:#eee;cursor:pointer;}
+  .sheetgal button.thumb img{display:block;width:100%;height:104px;object-fit:cover;}
+  .sheetgal figcaption{font-size:11px;line-height:1.25;padding:4px 6px;border-top:2px solid var(--ink);word-break:break-word;}
+  .sheetgal .delimg{display:block;width:100%;border:0;border-top:1px solid #ddd;background:#fff;color:var(--red-2);font-weight:800;font-size:11px;padding:4px;cursor:pointer;}
+  .sheetgal .delimg:hover{background:#ffe9e7;}
+  /* Lightbox overlay */
+  .lightbox{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.86);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;}
+  .lightbox img{max-width:100%;max-height:calc(100vh - 84px);object-fit:contain;border:3px solid #fff;border-radius:4px;background:#fff;}
+  .lightbox .lbbar{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:12px;}
+  .lightbox .lbcap{color:#fff;font-size:13px;font-weight:700;max-width:70vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .lightbox .lbbtn{font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;border:2px solid #fff;border-radius:4px;padding:8px 14px;background:var(--blue);color:#fff;text-decoration:none;}
+  .lightbox .lbbtn.close{background:#fff;color:var(--ink);}
   .muted{color:#6b6354;font-size:12px;}
   .status{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:12px 18px;font-size:14px;
     transform:translateY(110%);transition:.2s;z-index:50;}
@@ -448,10 +463,17 @@ function normalizeSong(s){
     s.parts.bass=b; delete s.chords; delete s.image; delete s.imageThumb;
   }
   PART_DEFS.forEach(function(p){if(!s.parts[p.key])s.parts[p.key]={};});
+  /* Each part can hold MULTIPLE sheets: images:[{image,imageThumb,label}].
+     Migrate any legacy single image/imageThumb into the array. */
+  PART_DEFS.forEach(function(p){var pt=s.parts[p.key];
+    if(!Array.isArray(pt.images))pt.images=[];
+    if(pt.image){pt.images.unshift({image:pt.image,imageThumb:pt.imageThumb||'',label:pt.label||''});delete pt.image;delete pt.imageThumb;delete pt.label;}
+  });
   return s;
 }
+function partImgs(p){return (p&&Array.isArray(p.images))?p.images:[];}
 function partIsEmpty(p){
-  if(p&&(p.image||p._fullData))return false;
+  if(p&&(partImgs(p).length||p.image||p._fullData))return false;
   var c=((p&&p.chords)||'').trim();
   if(!c||c.indexOf('⚠️')===0)return true;
   var lines=c.split('\n').map(function(l){return l.trim();}).filter(Boolean);
@@ -561,8 +583,18 @@ function renderSongs(){
       if(!s._open) return '<div class="show-card">'+head+'</div>';
       var yid=ytId(s.youtube||''); var validYt=/^[A-Za-z0-9_-]{11}$/.test(yid);
       var pt=s.parts[ap]||{};
-      var imgPrev=pt._thumbData||(pt.imageThumb?'../'+pt.imageThumb:(pt.image?'../'+pt.image:''));
-      var imgFull=pt._fullData||(pt.image?'../'+pt.image:imgPrev);
+      var imgs=partImgs(pt);
+      var gal=imgs.map(function(im,gi){
+        var prev=im._thumbData||(im.imageThumb?'../'+im.imageThumb:(im.image?'../'+im.image:''));
+        var full=im._fullData||(im.image?'../'+im.image:prev);
+        var cap=im.label||('blad '+(gi+1));
+        return '<figure><button class="thumb" type="button" title="Vergroten" onclick="openLightbox('+i+',\''+ap+'\','+gi+')">'+
+            (prev?'<img src="'+esc(prev)+'" alt="'+esc(cap)+'">':'<span class="muted" style="display:block;padding:34px 4px">geen preview</span>')+
+          '</button>'+
+          '<figcaption title="'+esc(cap)+'">'+esc(cap)+'</figcaption>'+
+          '<button class="delimg" type="button" onclick="delSongImage('+i+',\''+ap+'\','+gi+')">verwijderen</button>'+
+        '</figure>';
+      }).join('');
       var ptUrl=(pt.chords||'').match(/https?:\/\/[^\s]+/);
       var tabs='<div class="parttabs">'+PART_DEFS.map(function(p){
         var filled=!partIsEmpty(s.parts[p.key]);
@@ -585,13 +617,10 @@ function renderSongs(){
         '<div class="partpane">'+
           '<label>Chord sheet / tekst — '+esc(partLabel(ap))+'</label><textarea class="sheet-input" wrap="off" oninput="updPart('+i+',\''+ap+'\',\'chords\',this.value)">'+esc(pt.chords||'')+'</textarea>'+
           (ptUrl?'<a class="openlink" href="'+esc(ptUrl[0])+'" target="_blank" rel="noopener">↗ Open songtekst in nieuw tabblad</a>':'')+
-          '<label>Bladmuziek / afbeelding — '+esc(partLabel(ap))+'</label>'+
-          '<div class="flyerline">'+
-            (imgPrev?'<a href="'+esc(imgFull)+'" target="_blank" rel="noopener"><img src="'+esc(imgPrev)+'" alt="sheet"></a>':'<span class="muted">Geen afbeelding.</span>')+
-            '<div style="flex:1 1 160px;min-width:0;"><input type="file" accept="image/*" onchange="pickSongImage('+i+',\''+ap+'\',this)">'+
-              (pt.image||pt._fullData?'<button class="btn ghost sm" type="button" style="margin-top:6px" onclick="delSongImage('+i+',\''+ap+'\')">Afbeelding verwijderen</button>':'')+
-              '<p class="muted">Wordt automatisch verkleind (volledige versie + thumbnail).</p></div>'+
-          '</div>'+
+          '<label>Bladmuziek / afbeeldingen — '+esc(partLabel(ap))+(imgs.length?' ('+imgs.length+')':'')+'</label>'+
+          (gal?'<div class="sheetgal">'+gal+'</div>':'<p class="muted">Nog geen afbeeldingen.</p>')+
+          '<div class="flyerline"><div style="flex:1 1 160px;min-width:0;"><input type="file" accept="image/*" multiple onchange="pickSongImage('+i+',\''+ap+'\',this)">'+
+            '<p class="muted">Meerdere tegelijk kan. Wordt automatisch verkleind (volledige versie + thumbnail). Klik een blad aan om te vergroten/downloaden.</p></div></div>'+
         '</div>'+
       '</div>';
     }).join('');
@@ -603,18 +632,39 @@ function setSongPart(i,k){repertoire[i]._part=k;renderSongs();}
 function delSong(i){if(confirm('Dit nummer verwijderen?')){repertoire.splice(i,1);renderSongs();statusMsg('Nummer verwijderd — klik op “💾 Repertoire publiceren” om het definitief op te slaan.',true);}}
 function addSong(){var parts={};PART_DEFS.forEach(function(p){parts[p.key]={};});repertoire.push({id:newId('s'),title:'',artist:'',key:'',bpm:'',duration:'',youtube:'',notes:'',parts:parts,_open:true,_part:'vocals'});repFilter='';if($('repSearch'))$('repSearch').value='';renderSongs();window.scrollTo(0,document.body.scrollHeight);}
 async function pickSongImage(i,part,input){
-  var f=input.files&&input.files[0]; if(!f) return;
-  statusMsg('Afbeelding verwerken…');
+  var files=input.files?Array.prototype.slice.call(input.files):[]; if(!files.length) return;
+  var s=repertoire[i]; s.parts=s.parts||{}; var p=s.parts[part]=s.parts[part]||{};
+  if(!Array.isArray(p.images))p.images=[];
   try{
-    var out=await fileToResized(f,1600);
-    var s=repertoire[i]; s.parts=s.parts||{}; var p=s.parts[part]=s.parts[part]||{};
-    p._fullData=out.full; p._thumbData=out.thumb;
-    var base='assets/repertoire/'+slug(s.title||'sheet')+'-'+part+'-'+Date.now().toString(36);
-    p.image=base+'.jpg'; p.imageThumb=base+'-thumb.jpg';
-    renderSongs(); statusMsg('Afbeelding klaar — vergeet niet te publiceren.');
+    for(var n=0;n<files.length;n++){
+      statusMsg('Afbeelding verwerken… ('+(n+1)+'/'+files.length+')');
+      var out=await fileToResized(files[n],1600);
+      var base='assets/repertoire/'+slug(s.title||'sheet')+'-'+part+'-'+Date.now().toString(36)+'-'+n;
+      p.images.push({image:base+'.jpg',imageThumb:base+'-thumb.jpg',label:(files[n].name||'').replace(/\.[a-z0-9]+$/i,''),_fullData:out.full,_thumbData:out.thumb});
+    }
+    renderSongs(); statusMsg(files.length+' afbeelding'+(files.length===1?'':'en')+' klaar — vergeet niet te publiceren.');
   }catch(e){statusMsg(e.message,true);}
 }
-function delSongImage(i,part){var p=repertoire[i].parts&&repertoire[i].parts[part]; if(!p)return; delete p._fullData; delete p._thumbData; p.image=''; p.imageThumb=''; renderSongs();}
+function delSongImage(i,part,idx){var p=repertoire[i].parts&&repertoire[i].parts[part]; if(!p||!Array.isArray(p.images))return; if(idx<0||idx>=p.images.length)return; p.images.splice(idx,1); renderSongs();}
+/* In-CMS lightbox: enlarge a sheet with a download button (no new tab). */
+function openLightbox(i,part,idx){
+  var p=repertoire[i]&&repertoire[i].parts&&repertoire[i].parts[part]; if(!p)return;
+  var im=partImgs(p)[idx]; if(!im)return;
+  var full=im._fullData||(im.image?'../'+im.image:im.imageThumb?'../'+im.imageThumb:''); if(!full)return;
+  var cap=im.label||(partLabel(part)+' — blad '+(idx+1));
+  var dlName=(slug(repertoire[i].title||'sheet')+'-'+part+(im.label?'-'+slug(im.label):'')+'.jpg');
+  var box=document.getElementById('lightbox');
+  if(!box){box=document.createElement('div');box.id='lightbox';box.className='lightbox hide';document.body.appendChild(box);
+    box.addEventListener('click',function(e){if(e.target===box)closeLightbox();});}
+  box.innerHTML='<img src="'+esc(full)+'" alt="'+esc(cap)+'">'+
+    '<div class="lbbar"><span class="lbcap">'+esc(cap)+'</span>'+
+      '<a class="lbbtn" href="'+esc(full)+'" download="'+esc(dlName)+'">⬇ Download</a>'+
+      '<button class="lbbtn close" type="button" onclick="closeLightbox()">Sluiten ✕</button></div>';
+  box.classList.remove('hide');
+  document.addEventListener('keydown',lbEsc);
+}
+function lbEsc(e){if(e.key==='Escape')closeLightbox();}
+function closeLightbox(){var box=document.getElementById('lightbox'); if(box)box.classList.add('hide'); document.removeEventListener('keydown',lbEsc);}
 async function saveRepertoire(){
   if(!session()){statusMsg('Log eerst in om te publiceren.',true);return;}
   statusMsg('Repertoire publiceren…');
@@ -622,16 +672,19 @@ async function saveRepertoire(){
     /* Gather any newly-uploaded per-part images + the repertoire JSON into a single commit. */
     var files=[];
     repertoire.forEach(function(s){ if(!s.parts)return; PART_DEFS.forEach(function(pd){var p=s.parts[pd.key];
-      if(p&&p._fullData){ files.push({path:p.image,base64:p._fullData.split(',')[1]}); files.push({path:p.imageThumb,base64:p._thumbData.split(',')[1]}); }
+      partImgs(p).forEach(function(im){ if(im._fullData){ files.push({path:im.image,base64:im._fullData.split(',')[1]}); files.push({path:im.imageThumb,base64:im._thumbData.split(',')[1]}); } });
     });});
     var clean=repertoire.map(function(s){
       var parts={};
-      PART_DEFS.forEach(function(pd){var p=(s.parts&&s.parts[pd.key])||{}; var o={}; var c=(p.chords||''); if(c)o.chords=c; if(p.image){o.image=p.image;o.imageThumb=p.imageThumb||'';} if(Object.keys(o).length)parts[pd.key]=o;});
+      PART_DEFS.forEach(function(pd){var p=(s.parts&&s.parts[pd.key])||{}; var o={}; var c=(p.chords||''); if(c)o.chords=c;
+        var ims=partImgs(p).filter(function(im){return im.image;}).map(function(im){return {image:im.image,imageThumb:im.imageThumb||'',label:im.label||''};});
+        if(ims.length)o.images=ims;
+        if(Object.keys(o).length)parts[pd.key]=o;});
       return {id:s.id,title:(s.title||'').trim(),artist:(s.artist||'').trim(),key:(s.key||'').trim(),bpm:(s.bpm||'').trim(),duration:(s.duration||'').trim(),youtube:(s.youtube||'').trim(),notes:s.notes||'',parts:parts};
     });
     files.push({path:REP_PATH,base64:b64enc(JSON.stringify(clean,null,2)+'\n')});
     await apiCommit(files,'CMS: repertoire bijgewerkt ('+files.length+' bestand'+(files.length===1?'':'en')+')');
-    repertoire.forEach(function(s){ if(!s.parts)return; PART_DEFS.forEach(function(pd){var p=s.parts[pd.key]; if(p){delete p._fullData; delete p._thumbData;}}); });
+    repertoire.forEach(function(s){ if(!s.parts)return; PART_DEFS.forEach(function(pd){var p=s.parts[pd.key]; partImgs(p).forEach(function(im){delete im._fullData; delete im._thumbData;}); }); });
     statusMsg('Repertoire gepubliceerd in één commit — de site werkt over ±1 min bij.');
   }
   catch(e){ if(String(e.message)==='unauthorized'){logout();return;} statusMsg('Fout bij publiceren: '+e.message,true); }
@@ -721,13 +774,13 @@ function songBlock(s,cls,part){
   var p=(s.parts&&s.parts[part])||{};
   var chords=p.chords||'';
   var showChords=chords.trim() && chords.indexOf('⚠️')!==0;
-  var imgURL=p._fullData || (p.image ? (/^https?:/.test(p.image)?p.image:(location.origin+'/'+p.image)) : '');
+  var imgs=partImgs(p).map(function(im){return im._fullData || (im.image ? (/^https?:/.test(im.image)?im.image:(location.origin+'/'+im.image)) : '');}).filter(Boolean);
   return '<div class="'+(cls||'')+'"><h1>'+esc(s.title||'Naamloos')+'</h1>'+
     (s.artist?'<div class="meta">'+esc(s.artist)+'</div>':'')+
     (songMeta(s)?'<div class="meta">'+songMeta(s)+'</div>':'')+
     (showChords?'<pre class="sheet">'+esc(chords)+'</pre>':'')+
-    (imgURL?'<img class="sheet-img" src="'+esc(imgURL)+'">':'')+
-    (!showChords&&!imgURL?'<div class="meta"><em>Geen sheet voor '+esc(partLabel(part))+'.</em></div>':'')+
+    imgs.map(function(u){return '<img class="sheet-img" src="'+esc(u)+'">';}).join('')+
+    (!showChords&&!imgs.length?'<div class="meta"><em>Geen sheet voor '+esc(partLabel(part))+'.</em></div>':'')+
     (s.notes?'<div class="notes"><b>Notities:</b>\n'+esc(s.notes)+'</div>':'')+'</div>';
 }
 function exportSongPDF(id,part){var s=songById(id);if(!s)return;part=part||firstFilledPart(s);printHTML((s.title||'Chord sheet')+' — '+partLabel(part),songBlock(s,'',part));}
