@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handleiding &amp; beheer · The Explosion Rockets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3E9D2; --paper-2:#FFFDF4; --ink:#16130F;
+    --red:#E5342A; --red-2:#B81E16; --yellow:#FFC81E; --blue:#1E83C9; --blue-2:#135E94;
+    --sh:rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55;}
+  a{color:var(--blue-2);font-weight:600;}
+  header{background:var(--ink);color:var(--paper-2);padding:18px 20px;position:sticky;top:0;z-index:10;
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 3px 0 var(--sh);}
+  header h1{font-family:Bangers,cursive;font-weight:400;letter-spacing:1px;font-size:26px;margin:0;}
+  header .sp{margin-left:auto;}
+  .backlink{color:var(--paper-2);border:2px solid var(--paper-2);border-radius:6px;padding:6px 12px;text-decoration:none;font-weight:800;font-size:14px;}
+  .wrap{max-width:920px;margin:0 auto;padding:22px 18px 80px;}
+  .lead{font-size:17px;background:var(--paper-2);border:3px solid var(--ink);border-radius:8px;padding:16px 18px;box-shadow:4px 4px 0 var(--sh);}
+  h2{font-family:Anton,sans-serif;font-weight:400;letter-spacing:.5px;font-size:23px;text-transform:uppercase;margin:34px 0 4px;
+     border-bottom:3px solid var(--ink);padding-bottom:5px;}
+  h2 .em{font-size:22px;}
+  h3{font-size:17px;margin:18px 0 4px;}
+  section{background:var(--paper-2);border:2px solid var(--ink);border-radius:8px;padding:6px 18px 16px;margin:16px 0;box-shadow:3px 3px 0 var(--sh);}
+  code{background:#efe6cf;border:1px solid #d8cdb4;border-radius:4px;padding:1px 6px;font-size:13px;word-break:break-word;}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px;display:block;overflow-x:auto;}
+  th,td{border:2px solid var(--ink);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:var(--ink);color:var(--paper-2);font-family:Inter;font-weight:800;}
+  tbody tr:nth-child(even){background:#fbf6e8;}
+  .callout{border-left:6px solid var(--blue);background:#eef6fc;padding:10px 14px;border-radius:0 6px 6px 0;margin:12px 0;font-size:14px;}
+  .callout.warn{border-color:var(--red);background:#fdecea;}
+  .callout.ok{border-color:#2e9e4f;background:#e9f8ee;}
+  .pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;border:2px solid var(--ink);background:var(--yellow);}
+  ol,ul{padding-left:22px;} li{margin:4px 0;}
+  .toc{columns:2;font-size:14px;} .toc a{display:block;margin:3px 0;}
+  .flow{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#efe6cf;border:2px solid var(--ink);border-radius:6px;padding:12px;overflow-x:auto;white-space:pre;}
+  .fill{background:#fff3cf;border:1px dashed var(--red-2);border-radius:4px;padding:0 5px;font-size:13px;}
+  footer{text-align:center;color:#6b6354;font-size:13px;margin-top:30px;}
+  @media(max-width:560px){.toc{columns:1;} header h1{font-size:21px;}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎸 Handleiding &amp; beheer</h1>
+  <span class="sp"></span>
+  <a class="backlink" href="./">← terug naar het CMS</a>
+</header>
+
+<div class="wrap">
+
+  <p class="lead">
+    Dit is de <b>uitleg-voor-iedereen</b> van de website én het beheer (CMS) van The Explosion Rockets.
+    Hier staat wat er allemaal is, hoe het aan elkaar hangt, waar de "sleutels" liggen en hoe je het beheer
+    kunt overnemen. <b>Geen technische voorkennis nodig.</b> Wachtwoorden staan hier bewust <b>niet</b> in —
+    alleen wáár je ze vindt en onder welk account.
+  </p>
+
+  <section>
+    <h2>Inhoud</h2>
+    <nav class="toc">
+      <a href="#kort">1. In het kort</a>
+      <a href="#waarstaatwat">2. Waar staat wat (overzicht)</a>
+      <a href="#website">3. De website</a>
+      <a href="#cms">4. Het CMS (beheer)</a>
+      <a href="#repertoire">5. Repertoire &amp; setlists</a>
+      <a href="#inloggen">6. Hoe het inloggen werkt</a>
+      <a href="#techniek">7. De techniek eronder</a>
+      <a href="#accounts">8. Accounts &amp; sleutels</a>
+      <a href="#taken">9. Veelvoorkomende beheertaken</a>
+      <a href="#overnemen">10. Beheer overnemen</a>
+      <a href="#bronnen">11. Bronnen &amp; links</a>
+    </nav>
+  </section>
+
+  <section id="kort">
+    <h2>1. In het kort</h2>
+    <p>Er zijn eigenlijk maar <b>twee dingen</b>:</p>
+    <ul>
+      <li><b>De website</b> — <a href="https://explosionrockets.com" target="_blank">explosionrockets.com</a>.
+        Dit is de openbare pagina met de band, muziek, agenda en video's. Iedereen kan die zien.</li>
+      <li><b>Het CMS (beheer)</b> — <a href="https://explosionrockets.com/admin/" target="_blank">explosionrockets.com/admin</a>.
+        Hier loggen bandleden in om de <b>agenda</b>, <b>video's</b>, het <b>repertoire</b> en de <b>setlists</b>
+        aan te passen. Wat je hier opslaat, verschijnt automatisch op de website.</li>
+    </ul>
+    <div class="callout ok"><b>Belangrijk om te snappen:</b> de website heeft géén klassieke database of dure server.
+      Alles — teksten, foto's, bladmuziek, de agenda — zit als <b>bestanden</b> in één online map (een "repository" bij GitHub).
+      Het CMS bewerkt die bestanden voor je. Dat maakt het goedkoop (gratis), simpel en heel moeilijk kapot te krijgen.</div>
+  </section>
+
+  <section id="waarstaatwat">
+    <h2>2. Waar staat wat — het overzicht</h2>
+    <table>
+      <thead><tr><th>Onderdeel</th><th>Waar</th><th>Waarvoor</th></tr></thead>
+      <tbody>
+        <tr><td><b>Alle code &amp; inhoud</b></td><td>GitHub — repository <code>tduijghuisen/ER-Setlist-Maker</code></td><td>De website, het CMS, alle data en afbeeldingen staan hier als bestanden.</td></tr>
+        <tr><td><b>Hosting (de website draait)</b></td><td>GitHub Pages</td><td>Zet de bestanden gratis online. Publiceert automatisch bij elke wijziging.</td></tr>
+        <tr><td><b>Domeinnaam</b></td><td>explosionrockets.com <span class="fill">registrar in te vullen</span></td><td>Wijst naar GitHub Pages via het bestand <code>CNAME</code> in de repo.</td></tr>
+        <tr><td><b>Inlog-beveiliging</b></td><td>Cloudflare — Worker <code>er-cms</code></td><td>Regelt het inloggen met Google en het veilig opslaan. Bewaart de geheime sleutels.</td></tr>
+        <tr><td><b>Inloggen met Google</b></td><td>Google Cloud (OAuth)</td><td>Zorgt dat alleen bandleden met een toegelaten e-mailadres in het CMS komen.</td></tr>
+        <tr><td><b>Muziek-speler op de site</b></td><td>Spotify + YouTube</td><td>Ingesloten spelers (embeds). Geen inlog nodig, geen sleutels.</td></tr>
+        <tr><td><b>Webshop</b></td><td><a href="https://shop.ermusicevents.nl/explosion-rockets/" target="_blank">shop.ermusicevents.nl</a></td><td>Losstaand, wordt hier niet beheerd — alleen naar gelinkt.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="website">
+    <h2>3. De website</h2>
+    <p>De hele publieke site is één bestand: <code>index.html</code> (in de hoofdmap van de repo). Alle opmaak en
+      programmacode zit er direct in — geen ingewikkelde bouwstappen. Daarnaast:</p>
+    <ul>
+      <li><code>assets/</code> — alle afbeeldingen: bandfoto's (<code>assets/members/</code>), flyers
+        (<code>assets/shows/</code>), logo's/stickers, albumhoezen, achtergrondvideo's, en de bladmuziek
+        (<code>assets/repertoire/</code>).</li>
+      <li><code>data/</code> — de inhoud die via het CMS verandert (zie hieronder).</li>
+      <li><code>CNAME</code> — koppelt de domeinnaam <code>explosionrockets.com</code> aan de site.</li>
+    </ul>
+    <h3>De databestanden (map <code>data/</code>)</h3>
+    <table>
+      <thead><tr><th>Bestand</th><th>Bevat</th><th>Beheerd via CMS-tab</th></tr></thead>
+      <tbody>
+        <tr><td><code>shows.json</code></td><td>De agenda / optredens</td><td>🎤 Agenda</td></tr>
+        <tr><td><code>videos.json</code></td><td>De YouTube-video's op de site</td><td>📺 Video's</td></tr>
+        <tr><td><code>repertoire.json</code></td><td>Alle nummers + bladmuziek per instrument</td><td>🎶 Repertoire</td></tr>
+        <tr><td><code>setlists.json</code></td><td>De samengestelde setlijsten</td><td>📝 Setlists</td></tr>
+        <tr><td><code>admin.json</code></td><td><i>Oud restant</i> van de vorige wachtwoord-login. Wordt niet meer gebruikt (bevat geen wachtwoord, alleen een onbruikbare code).</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="cms">
+    <h2>4. Het CMS (beheer)</h2>
+    <p>Te vinden op <a href="https://explosionrockets.com/admin/" target="_blank">explosionrockets.com/admin</a>.
+      Na inloggen zie je vier tabbladen:</p>
+    <ul>
+      <li><b>🎤 Agenda</b> — optredens toevoegen/wijzigen (datum, locatie, omschrijving, ticketlink, flyer).
+        Voorbije data verdwijnen vanzelf naar "historie".</li>
+      <li><b>📺 Video's</b> — YouTube-video's beheren (via video-ID).</li>
+      <li><b>🎶 Repertoire</b> — alle nummers met bladmuziek per bandlid (zie hoofdstuk 5).</li>
+      <li><b>📝 Setlists</b> — setlijsten samenstellen, exporteren als PDF, suggesties voor "lang niet gespeeld".</li>
+    </ul>
+    <div class="callout"><b>Zo publiceer je:</b> na het wijzigen klik je op de <b>"… publiceren"</b>-knop
+      (bv. "💾 Repertoire publiceren"). Je wijziging wordt in één keer opgeslagen en staat na <b>±1 minuut</b> live
+      op de website. Vergeet die knop niet — anders zijn je wijzigingen alleen op je scherm, nog niet opgeslagen.</div>
+  </section>
+
+  <section id="repertoire">
+    <h2>5. Repertoire &amp; setlists in detail</h2>
+    <h3>Nummers &amp; bladmuziek per bandlid</h3>
+    <p>Elk nummer heeft algemene velden (titel, artiest, toonsoort, tempo, duur, YouTube-link met speler, notities)
+      en daaronder <b>zes tabbladen per rol</b>:
+      🎤 Zang · 🎸 Leadgitaar · 🎸 Slaggitaar · 🎹 Toetsen · 🎸 Bas · 🥁 Drums.
+      Elke rol heeft z'n eigen akkoorden/tekst én z'n eigen <b>bladmuziek-afbeeldingen</b>.</p>
+    <ul>
+      <li>Een rol kan <b>meerdere bladen</b> hebben (bv. een snelle én langzame versie, of een chart van meerdere pagina's).
+        Ze staan als galerij naast elkaar.</li>
+      <li>Klik een blad aan → het opent groot in een <b>venster over de pagina</b> met een <b>downloadknop</b>.</li>
+      <li>Bij 🎤 Zang staan <b>links</b> naar songteksten (niet de volledige tekst zelf — auteursrecht).</li>
+      <li>Nummers zonder inhoud herken je aan het filter "onvolledig".</li>
+    </ul>
+    <div class="callout ok">In juli 2026 zijn ~640 drum- en tekstbladen van de drummer geïmporteerd:
+      403 drumpartijen en 236 teksten. 106 daarvan hoorden bij nummers die nog niet in het CMS stonden — die zijn
+      aangemaakt en gemarkeerd met de notitie <b>"NOG NIET MET MENNO EN TEUN GESPEELD"</b>.</div>
+    <h3>Setlists</h3>
+    <ul>
+      <li>Samenstellen door nummers te kiezen of een lijst als <b>tekst te plakken</b> (het CMS zoekt de nummers erbij).</li>
+      <li>Exporteren als <b>📋 Lijst</b> (alleen de volgorde) of als <b>🎶 Boekje</b> per instrument (met de bladmuziek).</li>
+      <li>Suggesties voor nummers die <b>langer dan 3 maanden niet gespeeld</b> zijn (shuffle-blok).</li>
+    </ul>
+  </section>
+
+  <section id="inloggen">
+    <h2>6. Hoe het inloggen werkt</h2>
+    <p>Bandleden loggen in met hun <b>Google-account</b> — geen apart wachtwoord om te onthouden. Wie erin mag,
+      staat op een <b>toegelaten lijst</b> (e-mailadressen). Achter de schermen gaat het zo:</p>
+    <div class="flow">Bandlid  →  klikt "Inloggen met Google" in het CMS
+         →  Google vraagt: welk account?
+         →  Cloudflare Worker (er-cms) controleert het e-mailadres tegen de toegelaten lijst
+         →  Worker geeft de browser een tijdelijk "toegangsbewijs" (30 dagen geldig)
+         →  CMS leest &amp; bewaart wijzigingen via de Worker (die praat met GitHub)</div>
+    <div class="callout"><b>Waarom via die Worker?</b> Zo hoeft geen enkel bandlid een geheime GitHub-sleutel te hebben.
+      Die ene sleutel zit veilig bij Cloudflare; de bandleden hebben alleen hun Google-login.</div>
+  </section>
+
+  <section id="techniek">
+    <h2>7. De techniek eronder</h2>
+    <div class="flow">┌─────────────┐   inloggen    ┌──────────────────┐   1 nette opslag   ┌─────────────────────┐
+│  Bandlid    │ ────────────▶ │  Cloudflare      │ ─────────────────▶ │  GitHub repo        │
+│  (browser)  │  via Google   │  Worker "er-cms" │  (namens de band)  │  ER-Setlist-Maker   │
+└─────────────┘               └──────────────────┘                    └──────────┬──────────┘
+                                                                                  │ publiceert automatisch
+                                                                                  ▼
+                                                                       ┌─────────────────────┐
+                                                                       │  GitHub Pages        │
+                                                                       │  explosionrockets.com│
+                                                                       └─────────────────────┘</div>
+    <ul>
+      <li><b>GitHub Pages</b> zet de site automatisch online zodra er iets verandert in de <code>main</code>-versie
+        (dat heet een "deploy", duurt ±1 min).</li>
+      <li>De <b>Cloudflare Worker</b> (mapje <code>worker/</code> in de repo) wordt <i>ook</i> automatisch bijgewerkt
+        als daar code verandert (via "Cloudflare Workers Builds", gekoppeld aan dezelfde repo).</li>
+    </ul>
+  </section>
+
+  <section id="accounts">
+    <h2>8. Accounts &amp; waar de sleutels staan</h2>
+    <p class="callout warn"><b>Geen wachtwoorden in dit document.</b> Hieronder staat alleen <i>waar</i> iets zit en
+      <i>onder welk account</i>. De echte wachtwoorden/sleutels beheert de hoofdbeheerder.</p>
+    <table>
+      <thead><tr><th>Platform</th><th>Account / eigenaar</th><th>Wat er staat</th></tr></thead>
+      <tbody>
+        <tr><td><b>GitHub</b></td><td>gebruiker <code>tduijghuisen</code> (Teun Duijghuisen)</td><td>De repository met alle code, data en afbeeldingen. Hoofdbeheerder is eigenaar.</td></tr>
+        <tr><td><b>Cloudflare</b></td><td>account van Teun · account-id <code>c70d6662eabfcfc0b826e77864dae7b8</code></td><td>De Worker <code>er-cms</code> + de geheime sleutels (zie volgende tabel).</td></tr>
+        <tr><td><b>Google Cloud</b></td><td>Google-account van Teun</td><td>De "OAuth-client" waarmee het inloggen-met-Google werkt.</td></tr>
+        <tr><td><b>Hoofdbeheerder / contact</b></td><td>Teun Duijghuisen · <span class="fill">t.duijghuisen@baril.nl</span></td><td>Weet waar de wachtwoorden liggen; kan bandleden toevoegen.</td></tr>
+        <tr><td><b>Domeinnaam</b></td><td><span class="fill">registrar + account in te vullen</span></td><td>Waar explosionrockets.com is gekocht en de DNS wordt beheerd.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>De geheime sleutels van de Worker</h3>
+    <p>Deze staan als <b>versleutelde "secrets"</b> bij Cloudflare (Worker <code>er-cms</code> → Settings →
+      Variables and secrets). Ze zijn <b>nergens anders</b> opgeslagen en staan <b>niet</b> in de code.</p>
+    <table>
+      <thead><tr><th>Naam</th><th>Wat het is</th></tr></thead>
+      <tbody>
+        <tr><td><code>GOOGLE_CLIENT_ID</code></td><td>Publiek deel van de Google-inlog.</td></tr>
+        <tr><td><code>GOOGLE_CLIENT_SECRET</code></td><td>Geheim deel van de Google-inlog (uit Google Cloud).</td></tr>
+        <tr><td><code>GITHUB_TOKEN</code></td><td>De ene sleutel waarmee de Worker namens de band in de repo mag schrijven (fijnmazig token, alleen "Contents: lezen &amp; schrijven").</td></tr>
+        <tr><td><code>SESSION_SECRET</code></td><td>Willekeurige geheime code waarmee de "toegangsbewijzen" van bandleden worden ondertekend.</td></tr>
+        <tr><td><code>ALLOWED_EMAILS</code></td><td>De lijst met toegelaten e-mailadressen van bandleden (met komma's gescheiden).</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn"><b>Nooit doen:</b> deze sleutels in de code of in een bestand in de repo zetten.
+      Ze horen alléén bij Cloudflare. En: de Google-inlog heeft één <b>toegestane redirect-URI</b> die exact moet zijn:
+      <code>https://er-cms.explosionrockets.workers.dev/auth/callback</code>.</div>
+  </section>
+
+  <section id="taken">
+    <h2>9. Veelvoorkomende beheertaken</h2>
+
+    <h3>Een bandlid toegang geven (of intrekken)</h3>
+    <ol>
+      <li>Log in bij <b>Cloudflare</b> → Workers &amp; Pages → <code>er-cms</code> → Settings → Variables and secrets.</li>
+      <li>Bewerk <code>ALLOWED_EMAILS</code>: voeg het Google-e-mailadres toe (of verwijder het), met komma's ertussen.</li>
+      <li>Opslaan. Het bandlid kan daarna inloggen met "Inloggen met Google".</li>
+    </ol>
+
+    <h3>"Inloggen mislukt" of iedereen kan er niet in</h3>
+    <ul>
+      <li>Meestal is een sleutel bij Cloudflare fout gekopieerd (let op de exacte naam, bv.
+        <code>GOOGLE_CLIENT_SECRET</code> — een typefout hierin heeft ons eerder een middag gekost).</li>
+      <li>Check dat de redirect-URI in Google Cloud exact klopt (zie kader hierboven).</li>
+      <li>Test de Worker zelf: open <a href="https://er-cms.explosionrockets.workers.dev/" target="_blank">er-cms.explosionrockets.workers.dev</a> — hoort <code>{ok:true…}</code> te tonen.</li>
+    </ul>
+
+    <h3>De GitHub-schrijfsleutel vernieuwen (token verlopen)</h3>
+    <ol>
+      <li>GitHub → Settings → Developer settings → <b>Fine-grained personal access tokens</b> → maak een nieuwe aan
+        voor repo <code>ER-Setlist-Maker</code> met <b>Contents: Read and write</b>.</li>
+      <li>Zet die als secret <code>GITHUB_TOKEN</code> bij de Cloudflare Worker (oude overschrijven).</li>
+    </ol>
+
+    <h3>"Deploy mislukt"-mailtje ontvangen</h3>
+    <p>Meestal onschuldig: als je snel achter elkaar publiceert, botsen twee publicaties. Als de <i>laatste</i> deploy
+      groen is, staat alles goed. Anders: GitHub → tab <b>Actions</b> → de rode run opnieuw starten
+      ("Re-run failed jobs").</p>
+
+    <h3>Een foto/flyer/blad toevoegen</h3>
+    <p>Gewoon in het CMS uploaden bij het betreffende optreden of nummer — het wordt automatisch verkleind
+      (volledige versie + kleine voorvertoning) en meegepubliceerd.</p>
+  </section>
+
+  <section id="overnemen">
+    <h2>10. Als je het beheer overneemt</h2>
+    <p>Wil een ander bandlid (met wat hulp) het beheer kunnen overnemen? Dit heb je nodig:</p>
+    <ol>
+      <li><b>Toegang tot de GitHub-repository</b> <code>tduijghuisen/ER-Setlist-Maker</code> (als mede-eigenaar/collaborator).</li>
+      <li><b>Toegang tot het Cloudflare-account</b> waar de Worker <code>er-cms</code> en de secrets staan.</li>
+      <li><b>Toegang tot het Google Cloud-project</b> met de OAuth-inlog.</li>
+      <li><b>Toegang tot de domeinregistrar</b> van explosionrockets.com (voor de DNS).</li>
+    </ol>
+    <div class="callout">Tip: spreek af wie de "hoofdbeheerder" is en deel de wachtwoorden via een
+      <b>wachtwoordmanager</b> (bv. Bitwarden/1Password), niet via de mail of appjes. Zet dit document bij als startpunt.</div>
+    <p>Dagelijks beheer (agenda, video's, repertoire, setlists) kan iederéén doen via het CMS met alleen een Google-login —
+      daar is geen technische kennis voor nodig.</p>
+  </section>
+
+  <section id="bronnen">
+    <h2>11. Bronnen &amp; links</h2>
+    <ul>
+      <li>Website: <a href="https://explosionrockets.com" target="_blank">explosionrockets.com</a> ·
+        CMS: <a href="https://explosionrockets.com/admin/" target="_blank">/admin</a></li>
+      <li>Reserve-adres: <a href="https://tduijghuisen.github.io/ER-Setlist-Maker/" target="_blank">tduijghuisen.github.io/ER-Setlist-Maker</a></li>
+      <li>Code (GitHub): repository <code>tduijghuisen/ER-Setlist-Maker</code></li>
+      <li>Worker (Cloudflare): <a href="https://er-cms.explosionrockets.workers.dev/" target="_blank">er-cms.explosionrockets.workers.dev</a></li>
+      <li>Spotify-artiest: <code>50oIPfD4YcZc5xCzvMYBVZ</code> · Webshop:
+        <a href="https://shop.ermusicevents.nl/explosion-rockets/" target="_blank">shop.ermusicevents.nl</a></li>
+      <li>Technische naslag voor ontwikkelaars: <code>CLAUDE.md</code> en <code>worker/README.md</code> in de repo.</li>
+    </ul>
+    <div class="callout"><b>Vakjes met een gele rand</b> (<span class="fill">zo</span>) zijn nog handmatig in te vullen
+      of te bevestigen — vooral rond de domeinregistrar en exacte accountadressen.</div>
+  </section>
+
+  <footer>Interne handleiding · The Explosion Rockets · laatst bijgewerkt juli 2026</footer>
+</div>
+</body>
+</html>

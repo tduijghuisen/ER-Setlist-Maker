@@ -15,6 +15,9 @@ A spectacular **pop-art / comic-book** one-page website for the Dutch rock-'n-ro
   `WORKER/api/read`, publishes through `WORKER/api/commit` (one git commit).
   The Worker holds the single server-side GitHub token + the `ALLOWED_EMAILS`
   allow-list as Cloudflare secrets. Worker URL: `https://er-cms.explosionrockets.workers.dev`.
+- **`admin/handleiding.html`** — a plain-language ("for dummies") NL guide to the whole
+  site + CMS for band members: architecture, connected services, which credentials live where
+  (no passwords), and how to take over management. Linked from the CMS header + login card.
 - **`CNAME`** — binds the custom domain `explosionrockets.com` to GitHub Pages.
 
   (The OLD "Setlist Maker" app that used to sit at the repo root was removed — it's in git history.)
