@@ -232,6 +232,31 @@ async function ghPut(path,b64,message,sha){
   if(!r.ok)throw new Error('PUT '+path+' → '+r.status+' '+(await r.text()).slice(0,140));
   return await r.json();
 }
+/* Generic Git Data API call (blobs/trees/commits/refs). */
+async function ghApi(method,endpoint,body){
+  var url='https://api.github.com/repos/'+REPO.owner+'/'+REPO.name+'/'+endpoint;
+  if(method==='GET')url+=(url.indexOf('?')<0?'?':'&')+'t='+Date.now();
+  var opt={method:method,headers:ghHeaders(),cache:'no-store'};if(body)opt.body=JSON.stringify(body);
+  var r=await fetch(url,opt);
+  if(!r.ok)throw new Error(method+' '+endpoint+' → '+r.status+' '+(await r.text()).slice(0,140));
+  return await r.json();
+}
+/* Commit several files in ONE git commit, so a bulk publish triggers a single
+   Pages deploy instead of one deploy per file. files: [{path, b64}] (base64 content). */
+async function ghCommitFiles(files,message){
+  var ref=await ghApi('GET','git/ref/heads/'+REPO.branch);
+  var baseSha=ref.object.sha;
+  var baseCommit=await ghApi('GET','git/commits/'+baseSha);
+  var tree=[];
+  for(var i=0;i<files.length;i++){
+    var blob=await ghApi('POST','git/blobs',{content:files[i].b64,encoding:'base64'});
+    tree.push({path:files[i].path,mode:'100644',type:'blob',sha:blob.sha});
+  }
+  var newTree=await ghApi('POST','git/trees',{base_tree:baseCommit.tree.sha,tree:tree});
+  var commit=await ghApi('POST','git/commits',{message:message,tree:newTree.sha,parents:[baseSha]});
+  await ghApi('PATCH','git/refs/heads/'+REPO.branch,{sha:commit.sha});
+  return commit;
+}
 
 /* ---------- image resize ---------- */
 function fileToResized(file,fullMax){
@@ -545,16 +570,19 @@ async function saveRepertoire(){
   if(!token()){statusMsg('Stel eerst een GitHub-token in om te publiceren.',true);return;}
   statusMsg('Repertoire publiceren…');
   try{
+    /* Gather any newly-uploaded images + the repertoire JSON into a single commit. */
+    var files=[];
     for(var i=0;i<repertoire.length;i++){var s=repertoire[i];
       if(s._fullData){
-        await ghPut(s.image,s._fullData.split(',')[1],'CMS: sheet '+s.image,null);
-        await ghPut(s.imageThumb,s._thumbData.split(',')[1],'CMS: sheet thumb '+s.imageThumb,null);
-        delete s._fullData; delete s._thumbData;
+        files.push({path:s.image,b64:s._fullData.split(',')[1]});
+        files.push({path:s.imageThumb,b64:s._thumbData.split(',')[1]});
       }
     }
     var clean=repertoire.map(function(s){var o={id:s.id,title:(s.title||'').trim(),artist:(s.artist||'').trim(),key:(s.key||'').trim(),bpm:(s.bpm||'').trim(),duration:(s.duration||'').trim(),youtube:(s.youtube||'').trim(),chords:s.chords||'',notes:s.notes||''};if(s.image){o.image=s.image;o.imageThumb=s.imageThumb||'';}return o;});
-    var cur=await ghGet(REP_PATH);await ghPut(REP_PATH,b64enc(JSON.stringify(clean,null,2)+'\n'),'CMS: repertoire bijgewerkt',cur.sha);
-    statusMsg('Repertoire gepubliceerd!');
+    files.push({path:REP_PATH,b64:b64enc(JSON.stringify(clean,null,2)+'\n')});
+    await ghCommitFiles(files,'CMS: repertoire bijgewerkt ('+files.length+' bestand'+(files.length===1?'':'en')+')');
+    for(var j=0;j<repertoire.length;j++){delete repertoire[j]._fullData; delete repertoire[j]._thumbData;}
+    statusMsg('Repertoire gepubliceerd in één commit — de site werkt over ±1 min bij.');
   }
   catch(e){statusMsg('Fout bij publiceren: '+e.message,true);}
 }
