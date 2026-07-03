@@ -100,7 +100,7 @@
       <tbody>
         <tr><td><b>Alle code &amp; inhoud</b></td><td>GitHub — repository <code>tduijghuisen/ER-Setlist-Maker</code></td><td>De website, het CMS, alle data en afbeeldingen staan hier als bestanden.</td></tr>
         <tr><td><b>Hosting (de website draait)</b></td><td>GitHub Pages</td><td>Zet de bestanden gratis online. Publiceert automatisch bij elke wijziging.</td></tr>
-        <tr><td><b>Domeinnaam</b></td><td>explosionrockets.com <span class="fill">registrar in te vullen</span></td><td>Wijst naar GitHub Pages via het bestand <code>CNAME</code> in de repo.</td></tr>
+        <tr><td><b>Domeinnaam</b></td><td>explosionrockets.com · registrar <b>MijnDomein</b> (account <code>t.duijghuisen@baril.nl</code>)</td><td>Wijst naar GitHub Pages via het bestand <code>CNAME</code> in de repo.</td></tr>
         <tr><td><b>Inlog-beveiliging</b></td><td>Cloudflare — Worker <code>er-cms</code></td><td>Regelt het inloggen met Google en het veilig opslaan. Bewaart de geheime sleutels.</td></tr>
         <tr><td><b>Inloggen met Google</b></td><td>Google Cloud (OAuth)</td><td>Zorgt dat alleen bandleden met een toegelaten e-mailadres in het CMS komen.</td></tr>
         <tr><td><b>Muziek-speler op de site</b></td><td>Spotify + YouTube</td><td>Ingesloten spelers (embeds). Geen inlog nodig, geen sleutels.</td></tr>
@@ -214,11 +214,11 @@
     <table>
       <thead><tr><th>Platform</th><th>Account / eigenaar</th><th>Wat er staat</th></tr></thead>
       <tbody>
-        <tr><td><b>GitHub</b></td><td>gebruiker <code>tduijghuisen</code> (Teun Duijghuisen)</td><td>De repository met alle code, data en afbeeldingen. Hoofdbeheerder is eigenaar.</td></tr>
-        <tr><td><b>Cloudflare</b></td><td>account van Teun · account-id <code>c70d6662eabfcfc0b826e77864dae7b8</code></td><td>De Worker <code>er-cms</code> + de geheime sleutels (zie volgende tabel).</td></tr>
-        <tr><td><b>Google Cloud</b></td><td>Google-account van Teun</td><td>De "OAuth-client" waarmee het inloggen-met-Google werkt.</td></tr>
-        <tr><td><b>Hoofdbeheerder / contact</b></td><td>Teun Duijghuisen · <span class="fill">t.duijghuisen@baril.nl</span></td><td>Weet waar de wachtwoorden liggen; kan bandleden toevoegen.</td></tr>
-        <tr><td><b>Domeinnaam</b></td><td><span class="fill">registrar + account in te vullen</span></td><td>Waar explosionrockets.com is gekocht en de DNS wordt beheerd.</td></tr>
+        <tr><td><b>GitHub</b></td><td>gebruiker <code>tduijghuisen</code> (Teun Duijghuisen) · gekoppeld aan Google-account <code>t.duijghuisen@gmail.com</code></td><td>De repository met alle code, data en afbeeldingen. Hoofdbeheerder is eigenaar.</td></tr>
+        <tr><td><b>Cloudflare</b></td><td>account <code>t.duijghuisen@gmail.com</code> · account-id <code>c70d6662eabfcfc0b826e77864dae7b8</code></td><td>De Worker <code>er-cms</code> + de geheime sleutels (zie volgende tabel).</td></tr>
+        <tr><td><b>Google Cloud</b></td><td>Google-account <code>t.duijghuisen@gmail.com</code></td><td>De "OAuth-client" waarmee het inloggen-met-Google werkt.</td></tr>
+        <tr><td><b>Domeinnaam (MijnDomein)</b></td><td>account <code>t.duijghuisen@baril.nl</code></td><td>Waar explosionrockets.com is gekocht en de DNS wordt beheerd.</td></tr>
+        <tr><td><b>Hoofdbeheerder / contact</b></td><td>Teun Duijghuisen · <code>t.duijghuisen@baril.nl</code></td><td>Weet waar de wachtwoorden liggen; kan bandleden toevoegen.</td></tr>
       </tbody>
     </table>
 
@@ -281,8 +281,8 @@
     <ol>
       <li><b>Toegang tot de GitHub-repository</b> <code>tduijghuisen/ER-Setlist-Maker</code> (als mede-eigenaar/collaborator).</li>
       <li><b>Toegang tot het Cloudflare-account</b> waar de Worker <code>er-cms</code> en de secrets staan.</li>
-      <li><b>Toegang tot het Google Cloud-project</b> met de OAuth-inlog.</li>
-      <li><b>Toegang tot de domeinregistrar</b> van explosionrockets.com (voor de DNS).</li>
+      <li><b>Toegang tot het Google Cloud-project</b> met de OAuth-inlog (Google-account <code>t.duijghuisen@gmail.com</code>).</li>
+      <li><b>Toegang tot de domeinregistrar MijnDomein</b> (account <code>t.duijghuisen@baril.nl</code>) voor de DNS van explosionrockets.com.</li>
     </ol>
     <div class="callout">Tip: spreek af wie de "hoofdbeheerder" is en deel de wachtwoorden via een
       <b>wachtwoordmanager</b> (bv. Bitwarden/1Password), niet via de mail of appjes. Zet dit document bij als startpunt.</div>
@@ -302,8 +302,8 @@
         <a href="https://shop.ermusicevents.nl/explosion-rockets/" target="_blank">shop.ermusicevents.nl</a></li>
       <li>Technische naslag voor ontwikkelaars: <code>CLAUDE.md</code> en <code>worker/README.md</code> in de repo.</li>
     </ul>
-    <div class="callout"><b>Vakjes met een gele rand</b> (<span class="fill">zo</span>) zijn nog handmatig in te vullen
-      of te bevestigen — vooral rond de domeinregistrar en exacte accountadressen.</div>
+    <div class="callout ok">Alle platforms, accounts en de domeinregistrar zijn ingevuld. Wachtwoorden staan
+      hier bewust niet in — die beheert de hoofdbeheerder via een wachtwoordmanager.</div>
   </section>
 
   <footer>Interne handleiding · The Explosion Rockets · laatst bijgewerkt juli 2026</footer>
