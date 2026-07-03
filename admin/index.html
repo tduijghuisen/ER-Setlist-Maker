@@ -647,7 +647,9 @@ function renderSetlists(){
     if(!db)return 1;
     return db.localeCompare(da);
   });
-  var songOpts='<option value="">+ Nummer toevoegen…</option>'+repertoire.map(function(s){return '<option value="'+esc(s.id)+'">'+esc(s.title||'Naamloos')+(s.key?' ('+esc(s.key)+')':'')+'</option>';}).join('');
+  /* One alphabetically-sorted option list, reused for both the add-song and the "koppel aan…" dropdowns. */
+  var songOptsInner=repertoire.slice().sort(function(a,b){return (a.title||'').localeCompare(b.title||'',{sensitivity:'base'});}).map(function(s){return '<option value="'+esc(s.id)+'">'+esc(s.title||'Naamloos')+(s.key?' ('+esc(s.key)+')':'')+'</option>';}).join('');
+  var songOpts='<option value="">+ Nummer toevoegen…</option>'+songOptsInner;
   var html=setlists.map(function(sl,i){
     var cnt=0;
     var rows=(sl.songs||[]).map(function(item,idx){
@@ -658,8 +660,7 @@ function renderSetlists(){
       if(tp==='h') return '<div class="setrow hd"><span class="t">'+esc(item.h)+'</span>'+ctrls+'</div>';
       cnt++;
       if(tp==='t'){
-        var sel='<select class="miss-sel" onchange="resolveMiss('+i+','+idx+',this.value)"><option value="">koppel aan…</option>'+
-          repertoire.map(function(s){return '<option value="'+esc(s.id)+'">'+esc(s.title||'Naamloos')+(s.key?' ('+esc(s.key)+')':'')+'</option>';}).join('')+'</select>';
+        var sel='<select class="miss-sel" onchange="resolveMiss('+i+','+idx+',this.value)"><option value="">koppel aan…</option>'+songOptsInner+'</select>';
         return '<div class="setrow miss"><span class="k">'+cnt+'.</span><span class="t">'+esc(item.t)+' <span class="k">(niet gevonden)</span></span>'+sel+ctrls+'</div>';
       }
       var s=songById(item);
