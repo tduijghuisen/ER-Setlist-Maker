@@ -9,7 +9,12 @@ A spectacular **pop-art / comic-book** one-page website for the Dutch rock-'n-ro
 - **`index.html`** (repo root) — the whole site (self-contained: inline CSS + JS, no build step).
 - **`assets/`** — images, stickers, icons, album art, background videos, flyers (`assets/shows/`).
 - **`data/shows.json`** — the tour agenda (managed via `/admin`).
-- **`admin/`** — small CMS that commits agenda + flyers via the GitHub API.
+- **`admin/`** — members CMS. Sign-in is **Google OAuth** via the `er-cms`
+  Cloudflare Worker (in `worker/`); the browser holds a signed **session token**
+  (localStorage `er_session`), never a GitHub token. Reads go through
+  `WORKER/api/read`, publishes through `WORKER/api/commit` (one git commit).
+  The Worker holds the single server-side GitHub token + the `ALLOWED_EMAILS`
+  allow-list as Cloudflare secrets. Worker URL: `https://er-cms.explosionrockets.workers.dev`.
 - **`CNAME`** — binds the custom domain `explosionrockets.com` to GitHub Pages.
 
   (The OLD "Setlist Maker" app that used to sit at the repo root was removed — it's in git history.)

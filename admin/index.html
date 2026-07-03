@@ -82,7 +82,7 @@
 <header>
   <h1>🎸 The Explosion Rockets · Beheer</h1>
   <span class="sp"></span>
-  <span class="tokstate" id="tokState"></span>
+  <span class="tokstate" id="userState"></span>
   <button class="btn sm ghost hide" id="logoutBtn" type="button">Uitloggen</button>
 </header>
 
@@ -91,36 +91,13 @@
   <!-- LOGIN -->
   <div class="card" id="gate">
     <h2>Inloggen</h2>
-    <label for="pw">Wachtwoord</label>
-    <input type="password" id="pw" autocomplete="current-password" />
-    <p id="pwerr" style="color:var(--red-2);font-size:13px;min-height:18px;margin:6px 0 0;"></p>
-    <button class="btn" id="loginBtn" type="button">Inloggen</button>
-    <p class="muted" style="margin-top:12px;">Lichte beveiliging voor deze beheerpagina. De echte schrijfbeveiliging zit in je GitHub-token.</p>
+    <p class="muted">Log in met je Google-account. Alleen bandleden met een toegelaten e-mailadres krijgen toegang.</p>
+    <button class="btn" id="googleBtn" type="button">Inloggen met Google</button>
+    <p id="pwerr" style="color:var(--red-2);font-size:13px;min-height:18px;margin:10px 0 0;"></p>
   </div>
 
   <!-- APP -->
   <div id="app" class="hide">
-
-    <!-- TOKEN SETUP -->
-    <div class="card" id="tokenCard">
-      <h2>GitHub-token</h2>
-      <p class="muted">Eenmalig instellen. De token blijft alleen in deze browser (localStorage) en wordt nooit op de site geplaatst.</p>
-      <label for="tok">Token</label>
-      <input type="password" id="tok" placeholder="github_pat_…" autocomplete="off" />
-      <div class="row" style="margin-top:10px;">
-        <div style="flex:0 0 auto;"><button class="btn" id="saveTokBtn" type="button">Token opslaan</button></div>
-        <div style="flex:0 0 auto;"><button class="btn ghost sm" id="clearTokBtn" type="button">Token wissen</button></div>
-      </div>
-      <details class="help">
-        <summary>Hoe maak ik een token aan?</summary>
-        <ol>
-          <li>Ga naar <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → Fine-grained tokens</a> (ingelogd als eigenaar van de repo).</li>
-          <li>Bij <em>Repository access</em>: kies <strong>Only select repositories</strong> → <code>ER-Setlist-Maker</code>.</li>
-          <li>Bij <em>Permissions → Repository permissions</em>: zet <strong>Contents</strong> op <strong>Read and write</strong>.</li>
-          <li>Maak de token aan, kopieer hem (<code>github_pat_…</code>) en plak hierboven.</li>
-        </ol>
-      </details>
-    </div>
 
     <!-- TABS -->
     <div class="tabs hide" id="tabs">
@@ -142,7 +119,6 @@
       <div id="list" style="margin-top:14px;"></div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
         <button class="btn r" id="saveBtn" type="button">💾 Publiceren</button>
-        <button class="btn ghost sm" id="pwBtn" type="button">Wachtwoord wijzigen</button>
       </div>
       <p class="muted" style="margin-top:8px;">Na publiceren werkt de site over ±1 minuut bij (GitHub Pages bouwt opnieuw).</p>
     </div>
@@ -219,62 +195,39 @@
 <div class="status" id="status"></div>
 
 <script>
-var REPO={owner:'tduijghuisen',name:'ER-Setlist-Maker',branch:'main'};
+var WORKER='https://er-cms.explosionrockets.workers.dev';  /* auth + commit proxy */
 var IMG_DIR='assets/shows/';            /* site-root relative (repo root) */
 var JSON_PATH='data/shows.json';
 var VIDEOS_PATH='data/videos.json';
-var ADMIN_PATH='data/admin.json';
 var shows=[];
 var videos=[];
+var currentUser='';
 
 /* ---------- helpers ---------- */
 function $(id){return document.getElementById(id);}
 function statusMsg(msg,err){var s=$('status');s.textContent=msg;s.className='status show'+(err?' err':'');if(!err&&msg){clearTimeout(statusMsg._t);statusMsg._t=setTimeout(function(){s.className='status';},4000);}}
 async function sha256hex(str){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join('');}
 function b64enc(str){return btoa(unescape(encodeURIComponent(str)));}
-function b64dec(b64){return decodeURIComponent(escape(atob((b64||'').replace(/\s/g,''))));}
-function token(){return localStorage.getItem('er_gh_token')||'';}
+function session(){return localStorage.getItem('er_session')||'';}
 function slug(s){return (s||'flyer').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40)||'flyer';}
 function esc(x){return (''+(x==null?'':x)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-/* ---------- GitHub API ---------- */
-function ghHeaders(){return {'Authorization':'Bearer '+token(),'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};}
-async function ghGet(path){
-  var r=await fetch('https://api.github.com/repos/'+REPO.owner+'/'+REPO.name+'/contents/'+path+'?ref='+REPO.branch+'&t='+Date.now(),{headers:ghHeaders(),cache:'no-store'});
-  if(r.status===404)return {sha:null,content:null};
-  if(!r.ok)throw new Error('GET '+path+' → '+r.status);
-  var j=await r.json();return {sha:j.sha,content:j.content?b64dec(j.content):null};
+/* ---------- CMS API (via the er-cms Worker; auth = signed session, no GitHub token in the browser) ---------- */
+function apiHeaders(json){var h={'Authorization':'Bearer '+session()};if(json)h['Content-Type']='application/json';return h;}
+async function apiRead(path){
+  var r=await fetch(WORKER+'/api/read?path='+encodeURIComponent(path)+'&t='+Date.now(),{headers:apiHeaders(false),cache:'no-store'});
+  if(r.status===401)throw new Error('unauthorized');
+  var j=await r.json();
+  if(!j.ok)throw new Error(j.error||('read '+path));
+  return j.content; /* string or null */
 }
-async function ghPut(path,b64,message,sha){
-  var body={message:message,content:b64,branch:REPO.branch};if(sha)body.sha=sha;
-  var r=await fetch('https://api.github.com/repos/'+REPO.owner+'/'+REPO.name+'/contents/'+path,{method:'PUT',headers:ghHeaders(),body:JSON.stringify(body)});
-  if(!r.ok)throw new Error('PUT '+path+' → '+r.status+' '+(await r.text()).slice(0,140));
-  return await r.json();
-}
-/* Generic Git Data API call (blobs/trees/commits/refs). */
-async function ghApi(method,endpoint,body){
-  var url='https://api.github.com/repos/'+REPO.owner+'/'+REPO.name+'/'+endpoint;
-  if(method==='GET')url+=(url.indexOf('?')<0?'?':'&')+'t='+Date.now();
-  var opt={method:method,headers:ghHeaders(),cache:'no-store'};if(body)opt.body=JSON.stringify(body);
-  var r=await fetch(url,opt);
-  if(!r.ok)throw new Error(method+' '+endpoint+' → '+r.status+' '+(await r.text()).slice(0,140));
-  return await r.json();
-}
-/* Commit several files in ONE git commit, so a bulk publish triggers a single
-   Pages deploy instead of one deploy per file. files: [{path, b64}] (base64 content). */
-async function ghCommitFiles(files,message){
-  var ref=await ghApi('GET','git/ref/heads/'+REPO.branch);
-  var baseSha=ref.object.sha;
-  var baseCommit=await ghApi('GET','git/commits/'+baseSha);
-  var tree=[];
-  for(var i=0;i<files.length;i++){
-    var blob=await ghApi('POST','git/blobs',{content:files[i].b64,encoding:'base64'});
-    tree.push({path:files[i].path,mode:'100644',type:'blob',sha:blob.sha});
-  }
-  var newTree=await ghApi('POST','git/trees',{base_tree:baseCommit.tree.sha,tree:tree});
-  var commit=await ghApi('POST','git/commits',{message:message,tree:newTree.sha,parents:[baseSha]});
-  await ghApi('PATCH','git/refs/heads/'+REPO.branch,{sha:commit.sha});
-  return commit;
+/* Commit several files in ONE git commit (the Worker uses the Git Data API). files: [{path, base64}]. */
+async function apiCommit(files,message){
+  var r=await fetch(WORKER+'/api/commit',{method:'POST',headers:apiHeaders(true),body:JSON.stringify({message:message,files:files})});
+  if(r.status===401)throw new Error('unauthorized');
+  var j=await r.json().catch(function(){return {ok:false,error:'HTTP '+r.status};});
+  if(!j.ok)throw new Error(j.error||('HTTP '+r.status));
+  return j;
 }
 
 /* ---------- image resize ---------- */
@@ -298,35 +251,51 @@ function fileToResized(file,fullMax){
   });
 }
 
-/* ---------- auth ---------- */
-async function doLogin(){
-  $('pwerr').textContent='';
+/* ---------- auth (Google login via the Worker) ---------- */
+function startGoogleLogin(){
+  location.href=WORKER+'/auth/login?redirect='+encodeURIComponent(location.origin+location.pathname);
+}
+function logout(){ localStorage.removeItem('er_session'); currentUser=''; location.reload(); }
+var pendingAuthError='';
+/* After returning from Google the Worker appends #token=… or #error=… — read and strip it. */
+function consumeAuthHash(){
+  var h=location.hash||'';
+  if(h.indexOf('token=')>=0){
+    var m=h.match(/token=([^&]+)/); if(m)localStorage.setItem('er_session',decodeURIComponent(m[1]));
+    history.replaceState(null,'',location.pathname+location.search);
+  }else if(h.indexOf('error=')>=0){
+    var em=h.match(/error=([^&]+)/),code=em?em[1]:'';
+    history.replaceState(null,'',location.pathname+location.search);
+    pendingAuthError=code==='notallowed'
+      ? 'Dit Google-account staat niet op de toegestane lijst. Vraag de beheerder om je toe te voegen.'
+      : 'Inloggen mislukt ('+code+'). Probeer het opnieuw.';
+  }
+}
+function showLogin(){
+  $('gate').classList.remove('hide');$('app').classList.add('hide');
+  $('logoutBtn').classList.add('hide');$('tabs').classList.add('hide');
+  $('userState').innerHTML='';
+  if(pendingAuthError){$('pwerr').textContent=pendingAuthError;pendingAuthError='';}
+}
+async function boot(){
+  consumeAuthHash();
+  if(!session()){ showLogin(); return; }
   try{
-    var r=await fetch('../data/admin.json?t='+Date.now(),{cache:'no-store'});var cfg=await r.json();
-    var h=await sha256hex($('pw').value);
-    if(h===cfg.pwhash){sessionStorage.setItem('er_authed','1');showApp();}
-    else $('pwerr').textContent='Onjuist wachtwoord.';
-  }catch(e){$('pwerr').textContent='Kon beveiliging niet laden: '+e.message;}
+    var r=await fetch(WORKER+'/auth/me',{headers:apiHeaders(false),cache:'no-store'});
+    var j=r.ok?await r.json():null;
+    if(!j||!j.ok)throw new Error('nosession');
+    currentUser=j.email||'';
+  }catch(e){ localStorage.removeItem('er_session'); showLogin(); return; }
+  showApp();
 }
 async function showApp(){
   $('gate').classList.add('hide');$('app').classList.remove('hide');$('logoutBtn').classList.remove('hide');
   $('tabs').classList.remove('hide');
+  $('userState').innerHTML='<span class="pill ok">ingelogd: '+esc(currentUser)+'</span>';
   showTab(currentTab);
-  await loadAllData();
+  loadEditor(); loadRepertoire();
 }
-/* Load every tab's data, but only after confirming the token is valid.
-   With no/invalid token nothing is shown — all tabs stay locked. */
-async function loadAllData(){
-  var ok=await validateToken();
-  if(ok){ loadEditor(); loadRepertoire(); }
-  else {
-    shows=[];videos=[];repertoire=[];setlists=[];
-    render();renderVids();renderSongs();renderSetlists();
-    statusMsg(token()
-      ? 'Token ongeldig — GitHub weigert hem. Vul rechtsboven een geldige token in om de gegevens te laden.'
-      : 'Vul rechtsboven een GitHub-token in om de gegevens te laden.', true);
-  }
-}
+function dataLocked(){return !session();}
 var TAB_CARDS={agenda:'agendaCard',videos:'videoCard',repertoire:'repertoireCard',setlists:'setlistCard'};
 var TAB_BTNS={agenda:'tabAgenda',videos:'tabVideos',repertoire:'tabRepertoire',setlists:'tabSetlists'};
 /* Remember the active tab so a page reload (e.g. mobile memory-reload) returns here, not to Agenda. */
@@ -335,32 +304,6 @@ function showTab(t){
   currentTab=t; sessionStorage.setItem('er_tab',t);
   Object.keys(TAB_CARDS).forEach(function(k){$(TAB_CARDS[k]).classList.toggle('hide',k!==t);});
   Object.keys(TAB_BTNS).forEach(function(k){$(TAB_BTNS[k]).classList.toggle('active',k===t);});
-}
-var tokValid=null; /* null = not yet checked, true = accepted by GitHub, false = rejected */
-function dataLocked(){return !token()||tokValid===false;}
-function refreshTokState(){
-  var has=!!token(),el=$('tokState');
-  if(!has){ el.innerHTML='<span class="pill no">geen token</span>'; el.style.cursor=''; }
-  else if(tokValid===false){ el.innerHTML='<span class="pill err" title="Klik om de token te vervangen">token ✕ ongeldig · vervangen</span>'; el.style.cursor='pointer'; }
-  else if(tokValid===true){ el.innerHTML='<span class="pill ok" title="Klik om de token te vervangen">token ✓ · vervangen</span>'; el.style.cursor='pointer'; }
-  else { el.innerHTML='<span class="pill chk" title="Klik om de token te vervangen">token · controleren…</span>'; el.style.cursor='pointer'; }
-  /* Show the token card whenever there is no token OR the token was rejected. */
-  var lock=!has||tokValid===false;
-  $('tokenCard').classList.toggle('hide',!lock);
-  if(!lock)$('tok').value='';
-}
-/* Ask GitHub whether the stored token is accepted (and can read repo contents). */
-async function validateToken(){
-  if(!token()){ tokValid=null; refreshTokState(); return false; }
-  tokValid=null; refreshTokState();
-  try{
-    var r=await fetch('https://api.github.com/repos/'+REPO.owner+'/'+REPO.name+'/contents/'+ADMIN_PATH+'?ref='+REPO.branch+'&t='+Date.now(),{headers:ghHeaders(),cache:'no-store'});
-    /* admin.json always exists: a real 200 proves the token is accepted AND can read repo contents.
-       401=bad creds, 403=forbidden, 404=no access for a fine-grained token → all invalid. */
-    tokValid=r.ok;
-  }catch(e){ tokValid=false; }
-  refreshTokState();
-  return tokValid;
 }
 
 /* ---------- editor ---------- */
@@ -408,41 +351,30 @@ async function pickFlyer(i,input){
 async function loadEditor(){
   statusMsg('Laden…');
   try{
-    var r=await ghGet(JSON_PATH);shows=r.content?JSON.parse(r.content):[];render();
-    var rv=await ghGet(VIDEOS_PATH);videos=rv.content?JSON.parse(rv.content):[];renderVids();
+    var a=await apiRead(JSON_PATH);shows=a?JSON.parse(a):[];render();
+    var v=await apiRead(VIDEOS_PATH);videos=v?JSON.parse(v):[];renderVids();
     statusMsg('Agenda & video’s geladen.');
   }
-  catch(e){statusMsg('Laden mislukt: '+e.message,true);}
+  catch(e){ if(String(e.message)==='unauthorized'){logout();return;} statusMsg('Laden mislukt: '+e.message,true); }
 }
 async function save(){
-  if(!token()){statusMsg('Stel eerst een GitHub-token in.',true);return;}
+  if(!session()){statusMsg('Log eerst in.',true);return;}
   for(var k=0;k<shows.length;k++){if(!shows[k].date){statusMsg('Optreden #'+(k+1)+' heeft geen datum.',true);return;}}
   statusMsg('Publiceren…');
   try{
-    for(var i=0;i<shows.length;i++){
-      var s=shows[i];
+    var files=[];
+    for(var i=0;i<shows.length;i++){var s=shows[i];
       if(s._fullData){
-        await ghPut(s.flyer,s._fullData.split(',')[1],'CMS: flyer '+s.flyer,null);
-        await ghPut(s.thumb,s._thumbData.split(',')[1],'CMS: flyer thumb '+s.thumb,null);
-        delete s._fullData;delete s._thumbData;
+        files.push({path:s.flyer,base64:s._fullData.split(',')[1]});
+        files.push({path:s.thumb,base64:s._thumbData.split(',')[1]});
       }
     }
     var clean=shows.map(function(s){return {date:s.date,description:s.description,location:s.location,flyer:s.flyer,thumb:s.thumb,ticket:s.ticket};}).sort(by);
-    var cur=await ghGet(JSON_PATH);
-    await ghPut(JSON_PATH,b64enc(JSON.stringify(clean,null,2)+'\n'),'CMS: agenda bijgewerkt',cur.sha);
+    files.push({path:JSON_PATH,base64:b64enc(JSON.stringify(clean,null,2)+'\n')});
+    await apiCommit(files,'CMS: agenda bijgewerkt');
+    for(var j=0;j<shows.length;j++){delete shows[j]._fullData;delete shows[j]._thumbData;}
     statusMsg('Gepubliceerd! De site werkt over ±1 min bij.');
-  }catch(e){statusMsg('Fout bij publiceren: '+e.message,true);}
-}
-async function changePw(){
-  var np=prompt('Nieuw wachtwoord (min. 6 tekens):');if(np==null)return;
-  if(np.length<6){statusMsg('Wachtwoord te kort.',true);return;}
-  if(!token()){statusMsg('Stel eerst een GitHub-token in.',true);return;}
-  statusMsg('Wachtwoord wijzigen…');
-  try{
-    var h=await sha256hex(np);var cur=await ghGet(ADMIN_PATH);
-    await ghPut(ADMIN_PATH,b64enc(JSON.stringify({pwhash:h},null,2)+'\n'),'CMS: wachtwoord gewijzigd',cur.sha);
-    statusMsg('Wachtwoord gewijzigd (geldt na de site-rebuild).');
-  }catch(e){statusMsg('Fout: '+e.message,true);}
+  }catch(e){ if(String(e.message)==='unauthorized'){logout();return;} statusMsg('Fout bij publiceren: '+e.message,true); }
 }
 
 /* ---------- videos ---------- */
@@ -473,14 +405,13 @@ function addVid(){videos.push(['','']);renderVids();window.scrollTo(0,document.b
 function delVid(i){if(confirm('Deze video verwijderen?')){videos.splice(i,1);renderVids();}}
 function moveVid(i,d){var j=i+d;if(j<0||j>=videos.length)return;var t=videos[i];videos[i]=videos[j];videos[j]=t;renderVids();}
 async function saveVideos(){
-  if(!token()){statusMsg('Stel eerst een GitHub-token in.',true);return;}
+  if(!session()){statusMsg('Log eerst in.',true);return;}
   var clean=videos.map(function(v){return [ytId(v[0]||''),(v[1]||'').trim()];}).filter(function(v){return v[0];});
   statusMsg('Video’s publiceren…');
   try{
-    var cur=await ghGet(VIDEOS_PATH);
-    await ghPut(VIDEOS_PATH,b64enc(JSON.stringify(clean,null,2)+'\n'),'CMS: video’s bijgewerkt',cur.sha);
+    await apiCommit([{path:VIDEOS_PATH,base64:b64enc(JSON.stringify(clean,null,2)+'\n')}],'CMS: video’s bijgewerkt');
     statusMsg('Video’s gepubliceerd! De site werkt over ±1 min bij.');
-  }catch(e){statusMsg('Fout bij publiceren: '+e.message,true);}
+  }catch(e){ if(String(e.message)==='unauthorized'){logout();return;} statusMsg('Fout bij publiceren: '+e.message,true); }
 }
 
 /* ---------- repertoire & setlists ---------- */
@@ -539,7 +470,7 @@ function renderSuggestions(){
   el.innerHTML=pick.map(function(s){
     var pd=lastPlayedDate(s.id),meta=pd?('laatst gespeeld '+fmtDate(pd)):'nog nooit gespeeld';
     return '<button class="chip" type="button" title="'+esc(meta)+'" onclick="addSuggestion(\''+esc(s.id)+'\')">'+esc(s.title||'Naamloos')+'</button>';
-  }).join('')||'<span class="muted">'+(dataLocked()?'Vul een geldige token in om het repertoire te laden.':'Alles is de laatste 3 maanden gespeeld 🎉')+'</span>';
+  }).join('')||'<span class="muted">'+(dataLocked()?'Log in om het repertoire te laden.':'Alles is de laatste 3 maanden gespeeld 🎉')+'</span>';
   /* Full repertoire A→Z in the dropdown (does not reorder the repertoire itself). */
   var sel=$('setSuggestAll'); if(sel){
     var sorted=repertoire.slice().sort(function(a,b){return (a.title||'').localeCompare(b.title||'',{sensitivity:'base'});});
@@ -557,11 +488,12 @@ function addSuggestion(id){
   statusMsg('“'+(s.title||'')+'” toegevoegd aan de tekst.');
 }
 async function loadRepertoire(){
-  if(!token()){repertoire=[];setlists=[];renderSongs();renderSetlists();renderSuggestions();return;}
+  if(!session()){repertoire=[];setlists=[];renderSongs();renderSetlists();renderSuggestions();return;}
   try{
-    var r=await ghGet(REP_PATH); repertoire=r.content?JSON.parse(r.content):[];
-    var s=await ghGet(SET_PATH); setlists=s.content?JSON.parse(s.content):[];
+    var a=await apiRead(REP_PATH); repertoire=a?JSON.parse(a):[];
+    var b=await apiRead(SET_PATH); setlists=b?JSON.parse(b):[];
   }catch(e){
+    if(String(e.message)==='unauthorized'){logout();return;}
     repertoire=[];setlists=[];renderSongs();renderSetlists();renderSuggestions();
     statusMsg('Repertoire laden mislukt: '+e.message,true); return;
   }
@@ -613,7 +545,7 @@ function renderSongs(){
         '</div>'+
       '</div>';
     }).join('');
-  $('songList').innerHTML=html||'<p class="muted">'+(dataLocked()?'🔒 Vul rechtsboven een geldige GitHub-token in om het repertoire te laden.':(repEmptyOnly?'Geen onvolledige nummers 🎉':(repFilter?'Geen nummers gevonden.':'Nog geen nummers. Klik op “+ Nummer”.')))+'</p>';
+  $('songList').innerHTML=html||'<p class="muted">'+(dataLocked()?'🔒 Log in om het repertoire te laden.':(repEmptyOnly?'Geen onvolledige nummers 🎉':(repFilter?'Geen nummers gevonden.':'Nog geen nummers. Klik op “+ Nummer”.')))+'</p>';
 }
 function updSong(i,k,v){repertoire[i][k]=v;}
 function delSong(i){if(confirm('Dit nummer verwijderen?')){repertoire.splice(i,1);renderSongs();}}
@@ -631,24 +563,24 @@ async function pickSongImage(i,input){
 }
 function delSongImage(i){var s=repertoire[i]; delete s._fullData; delete s._thumbData; s.image=''; s.imageThumb=''; renderSongs();}
 async function saveRepertoire(){
-  if(!token()){statusMsg('Stel eerst een GitHub-token in om te publiceren.',true);return;}
+  if(!session()){statusMsg('Log eerst in om te publiceren.',true);return;}
   statusMsg('Repertoire publiceren…');
   try{
     /* Gather any newly-uploaded images + the repertoire JSON into a single commit. */
     var files=[];
     for(var i=0;i<repertoire.length;i++){var s=repertoire[i];
       if(s._fullData){
-        files.push({path:s.image,b64:s._fullData.split(',')[1]});
-        files.push({path:s.imageThumb,b64:s._thumbData.split(',')[1]});
+        files.push({path:s.image,base64:s._fullData.split(',')[1]});
+        files.push({path:s.imageThumb,base64:s._thumbData.split(',')[1]});
       }
     }
     var clean=repertoire.map(function(s){var o={id:s.id,title:(s.title||'').trim(),artist:(s.artist||'').trim(),key:(s.key||'').trim(),bpm:(s.bpm||'').trim(),duration:(s.duration||'').trim(),youtube:(s.youtube||'').trim(),chords:s.chords||'',notes:s.notes||''};if(s.image){o.image=s.image;o.imageThumb=s.imageThumb||'';}return o;});
-    files.push({path:REP_PATH,b64:b64enc(JSON.stringify(clean,null,2)+'\n')});
-    await ghCommitFiles(files,'CMS: repertoire bijgewerkt ('+files.length+' bestand'+(files.length===1?'':'en')+')');
+    files.push({path:REP_PATH,base64:b64enc(JSON.stringify(clean,null,2)+'\n')});
+    await apiCommit(files,'CMS: repertoire bijgewerkt ('+files.length+' bestand'+(files.length===1?'':'en')+')');
     for(var j=0;j<repertoire.length;j++){delete repertoire[j]._fullData; delete repertoire[j]._thumbData;}
     statusMsg('Repertoire gepubliceerd in één commit — de site werkt over ±1 min bij.');
   }
-  catch(e){statusMsg('Fout bij publiceren: '+e.message,true);}
+  catch(e){ if(String(e.message)==='unauthorized'){logout();return;} statusMsg('Fout bij publiceren: '+e.message,true); }
 }
 function setItemType(it){ if(it&&typeof it==='object'){ if(it.h!=null)return'h'; if(it.t!=null)return't'; } return 's'; }
 function renderSetlists(){
@@ -702,7 +634,7 @@ function renderSetlists(){
       '</div>'+
     '</div>';
   }).join('');
-  $('setList').innerHTML=html||'<p class="muted">'+(dataLocked()?'🔒 Vul rechtsboven een geldige GitHub-token in om de setlists te laden.':'Nog geen setlists. Klik op “+ Setlist” of plak een setlist als tekst.')+'</p>';
+  $('setList').innerHTML=html||'<p class="muted">'+(dataLocked()?'🔒 Log in om de setlists te laden.':'Nog geen setlists. Klik op “+ Setlist” of plak een setlist als tekst.')+'</p>';
 }
 function toggleSetlist(i){ setlists[i]._collapsed=!setlists[i]._collapsed; renderSetlists(); }
 function resolveMiss(i,idx,sid){ if(!sid)return; setlists[i].songs[idx]=sid; renderSetlists(); }
@@ -714,11 +646,11 @@ function addSetSong(i,sid){if(!sid)return;setlists[i].songs=setlists[i].songs||[
 function delSetSong(i,idx){setlists[i].songs.splice(idx,1);renderSetlists();}
 function moveSetSong(i,idx,d){var a=setlists[i].songs,j=idx+d;if(j<0||j>=a.length)return;var t=a[idx];a[idx]=a[j];a[j]=t;renderSetlists();}
 async function saveSetlists(){
-  if(!token()){statusMsg('Stel eerst een GitHub-token in om te publiceren.',true);return;}
+  if(!session()){statusMsg('Log eerst in om te publiceren.',true);return;}
   var clean=setlists.map(function(sl){return {id:sl.id,name:(sl.name||'').trim(),date:sl.date||'',notes:(sl.notes||'').trim(),songs:(sl.songs||[]).slice()};});
   statusMsg('Setlists publiceren…');
-  try{var cur=await ghGet(SET_PATH);await ghPut(SET_PATH,b64enc(JSON.stringify(clean,null,2)+'\n'),'CMS: setlists bijgewerkt',cur.sha);statusMsg('Setlists gepubliceerd!');}
-  catch(e){statusMsg('Fout bij publiceren: '+e.message,true);}
+  try{ await apiCommit([{path:SET_PATH,base64:b64enc(JSON.stringify(clean,null,2)+'\n')}],'CMS: setlists bijgewerkt'); statusMsg('Setlists gepubliceerd!'); }
+  catch(e){ if(String(e.message)==='unauthorized'){logout();return;} statusMsg('Fout bij publiceren: '+e.message,true); }
 }
 /* ---------- PDF export (via print) ---------- */
 var PRINT_CSS='*{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#111;margin:0;padding:26px 30px;}h1{font-size:23px;margin:0 0 2px;}.meta{color:#555;font-size:13px;margin:0 0 12px;}.meta a{color:#1E83C9;}pre.sheet{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.4;white-space:pre-wrap;margin:0;}.notes{margin-top:14px;font-size:13px;color:#333;white-space:pre-wrap;}ol.set{font-size:15px;line-height:1.7;padding-left:26px;margin:4px 0 8px;}ol.set .k{color:#666;font-size:13px;}.setsec{font-size:15px;margin:16px 0 2px;text-transform:uppercase;letter-spacing:.04em;color:#B81E16;}.sheet-img{display:block;max-width:100%;max-height:245mm;margin:8px 0;}.song{page-break-before:always;}@media print{@page{margin:15mm;}}';
@@ -802,28 +734,11 @@ function createSetlistFromText(){
 }
 
 /* ---------- wire up ---------- */
-$('loginBtn').addEventListener('click',doLogin);
-$('pw').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
-$('logoutBtn').addEventListener('click',function(){sessionStorage.removeItem('er_authed');location.reload();});
-$('tokState').addEventListener('click',function(){if(token()){$('tokenCard').classList.remove('hide');$('tok').value='';$('tok').focus();statusMsg('Plak een nieuwe token en klik "Token opslaan".');}});
-$('saveTokBtn').addEventListener('click',async function(){
-  var t=$('tok').value.trim();if(!t){statusMsg('Plak eerst een token.',true);return;}
-  localStorage.setItem('er_gh_token',t);
-  statusMsg('Token controleren…');
-  var ok=await validateToken();
-  if(ok){ loadEditor(); loadRepertoire(); statusMsg('Token opgeslagen en geldig.'); }
-  else { shows=[];videos=[];repertoire=[];setlists=[];render();renderVids();renderSongs();renderSetlists();
-    statusMsg('Token opgeslagen, maar GitHub weigert hem (ongeldig/verlopen of onvoldoende rechten).',true); }
-});
-$('clearTokBtn').addEventListener('click',function(){
-  localStorage.removeItem('er_gh_token');tokValid=null;
-  shows=[];videos=[];repertoire=[];setlists=[];render();renderVids();renderSongs();renderSetlists();
-  refreshTokState();statusMsg('Token gewist.');
-});
+$('googleBtn').addEventListener('click',startGoogleLogin);
+$('logoutBtn').addEventListener('click',logout);
 $('reloadBtn').addEventListener('click',loadEditor);
 $('addBtn').addEventListener('click',addShow);
 $('saveBtn').addEventListener('click',save);
-$('pwBtn').addEventListener('click',changePw);
 $('reloadVidBtn').addEventListener('click',loadEditor);
 $('addVidBtn').addEventListener('click',addVid);
 $('saveVidBtn').addEventListener('click',saveVideos);
@@ -842,7 +757,7 @@ $('setShuffleBtn').addEventListener('click',renderSuggestions);
 $('setSuggestAll').addEventListener('change',function(){if(this.value){addSuggestion(this.value);this.value='';}});
 $('repSearch').addEventListener('input',function(){repFilter=this.value;renderSongs();});
 $('repEmpty').addEventListener('change',function(){repEmptyOnly=this.checked;renderSongs();});
-if(sessionStorage.getItem('er_authed')==='1')showApp();
+boot();
 </script>
 </body>
 </html>
