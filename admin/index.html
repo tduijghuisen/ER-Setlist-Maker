@@ -34,8 +34,9 @@
   .row{display:flex;gap:12px;flex-wrap:wrap;}
   .row>div{flex:1 1 200px;min-width:0;}
   .show-card{border:2px solid var(--ink);border-radius:4px;padding:14px;margin:0 0 14px;background:#fff;position:relative;}
-  .show-card .head{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;}
+  .show-card .head{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:nowrap;min-width:0;}
   .show-card .badge{font-weight:800;font-size:12px;background:var(--ink);color:#fff;padding:3px 8px;border-radius:99px;}
+  @media(max-width:640px){.show-card .head{flex-wrap:wrap;} .headbtns{flex-wrap:wrap;}}
   .show-card .past{background:#8a8madd;}
   .flyerline{display:flex;gap:14px;align-items:flex-start;margin-top:6px;flex-wrap:wrap;}
   .flyerline>div{flex:1 1 160px;min-width:0;}
@@ -62,10 +63,10 @@
   .setrow.miss .t{color:var(--red-2);}
   .miss-sel{flex:0 0 auto;max-width:150px;padding:4px 6px;border:2px solid var(--ink);border-radius:4px;font:inherit;background:#fff;font-size:12px;}
   .repchk{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-size:13px;font-weight:700;cursor:pointer;} .repchk input{width:auto;min-width:0;}
-  .setname,.songname{cursor:pointer;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} .settoggle{flex:0 0 auto;}
-  /* Keep a card's action buttons together on the right; the whole group wraps as one unit
-     to the next line when space is tight, instead of a single button breaking off. */
-  .headbtns{display:flex;gap:8px;flex:0 0 auto;flex-wrap:wrap;margin-left:auto;}
+  /* Title truncates with an ellipsis so every card head is a single, equal-height line. */
+  .setname,.songname{cursor:pointer;flex:0 1 auto;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} .settoggle{flex:0 0 auto;}
+  /* Action buttons stay together at full size on the right and never split (desktop). */
+  .headbtns{display:flex;gap:8px;flex:0 0 auto;flex-wrap:nowrap;margin-left:auto;}
   .song-lastplayed{font-size:12px;color:#6b6354;font-weight:600;margin-top:8px;}
   .setsuggest{margin-top:10px;padding:12px;border:2px dashed var(--blue);border-radius:4px;background:#eef6fc;}
   .setsuggest .shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
@@ -203,6 +204,8 @@
         </div>
         <div id="setSuggestChips" class="chips"></div>
         <p class="muted" style="margin-top:6px;">Klik een nummer om het als regel onderaan de tekst hierboven toe te voegen.</p>
+        <label style="margin-top:8px;">Of kies uit het volledige repertoire (A→Z)</label>
+        <select id="setSuggestAll" style="max-width:100%;"><option value="">+ Kies een nummer…</option></select>
       </div>
       <div id="setList" style="margin-top:14px;"></div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
@@ -537,6 +540,13 @@ function renderSuggestions(){
     var pd=lastPlayedDate(s.id),meta=pd?('laatst gespeeld '+fmtDate(pd)):'nog nooit gespeeld';
     return '<button class="chip" type="button" title="'+esc(meta)+'" onclick="addSuggestion(\''+esc(s.id)+'\')">'+esc(s.title||'Naamloos')+'</button>';
   }).join('')||'<span class="muted">'+(dataLocked()?'Vul een geldige token in om het repertoire te laden.':'Alles is de laatste 3 maanden gespeeld 🎉')+'</span>';
+  /* Full repertoire A→Z in the dropdown (does not reorder the repertoire itself). */
+  var sel=$('setSuggestAll'); if(sel){
+    var sorted=repertoire.slice().sort(function(a,b){return (a.title||'').localeCompare(b.title||'',{sensitivity:'base'});});
+    sel.innerHTML='<option value="">+ Kies een nummer…</option>'+sorted.map(function(s){
+      return '<option value="'+esc(s.id)+'">'+esc(s.title||'Naamloos')+(s.artist?' — '+esc(s.artist):'')+'</option>';
+    }).join('');
+  }
 }
 function addSuggestion(id){
   var s=songById(id); if(!s)return;
@@ -829,6 +839,7 @@ $('addSetBtn').addEventListener('click',addSetlist);
 $('saveSetBtn').addEventListener('click',saveSetlists);
 $('setPasteBtn').addEventListener('click',createSetlistFromText);
 $('setShuffleBtn').addEventListener('click',renderSuggestions);
+$('setSuggestAll').addEventListener('change',function(){if(this.value){addSuggestion(this.value);this.value='';}});
 $('repSearch').addEventListener('input',function(){repFilter=this.value;renderSongs();});
 $('repEmpty').addEventListener('change',function(){repEmptyOnly=this.checked;renderSongs();});
 if(sessionStorage.getItem('er_authed')==='1')showApp();
