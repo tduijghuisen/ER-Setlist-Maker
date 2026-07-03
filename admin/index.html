@@ -588,6 +588,15 @@ async function saveRepertoire(){
 }
 function setItemType(it){ if(it&&typeof it==='object'){ if(it.h!=null)return'h'; if(it.t!=null)return't'; } return 's'; }
 function renderSetlists(){
+  /* Newest first: sort the real array in place (index-based handlers stay valid).
+     Undated setlists (just created / not scheduled) float to the top. */
+  setlists.sort(function(a,b){
+    var da=a.date||'',db=b.date||'';
+    if(!da&&!db)return 0;
+    if(!da)return -1;
+    if(!db)return 1;
+    return db.localeCompare(da);
+  });
   var songOpts='<option value="">+ Nummer toevoegen…</option>'+repertoire.map(function(s){return '<option value="'+esc(s.id)+'">'+esc(s.title||'Naamloos')+(s.key?' ('+esc(s.key)+')':'')+'</option>';}).join('');
   var html=setlists.map(function(sl,i){
     var cnt=0;
