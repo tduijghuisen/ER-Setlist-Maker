@@ -62,9 +62,16 @@
   .setrow.miss .t{color:var(--red-2);}
   .miss-sel{flex:0 0 auto;max-width:150px;padding:4px 6px;border:2px solid var(--ink);border-radius:4px;font:inherit;background:#fff;font-size:12px;}
   .repchk{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-size:13px;font-weight:700;cursor:pointer;} .repchk input{width:auto;min-width:0;}
-  .setname{cursor:pointer;} .settoggle{flex:0 0 auto;}
-  .songname{cursor:pointer;}
+  .setname,.songname{cursor:pointer;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} .settoggle{flex:0 0 auto;}
+  /* Keep a card's action buttons together on the right; the whole group wraps as one unit
+     to the next line when space is tight, instead of a single button breaking off. */
+  .headbtns{display:flex;gap:8px;flex:0 0 auto;flex-wrap:wrap;margin-left:auto;}
   .song-lastplayed{font-size:12px;color:#6b6354;font-weight:600;margin-top:8px;}
+  .setsuggest{margin-top:10px;padding:12px;border:2px dashed var(--blue);border-radius:4px;background:#eef6fc;}
+  .setsuggest .shead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
+  .chip{font-family:inherit;font-weight:700;font-size:12px;cursor:pointer;border:2px solid var(--ink);background:#fff;border-radius:99px;padding:5px 11px;box-shadow:2px 2px 0 var(--sh);}
+  .chip:hover{background:var(--yellow);}
   .pill{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;border:2px solid var(--ink);color:var(--ink);}
   .pill.ok{background:#d6f5dd;} .pill.no{background:#ffd9d6;}
   .pill.err{background:#e5342a;color:#fff;} .pill.chk{background:#fff3cf;}
@@ -187,6 +194,15 @@
         <textarea id="setPasteText" class="sheet-input" wrap="off" placeholder="SET 1&#10;Guitar Boogie&#10;Shake, Rattle and Roll&#10;…&#10;&#10;SET 2&#10;…" style="min-height:120px;margin-top:6px;"></textarea>
         <button class="btn g" id="setPasteBtn" type="button" style="margin-top:8px;">Maak setlist uit tekst</button>
         <p class="muted" style="margin-top:6px;">Regels met “SET 1/2/3” (of Encore/Pauze) worden koppen. Titels worden automatisch aan het repertoire gekoppeld; niet-gevonden titels kun je daarna handmatig koppelen.</p>
+      </div>
+      <div class="setsuggest" id="setSuggest">
+        <div class="shead">
+          <label style="margin:0;">💡 Lang niet gespeeld <span class="muted">(&gt; 3 maanden of nooit)</span></label>
+          <span class="sp" style="margin-left:auto"></span>
+          <button class="btn ghost sm" id="setShuffleBtn" type="button">🔀 Shuffle</button>
+        </div>
+        <div id="setSuggestChips" class="chips"></div>
+        <p class="muted" style="margin-top:6px;">Klik een nummer om het als regel onderaan de tekst hierboven toe te voegen.</p>
       </div>
       <div id="setList" style="margin-top:14px;"></div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
@@ -493,19 +509,56 @@ function lastPlayed(id){
   return best;
 }
 function toggleSong(i){repertoire[i]._open=!repertoire[i]._open;renderSongs();}
+/* Latest DATED setlist date this song appears in ('' if never played on a dated setlist). */
+function lastPlayedDate(id){
+  var best='';
+  for(var i=0;i<setlists.length;i++){var sl=setlists[i];
+    if(!sl.date)continue;
+    if((sl.songs||[]).some(function(it){return setItemType(it)==='s'&&it===id;})){ if(sl.date>best)best=sl.date; }
+  }
+  return best;
+}
+/* Suggestion pool: songs not played on a dated setlist in the last 3 months (or never). */
+function eligibleUnplayed(){
+  var d=new Date(); d.setMonth(d.getMonth()-3);
+  var thr=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+  return repertoire.filter(function(s){
+    if(!s.title)return false;
+    var pd=lastPlayedDate(s.id);
+    return !pd || pd<thr;
+  });
+}
+function renderSuggestions(){
+  var el=$('setSuggestChips'); if(!el)return;
+  var pool=eligibleUnplayed();
+  for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=pool[i];pool[i]=pool[j];pool[j]=t;} /* Fisher–Yates */
+  var pick=pool.slice(0,12);
+  el.innerHTML=pick.map(function(s){
+    var pd=lastPlayedDate(s.id),meta=pd?('laatst gespeeld '+fmtDate(pd)):'nog nooit gespeeld';
+    return '<button class="chip" type="button" title="'+esc(meta)+'" onclick="addSuggestion(\''+esc(s.id)+'\')">'+esc(s.title||'Naamloos')+'</button>';
+  }).join('')||'<span class="muted">'+(dataLocked()?'Vul een geldige token in om het repertoire te laden.':'Alles is de laatste 3 maanden gespeeld 🎉')+'</span>';
+}
+function addSuggestion(id){
+  var s=songById(id); if(!s)return;
+  var ta=$('setPasteText'); var cur=ta.value;
+  if(cur && !/\n\s*$/.test(cur)) cur+='\n';
+  ta.value=cur+(s.title||'')+'\n';
+  ta.focus(); ta.scrollTop=ta.scrollHeight;
+  statusMsg('“'+(s.title||'')+'” toegevoegd aan de tekst.');
+}
 async function loadRepertoire(){
-  if(!token()){repertoire=[];setlists=[];renderSongs();renderSetlists();return;}
+  if(!token()){repertoire=[];setlists=[];renderSongs();renderSetlists();renderSuggestions();return;}
   try{
     var r=await ghGet(REP_PATH); repertoire=r.content?JSON.parse(r.content):[];
     var s=await ghGet(SET_PATH); setlists=s.content?JSON.parse(s.content):[];
   }catch(e){
-    repertoire=[];setlists=[];renderSongs();renderSetlists();
+    repertoire=[];setlists=[];renderSongs();renderSetlists();renderSuggestions();
     statusMsg('Repertoire laden mislukt: '+e.message,true); return;
   }
   if(!Array.isArray(repertoire))repertoire=[]; if(!Array.isArray(setlists))setlists=[];
   repertoire.forEach(function(s,i){if(!s.id)s.id='s'+i+Date.now().toString(36);});
   setlists.forEach(function(s,i){if(!s.id)s.id='l'+i+Date.now().toString(36); s._collapsed=true;});
-  renderSongs(); renderSetlists();
+  renderSongs(); renderSetlists(); renderSuggestions();
 }
 function renderSongs(){
   var q=repFilter.toLowerCase();
@@ -520,9 +573,10 @@ function renderSongs(){
           '<button class="btn ghost sm settoggle" type="button" onclick="toggleSong('+i+')" aria-label="In-/uitklappen">'+(s._open?'▾':'▸')+'</button>'+
           '<span class="badge songname" onclick="toggleSong('+i+')" title="Klik om in/uit te klappen">'+esc(s.title||'Naamloos')+'</span>'+
           (s.artist?'<span class="k">· '+esc(s.artist)+'</span>':'')+
-          '<span class="sp" style="margin-left:auto"></span>'+
-          '<button class="btn b sm" type="button" onclick="exportSongPDF(\''+s.id+'\')">PDF</button>'+
-          '<button class="btn r sm" type="button" onclick="delSong('+i+')">Verwijderen</button></div>'+
+          '<div class="headbtns">'+
+            '<button class="btn b sm" type="button" onclick="exportSongPDF(\''+s.id+'\')">PDF</button>'+
+            '<button class="btn r sm" type="button" onclick="delSong('+i+')">Verwijderen</button>'+
+          '</div></div>'+
         '<div class="song-lastplayed">'+lpTxt+'</div>';
       if(!s._open) return '<div class="show-card">'+head+'</div>';
       var imgPrev=s._thumbData||(s.imageThumb?'../'+s.imageThumb:(s.image?'../'+s.image:''));
@@ -621,10 +675,11 @@ function renderSetlists(){
         '<button class="btn ghost sm settoggle" type="button" onclick="toggleSetlist('+i+')" aria-label="In-/uitklappen">'+(sl._collapsed?'▸':'▾')+'</button>'+
         '<span class="badge setname" onclick="toggleSetlist('+i+')" title="Klik om in/uit te klappen">'+esc(sl.name||'Naamloze setlist')+'</span>'+
         '<span class="k">· '+cnt+' nr.</span>'+
-        '<span class="sp" style="margin-left:auto"></span>'+
-        '<button class="btn b sm" type="button" onclick="exportSetlistPDF('+i+',false)">PDF overzicht</button>'+
-        '<button class="btn b sm" type="button" onclick="exportSetlistPDF('+i+',true)">PDF boekje</button>'+
-        '<button class="btn r sm" type="button" onclick="delSetlist('+i+')">Verwijderen</button></div>'+
+        '<div class="headbtns">'+
+          '<button class="btn b sm" type="button" onclick="exportSetlistPDF('+i+',false)">PDF overzicht</button>'+
+          '<button class="btn b sm" type="button" onclick="exportSetlistPDF('+i+',true)">PDF boekje</button>'+
+          '<button class="btn r sm" type="button" onclick="delSetlist('+i+')">Verwijderen</button>'+
+        '</div></div>'+
       '<div class="set-body'+(sl._collapsed?' hide':'')+'">'+
         '<div class="row">'+
           '<div><label>Naam</label><input type="text" value="'+esc(sl.name)+'" placeholder="bv. Parelrock Oisterwijk" oninput="updSet('+i+',\'name\',this.value)"></div>'+
@@ -773,6 +828,7 @@ $('reloadSetBtn').addEventListener('click',loadRepertoire);
 $('addSetBtn').addEventListener('click',addSetlist);
 $('saveSetBtn').addEventListener('click',saveSetlists);
 $('setPasteBtn').addEventListener('click',createSetlistFromText);
+$('setShuffleBtn').addEventListener('click',renderSuggestions);
 $('repSearch').addEventListener('input',function(){repFilter=this.value;renderSongs();});
 $('repEmpty').addEventListener('change',function(){repEmptyOnly=this.checked;renderSongs();});
 if(sessionStorage.getItem('er_authed')==='1')showApp();
