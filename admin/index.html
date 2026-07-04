@@ -813,12 +813,26 @@ async function saveSetlists(){
 }
 /* ---------- PDF export (via print) ---------- */
 var PRINT_CSS='*{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#111;margin:0;padding:26px 30px;}h1{font-size:23px;margin:0 0 2px;}.meta{color:#555;font-size:13px;margin:0 0 12px;}.meta a{color:#1E83C9;}pre.sheet{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.4;white-space:pre-wrap;margin:0;}.notes{margin-top:14px;font-size:13px;color:#333;white-space:pre-wrap;}ol.set{font-size:15px;line-height:1.7;padding-left:26px;margin:4px 0 8px;}ol.set .k{color:#666;font-size:13px;}.setsec{font-size:15px;margin:16px 0 2px;text-transform:uppercase;letter-spacing:.04em;color:#B81E16;}.sheet-img{display:block;max-width:100%;max-height:245mm;margin:8px 0;}.song{page-break-before:always;}@media print{@page{margin:15mm;}}';
+function isTouchDevice(){return (navigator.maxTouchPoints||0)>0||(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches);}
 function printHTML(title,body){
-  var w=window.open('','_blank');
-  if(!w){statusMsg('Sta pop-ups toe om naar PDF te exporteren.',true);return;}
-  w.document.open();
-  w.document.write('<!doctype html><html lang="nl"><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>'+PRINT_CSS+'</style></head><body>'+body+'<'+'script>window.onload=function(){setTimeout(function(){window.print();},300);};<'+'/script></body></html>');
-  w.document.close();
+  var doc='<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>'+esc(title)+'</title><style>'+PRINT_CSS+'</style></head><body>'+body+'<'+'script>window.onload=function(){setTimeout(function(){try{window.focus();}catch(e){}window.print();},350);};<'+'/script></body></html>';
+  /* Desktop: open a print tab (unchanged, works fine there).
+     Mobile/iPad: window.open is blocked by Safari (looks like a popup blocker),
+     so render into a hidden same-tab iframe and print that instead — no popup. */
+  if(!isTouchDevice()){
+    var w=window.open('','_blank');
+    if(!w){statusMsg('Sta pop-ups toe om naar PDF te exporteren.',true);return;}
+    w.document.open(); w.document.write(doc); w.document.close();
+    return;
+  }
+  var old=document.getElementById('printFrame'); if(old&&old.parentNode)old.parentNode.removeChild(old);
+  var ifr=document.createElement('iframe'); ifr.id='printFrame';
+  ifr.setAttribute('aria-hidden','true');
+  ifr.style.cssText='position:fixed;left:-10000px;top:0;width:1024px;height:1400px;border:0;opacity:0;';
+  document.body.appendChild(ifr);
+  statusMsg('PDF wordt voorbereid… kies daarna “Delen/Print → Bewaar in Bestanden”.');
+  var d=ifr.contentWindow.document; d.open(); d.write(doc); d.close();
+  setTimeout(function(){ if(ifr&&ifr.parentNode)ifr.parentNode.removeChild(ifr); },120000);
 }
 function songMeta(s){var b=[];if(s.key)b.push('Toonsoort: '+esc(s.key));if(s.bpm)b.push(esc(s.bpm)+' BPM');if(s.duration)b.push(esc(s.duration));if(s.youtube)b.push('<a href="'+esc(s.youtube)+'">YouTube</a>');return b.join('  ·  ');}
 function songBlock(s,cls,part){
