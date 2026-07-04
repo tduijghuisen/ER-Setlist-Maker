@@ -50,6 +50,10 @@
   .sheetgal figcaption{font-size:11px;line-height:1.25;padding:4px 6px;border-top:2px solid var(--ink);word-break:break-word;}
   .sheetgal .delimg{display:block;width:100%;border:0;border-top:1px solid #ddd;background:#fff;color:var(--red-2);font-weight:800;font-size:11px;padding:4px;cursor:pointer;}
   .sheetgal .delimg:hover{background:#ffe9e7;}
+  /* Read-only "rehearse" panel inside a setlist row */
+  .setsong-detail{border-top:2px dashed #d8cdb4;margin:2px 0 10px;padding:10px 0 2px;}
+  .sheet-ro{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.4;white-space:pre-wrap;
+    background:#fbf6e8;border:2px solid var(--ink);border-radius:4px;padding:10px;margin:6px 0;max-height:360px;overflow:auto;}
   /* Lightbox overlay */
   .lightbox{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.86);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;}
   .lightbox img{max-width:100%;max-height:calc(100vh - 84px);object-fit:contain;border:3px solid #fff;border-radius:4px;background:#fff;}
@@ -721,7 +725,11 @@ function renderSetlists(){
       }
       var s=songById(item);
       var label=s?(esc(s.title||'Naamloos')+(s.key?' <span class="k">· '+esc(s.key)+'</span>':'')):'<span class="k">(verwijderd nummer)</span>';
-      return '<div class="setrow"><span class="k">'+cnt+'.</span><span class="t">'+label+'</span>'+ctrls+'</div>';
+      if(!s) return '<div class="setrow"><span class="k">'+cnt+'.</span><span class="t">'+label+'</span>'+ctrls+'</div>';
+      var svOpen=(setView[svKey(i,idx)]||{}).open;
+      var toggle='<button class="btn ghost sm settoggle" type="button" title="Repertoire-info tonen" onclick="toggleSetSongView('+i+','+idx+')">'+(svOpen?'▾':'▸')+'</button>';
+      return '<div class="setrow">'+toggle+'<span class="k">'+cnt+'.</span><span class="t">'+label+'</span>'+ctrls+'</div>'+
+        (svOpen?setSongDetail(s,i,idx):'');
     }).join('')||'<p class="muted">Nog geen nummers in deze setlist.</p>';
     return '<div class="show-card">'+
       '<div class="head">'+
@@ -748,6 +756,46 @@ function renderSetlists(){
   $('setList').innerHTML=html||'<p class="muted">'+(dataLocked()?'🔒 Log in om de setlists te laden.':'Nog geen setlists. Klik op “+ Setlist” of plak een setlist als tekst.')+'</p>';
 }
 function toggleSetlist(i){ setlists[i]._collapsed=!setlists[i]._collapsed; renderSetlists(); }
+/* Read-only "rehearse" view of a setlist song: shows the repertoire entry
+   (YouTube player, chords/lyrics + images per role) without any edit fields.
+   Purely a viewer — it does not touch the data or the PDF exports. */
+var setView={}; /* key "i_idx" -> {open, part} */
+function svKey(i,idx){return i+'_'+idx;}
+function toggleSetSongView(i,idx){var k=svKey(i,idx);var v=setView[k]=setView[k]||{};v.open=!v.open;renderSetlists();}
+function setSetSongPart(i,idx,part){var k=svKey(i,idx);(setView[k]=setView[k]||{}).part=part;renderSetlists();}
+function setSongDetail(s,i,idx){
+  var ri=repertoire.indexOf(s);
+  var k=svKey(i,idx), saved=(setView[k]&&setView[k].part);
+  var ap=(saved&&s.parts[saved])?saved:firstFilledPart(s);
+  var pt=s.parts[ap]||{};
+  var yid=ytId(s.youtube||''); var validYt=/^[A-Za-z0-9_-]{11}$/.test(yid);
+  var meta=[]; if(s.artist)meta.push(esc(s.artist)); if(s.key)meta.push('Toonsoort '+esc(s.key)); if(s.bpm)meta.push(esc(s.bpm)+' BPM'); if(s.duration)meta.push(esc(s.duration));
+  var tabs='<div class="parttabs">'+PART_DEFS.map(function(p){
+    var filled=!partIsEmpty(s.parts[p.key]);
+    return '<button class="parttab'+(p.key===ap?' active':'')+(filled?' filled':'')+'" type="button" onclick="setSetSongPart('+i+','+idx+',\''+p.key+'\')">'+p.icon+' '+esc(p.label)+(filled?' ●':'')+'</button>';
+  }).join('')+'</div>';
+  var chords=pt.chords||''; var showChords=chords.trim()&&chords.indexOf('⚠️')!==0;
+  var ptUrl=(pt.chords||'').match(/https?:\/\/[^\s]+/);
+  var gal=partImgs(pt).map(function(im,gi){
+    var prev=im._thumbData||(im.imageThumb?'../'+im.imageThumb:(im.image?'../'+im.image:''));
+    var cap=im.label||('blad '+(gi+1));
+    return '<figure><button class="thumb" type="button" title="Vergroten" onclick="openLightbox('+ri+',\''+ap+'\','+gi+')">'+
+        (prev?'<img src="'+esc(prev)+'" alt="'+esc(cap)+'">':'<span class="muted" style="display:block;padding:34px 4px">geen preview</span>')+
+      '</button><figcaption title="'+esc(cap)+'">'+esc(cap)+'</figcaption></figure>';
+  }).join('');
+  var empty=!validYt&&!showChords&&!gal;
+  return '<div class="setsong-detail">'+
+    (meta.length?'<div class="muted" style="margin-bottom:4px;">'+meta.join(' · ')+'</div>':'')+
+    (validYt?'<div class="song-yt"><iframe src="https://www.youtube.com/embed/'+yid+'" title="YouTube-video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>':'')+
+    tabs+
+    '<div class="partpane">'+
+      (showChords?'<pre class="sheet-ro">'+esc(chords)+'</pre>':'')+
+      (ptUrl?'<a class="openlink" href="'+esc(ptUrl[0])+'" target="_blank" rel="noopener">↗ Open songtekst in nieuw tabblad</a>':'')+
+      (gal?'<div class="sheetgal">'+gal+'</div>':(showChords?'':'<p class="muted">Geen materiaal voor '+esc(partLabel(ap))+'.</p>'))+
+    '</div>'+
+    (empty?'<p class="muted">Nog geen repertoire-materiaal bij dit nummer.</p>':'')+
+  '</div>';
+}
 function resolveMiss(i,idx,sid){ if(!sid)return; setlists[i].songs[idx]=sid; renderSetlists(); }
 function addSetHeader(i){ var h=prompt('Naam van de set-kop (bijv. SET 2):'); if(h==null)return; setlists[i].songs.push({h:(h.trim()||'SET')}); renderSetlists(); }
 function updSet(i,k,v){setlists[i][k]=v;}
