@@ -8267,24 +8267,6 @@
     }
   },
   {
-    "id": "s251",
-    "title": "We say yeah",
-    "artist": "Cliff Richard",
-    "key": "D",
-    "bpm": "",
-    "duration": "",
-    "youtube": "https://www.youtube.com/watch?v=8-QwyuXix7c",
-    "notes": "",
-    "parts": {
-      "vocals": {
-        "chords": "🎤 Songtekst (lyrics): https://www.oldielyrics.com/lyrics/cliff_richard/we_say_yeah.html"
-      },
-      "bass": {
-        "chords": "BAS GRONDTOON OF TERUGLOPEN\n\nINTRO: |A    |%    |\n\nVERSE 1:\n              //              //\nn.c.          A|n.c.          A|\nMummy says no.  Daddy says no.\nn.c.                |A7\nBrother says no. But they all got to go.\n\nCHORUS:\n             |D                        |%\n'Cause we say yeah, (yeah-yeah). We say yeah, (yeah-yeah).\n      |G                        |A       |%\nWe say yeah, (yeah-yeah). We say yea - h, (yea-h).\n\nVERSE 2:\n\n     |A                   |%                       |\nIf we didn't go ahead, and thought of all they said.\n%                              |A7\n  Might as well give up man, we might as well be dead.\n\nCHORUS:\n         |D                        |%\nOh we say yeah, (yeah-yeah). We say yeah, (yeah-yeah).\n      |G                        |A       |%\nWe say yeah, (yeah-yeah). We say yea - h, (yea-h).\n\nVERSE 3:\n\n        |A                    |%                |\nOh we're moving up front baby, sing another song.\n%                                   |A7\n  Older ones they taught us, they're all dead and gone.\n\nCHORUS:\n           |D                        |%\nWell we say yeah, (yeah-yeah). We say yeah, (yeah-yeah).\n      |G                        |A       |%\nWe say yeah, (yeah-yeah). We say yea - h, (yea-h).\n\nVERSE 4:\n\n     |A               |%                    |\nWe'll aim for the sky, keep on shooting high.\n%                                 |\n  Forget about those problems baby,\nA7\ndon't just sit and sigh.\n\nCHORUS:\n\n      |D                        |%\nWe say yeah, (yeah-yeah). We say yeah, (yeah-yeah).\n      |G                        |A       |%\nWe say yeah, (yeah-yeah). We say yea - h, (yea-h).\n\nSOLO: |A    |%    |%    |E7   |A    |%    |%    |A7   |\n                            U - mm\n      |D    |%    |G    |A    |%\n\nVERSE 5:\n\n   |A           D      |A       D     |\nNow mummy says yeah. And daddy says yeah.\nA        D         |A7.        D\nBrother says yeah. Maybe they're not so square.\n\nCHORUS:\n\n          |D                            |%\nWe all say yeah, (yeah-yeah). We all say yeah, (yeah-yeah).\n                                                /\n      |G                        |A       |%      |\nWe say yeah, (yeah-yeah). We say yea – h, (yea-h)."
-      }
-    }
-  },
-  {
     "id": "s252",
     "title": "What a wonderful life",
     "artist": "Elvis Presley",
@@ -9225,21 +9207,21 @@
     "youtube": "",
     "notes": "NOG NIET MET MENNO EN TEUN GESPEELD",
     "parts": {
-      "drums": {
-        "images": [
-          {
-            "image": "assets/repertoire/devoted-to-you-drums-d5ad66.jpg",
-            "imageThumb": "assets/repertoire/devoted-to-you-drums-d5ad66-thumb.jpg",
-            "label": "Devoted to you"
-          }
-        ]
-      },
       "vocals": {
         "images": [
           {
             "image": "assets/repertoire/devoted-toyou-vocals-278211.jpg",
             "imageThumb": "assets/repertoire/devoted-toyou-vocals-278211-thumb.jpg",
             "label": "Devoted toYou - The Everly Brothers"
+          }
+        ]
+      },
+      "drums": {
+        "images": [
+          {
+            "image": "assets/repertoire/devoted-to-you-drums-d5ad66.jpg",
+            "imageThumb": "assets/repertoire/devoted-to-you-drums-d5ad66-thumb.jpg",
+            "label": "Devoted to you"
           }
         ]
       }
@@ -9744,21 +9726,21 @@
     "youtube": "",
     "notes": "NOG NIET MET MENNO EN TEUN GESPEELD",
     "parts": {
-      "drums": {
-        "images": [
-          {
-            "image": "assets/repertoire/judy-drums-335218.jpg",
-            "imageThumb": "assets/repertoire/judy-drums-335218-thumb.jpg",
-            "label": "Judy - Elvis Presley"
-          }
-        ]
-      },
       "vocals": {
         "images": [
           {
             "image": "assets/repertoire/judy-elvis-vocals-d08f4a.jpg",
             "imageThumb": "assets/repertoire/judy-elvis-vocals-d08f4a-thumb.jpg",
             "label": "Judy-Elvis"
+          }
+        ]
+      },
+      "drums": {
+        "images": [
+          {
+            "image": "assets/repertoire/judy-drums-335218.jpg",
+            "imageThumb": "assets/repertoire/judy-drums-335218-thumb.jpg",
+            "label": "Judy - Elvis Presley"
           }
         ]
       }
