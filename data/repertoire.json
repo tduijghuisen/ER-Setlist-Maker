@@ -589,7 +589,7 @@
     "key": "E",
     "bpm": "",
     "duration": "",
-    "youtube": "",
+    "youtube": "https://youtu.be/a1EITezkbU4?si=Bp8bcxBinkgiLDUn",
     "notes": "",
     "parts": {
       "vocals": {
@@ -8559,7 +8559,14 @@
         ]
       },
       "bass": {
-        "chords": "C (Bas loopt terug in 1 - 3 4 tempo. Onder C: C - G Bb, enz.)"
+        "chords": "C (Bas loopt terug in 1 - 3 4 tempo. Onder C: C - G Bb, enz.)",
+        "images": [
+          {
+            "image": "assets/repertoire/without-you-bass-mr6fjebc-0.jpg",
+            "imageThumb": "assets/repertoire/without-you-bass-mr6fjebc-0-thumb.jpg",
+            "label": "Without you 310a3b920b888098b179e78891dc2d36"
+          }
+        ]
       },
       "drums": {
         "images": [
