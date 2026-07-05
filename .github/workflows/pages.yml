@@ -1,0 +1,42 @@
+name: Deploy site to GitHub Pages
+
+# Custom Pages deploy with a concurrency group, so that several CMS publishes
+# close together no longer collide into "Deployment failed, try again later".
+# A newer publish cancels an in-progress deploy; only the latest content goes
+# live. Saving (the git commit) is unaffected — this only governs deploying.
+#
+# NOTE: requires Settings -> Pages -> Source = "GitHub Actions".
+# The `push` trigger is intentionally omitted until that switch is made; run
+# this manually (workflow_dispatch) once to verify, then the push trigger is
+# added in a follow-up commit.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
