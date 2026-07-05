@@ -201,7 +201,10 @@
                                                                        └─────────────────────┘</div>
     <ul>
       <li><b>GitHub Pages</b> zet de site automatisch online zodra er iets verandert in de <code>main</code>-versie
-        (dat heet een "deploy", duurt ±1 min).</li>
+        (dat heet een "deploy", duurt ±1 min). Dit gebeurt via een eigen workflow
+        (<code>.github/workflows/pages.yml</code>) met een <b>concurrency</b>-instelling: publiceren meerdere bandleden
+        vlak na elkaar, dan botsen de deploys niet meer — een nieuwere publicatie neemt netjes over en alleen de
+        laatste stand gaat live. In GitHub → Settings → Pages staat de bron daarom op <b>"GitHub Actions"</b>.</li>
       <li>De <b>Cloudflare Worker</b> (mapje <code>worker/</code> in de repo) wordt <i>ook</i> automatisch bijgewerkt
         als daar code verandert (via "Cloudflare Workers Builds", gekoppeld aan dezelfde repo).</li>
     </ul>
@@ -266,9 +269,11 @@
     </ol>
 
     <h3>"Deploy mislukt"-mailtje ontvangen</h3>
-    <p>Meestal onschuldig: als je snel achter elkaar publiceert, botsen twee publicaties. Als de <i>laatste</i> deploy
-      groen is, staat alles goed. Anders: GitHub → tab <b>Actions</b> → de rode run opnieuw starten
-      ("Re-run failed jobs").</p>
+    <p>Sinds juli 2026 deployt de site via een eigen workflow met <b>concurrency</b>, waardoor gelijktijdige
+      publicaties elkaar netjes opvolgen — deze foutmails horen dus niet meer voor te komen. Mocht je er tóch ooit
+      een zien: je opgeslagen wijziging is nooit kwijt (opslaan = een aparte, altijd geslaagde stap), en je kunt in
+      GitHub → tab <b>Actions</b> → "Deploy site to GitHub Pages" de laatste run met <b>"Run workflow"</b> opnieuw
+      starten.</p>
 
     <h3>Een foto/flyer/blad toevoegen</h3>
     <p>Gewoon in het CMS uploaden bij het betreffende optreden of nummer — het wordt automatisch verkleind

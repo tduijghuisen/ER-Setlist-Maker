@@ -65,7 +65,13 @@ and self-contained. Verify JS before pushing by extracting the `<script>` and ru
 ## 4. GitHub Pages + custom domain
 
 1. Push the repo to `github.com/tduijghuisen/ER-Setlist-Maker`.
-2. **Settings → Pages**: Source = *Deploy from a branch*, branch = `main`, folder = `/ (root)`.
+2. **Settings → Pages**: Source = **GitHub Actions**. Deploys run via the repo's own
+   workflow `.github/workflows/pages.yml` (uploads the root as the Pages artifact and
+   calls `actions/deploy-pages`). It has `concurrency: {group: "pages", cancel-in-progress: true}`
+   so several CMS publishes close together no longer collide into "Deployment failed,
+   try again later" — a newer publish supersedes an in-flight one and only the latest
+   content deploys. (The old *Deploy from a branch* source had no concurrency control
+   and produced spurious deploy failures under rapid publishing.)
 3. The `CNAME` file (contents: `explosionrockets.com`) makes Pages serve the custom domain.
 4. **DNS at MijnDomein** (account `t.duijghuisen@baril.nl`):
    - `A` records for the apex `explosionrockets.com` → GitHub Pages IPs
@@ -187,7 +193,8 @@ Confirm any referenced `assets/…` paths exist.
 
 ## 9. Deploy flow (day to day)
 
-- **Content:** band members just use the CMS → "… publiceren" → one commit → Pages redeploys.
+- **Content:** band members just use the CMS → "… publiceren" → one commit → the
+  `pages.yml` workflow redeploys (concurrency-guarded, so concurrent publishes don't collide).
 - **Code:** develop on a feature branch, then fast-forward `main`:
   ```bash
   git push -u origin <feature>
@@ -203,4 +210,7 @@ Confirm any referenced `assets/…` paths exist.
   R/W) and overwrite the `GITHUB_TOKEN` Worker secret.
 - **Login broken:** verify the Google redirect URI matches exactly, check secret *names*,
   and hit `https://er-cms.explosionrockets.workers.dev/` (should be `{ok:true}`).
-- **Deploy failed mail:** if the latest Pages run is green, ignore; else re-run failed jobs.
+- **Deploy failed mail:** should no longer happen (the `pages.yml` concurrency group
+  serialises deploys). The commit (the saved data) is safe regardless. If one ever
+  appears, re-run "Deploy site to GitHub Pages" from the Actions tab, or push any commit
+  to `main`.
