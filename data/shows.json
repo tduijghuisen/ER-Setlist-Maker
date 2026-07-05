@@ -1,13 +1,5 @@
 [
   {
-    "date": "2026-07-04",
-    "description": "The Explosion Rockets live (Parelrock)",
-    "location": "'Tiliander' · OISTERWIJK",
-    "flyer": "assets/shows/2026-07-04-parelrock.jpg",
-    "thumb": "assets/shows/2026-07-04-parelrock-thumb.jpg",
-    "ticket": "https://www.ticketkantoor.nl/shop/parelrock"
-  },
-  {
     "date": "2026-07-19",
     "description": "Rock & Roll Summer Vibes",
     "location": "Hatsiekedeeplein' / Markt  · OOSTERHOUT (NB) -  15:00",
@@ -17,7 +9,7 @@
   },
   {
     "date": "2026-07-26",
-    "description": "The Explosion Rockets live at De Boemel Buiten",
+    "description": "ROCK AND ROLL SUMMER DANCE PARTY! OUTDOORS - Burgemeester Brokxlaan 8-76",
     "location": "'De Boemel' · TILBURG - 15:00",
     "flyer": "assets/shows/2026-07-26-boemel-tilburg.jpg",
     "thumb": "assets/shows/2026-07-26-boemel-tilburg-thumb.jpg",
@@ -33,8 +25,8 @@
   },
   {
     "date": "2026-08-08",
-    "description": "The Explosion Rockets at Summershelter Festival - Open Air Festival bei Magdeburg",
-    "location": "Biederitz / Parkweg 1a · DUITSLAND - 16:30- 18:00",
+    "description": "The Explosion Rockets at Summershelter Festival - Open Air Festival bei Magdeburg - Parkweg 1A",
+    "location": "Biederitz  · DUITSLAND - 16:30- 18:00",
     "flyer": "assets/shows/2026-08-08-magdeburg.jpg",
     "thumb": "assets/shows/2026-08-08-magdeburg-thumb.jpg",
     "ticket": ""
@@ -65,7 +57,7 @@
   },
   {
     "date": "2026-09-26",
-    "description": "'Blue Suede Shoes!' Dance Party",
+    "description": "'Blue Suede Shoes!' Dance Party - Rijtseweg 1 ",
     "location": "'Zaal Hercules' · DIESSEN",
     "flyer": "assets/shows/2026-09-26-diessen.jpg",
     "thumb": "assets/shows/2026-09-26-diessen-thumb.jpg",
@@ -73,7 +65,7 @@
   },
   {
     "date": "2026-10-11",
-    "description": "Elvis & the Legends of Rock and Roll · Elvis Dag",
+    "description": "Elvis & the Legends of Rock and Roll · Elvis Dag -  Kaaistraat 12",
     "location": "'Het Wapen van Steenbergen' · STEENBERGEN",
     "flyer": "assets/shows/2026-10-11-steenbergen.jpg",
     "thumb": "assets/shows/2026-10-11-steenbergen-thumb.jpg",
@@ -81,7 +73,7 @@
   },
   {
     "date": "2026-10-18",
-    "description": "20 jaar Explosion Rockets in 'De Post' — jubileumconcert",
+    "description": "20 jaar Explosion Rockets in 'De Post' — jubileumconcert - Tripkouw 28",
     "location": "'De Post' · MIDWOUD (NH)",
     "flyer": "assets/shows/2026-10-18-de-post-midwoud.jpg",
     "thumb": "assets/shows/2026-10-18-de-post-midwoud-thumb.jpg",
@@ -97,15 +89,15 @@
   },
   {
     "date": "2026-11-08",
-    "description": "The Explosion Rockets @ 'De Club' Eindhoven",
+    "description": "The Explosion Rockets @ 'De Club' Eindhoven -  Dommelstraat 7",
     "location": "'De Club' · EINDHOVEN",
     "flyer": "assets/shows/the-explosion-rockets-de-club-eindhoven-2026-11-08-mr5yldt0.jpg",
     "thumb": "assets/shows/the-explosion-rockets-de-club-eindhoven-2026-11-08-mr5yldt0-thumb.jpg",
-    "ticket": ""
+    "ticket": "https://shop.weeztix.com/052aec58-aa6a-11f0-a9cb-7e126431635e/tickets"
   },
   {
     "date": "2026-11-22",
-    "description": "The Golden Hits of Rock and Roll",
+    "description": "The Golden Hits of Rock and Roll - Klappeijstraat 11",
     "location": "'Babbelz' · OOSTERHOUT (NB)",
     "flyer": "assets/shows/2026-11-22-babbelz-oosterhout.jpg",
     "thumb": "assets/shows/2026-11-22-babbelz-oosterhout-thumb.jpg",
@@ -113,15 +105,15 @@
   },
   {
     "date": "2026-11-29",
-    "description": "ROCK AND ROLL DANCE PARTY! - Zuiddijk 2A - ",
+    "description": "ROCK AND ROLL DANCE PARTY! - Zuiddijk 2A ",
     "location": "'De Rijper Eilanden' · DE RIJP (NB)",
-    "flyer": "assets/shows/rock-and-roll-dance-party-zuiddijk-2a-2026-11-29-mr7i8yxr.jpg",
-    "thumb": "assets/shows/rock-and-roll-dance-party-zuiddijk-2a-2026-11-29-mr7i8yxr-thumb.jpg",
+    "flyer": "assets/shows/rock-and-roll-dance-party-zuiddijk-2a-2026-11-29-mr7ik8b7.jpg",
+    "thumb": "assets/shows/rock-and-roll-dance-party-zuiddijk-2a-2026-11-29-mr7ik8b7-thumb.jpg",
     "ticket": "https://www.ticketkantoor.nl/shop/DeRijp"
   },
   {
     "date": "2026-12-20",
-    "description": "Rock And Roll Christmas Dance Party",
+    "description": "Rock And Roll Christmas Dance Party - Broekhovenseweg 111",
     "location": "'Bet Kolen' - TILBURG",
     "flyer": "",
     "thumb": "",
@@ -129,7 +121,7 @@
   },
   {
     "date": "2027-01-03",
-    "description": "Rock And Roll New Year's Party!",
+    "description": "Rock And Roll New Year's Party! - Heemraad Witweg 2",
     "location": "'De Werf'- HAUWERT (NH)",
     "flyer": "",
     "thumb": "",
@@ -137,7 +129,7 @@
   },
   {
     "date": "2027-01-24",
-    "description": "'Shake, Rattle And Roll!' - 12,5 Explosion Rockets Jubileum JOOST ROEST",
+    "description": "'Shake, Rattle And Roll!' - 12,5 Explosion Rockets Jubileum JOOST ROEST - Tongerloplein 1",
     "location": "'Zaal 't Plein' · UDENHOUT",
     "flyer": "",
     "thumb": "",
@@ -145,7 +137,7 @@
   },
   {
     "date": "2027-02-13",
-    "description": "Valentine's Rock And Roll DanceParty!",
+    "description": "Valentine's Rock And Roll DanceParty! - Julianalaan 1",
     "location": "'Zidewinde'- SPRANG-CAPELLE",
     "flyer": "assets/shows/valentine-s-rock-and-roll-dance-party-2027-02-13-mr58qhyf.jpg",
     "thumb": "assets/shows/valentine-s-rock-and-roll-dance-party-2027-02-13-mr58qhyf-thumb.jpg",
@@ -153,7 +145,7 @@
   },
   {
     "date": "2027-02-27",
-    "description": "The Explosion Rockets ft. Pete Storm (Johnny Cash Tribute)",
+    "description": "The Explosion Rockets ft. Pete Storm (Johnny Cash Tribute) - Nieuwe Nieuwstraat 7",
     "location": "'De Rots' · BOXTEL",
     "flyer": "assets/shows/the-explosion-rockets-ft-pete-storm-john-2027-02-27-mr63f6mf.jpg",
     "thumb": "assets/shows/the-explosion-rockets-ft-pete-storm-john-2027-02-27-mr63f6mf-thumb.jpg",
@@ -169,7 +161,7 @@
   },
   {
     "date": "2027-04-18",
-    "description": "The Explosion Rockets 2 — 'Het Witte Schaap'",
+    "description": "The Explosion Rockets 2 — 'Het Witte Schaap' -  Wegedoornpage 2",
     "location": "'Het Witte Schaap' · BREDA",
     "flyer": "",
     "thumb": "",
@@ -193,7 +185,7 @@
   },
   {
     "date": "2027-08-29",
-    "description": "The Explosion Rockets live at American Vintage Unlimited Outdoor!",
+    "description": "The Explosion Rockets live at American Vintage Unlimited Outdoor! - Ericssonstraat 2",
     "location": "American Vintage Unlimited · RIJEN",
     "flyer": "",
     "thumb": "",
