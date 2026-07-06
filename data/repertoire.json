@@ -9134,7 +9134,7 @@
     "key": "",
     "bpm": "",
     "duration": "",
-    "youtube": "",
+    "youtube": "https://youtu.be/4c_wrc26sWs",
     "notes": "NOG NIET MET MENNO EN TEUN GESPEELD",
     "parts": {
       "vocals": {
@@ -9145,6 +9145,9 @@
             "label": "Born to lose - Shakin' Arrows"
           }
         ]
+      },
+      "bass": {
+        "chords": "[Intro alleen gitaar]\nE E\n \n \n[Verse 1]\n             -                   E       E\nI'm born to lose, I've lived my life in vain\n        A                        E\nEvery dream has only brought me pain\n       E        E7              A\nAll my life I've always been so blue\n         B7                      E\nBorn to lose and now I'm losing you\n \n \n[Verse 2]\n         E         A       E      E\nBorn to lose, it seems so hard to bear\n       A                       E\nHow I long to always have you near\n E            E                             A\nYou've grown tired and now you say we're through\n         B7                      E\nBorn to lose and now I'm losing you\n \n \n[Interlude]\ncouplet\n \n \n[Verse 3]\n             E    A         E      E\nI'm born to lose, my every hope is gone\n         A                     E\nIt's so hard to face an empty dawn\nE             E                   A\nAnd you were all the happiness I knew\n             B7                      A\nI'm born to lose and now I'm losing you\n\n\n \n[Interlude]\ncouplet\n \n \n[Verse 3]\n             E    A         E      E\nI'm born to lose, my every hope is gone\n         A                     E\nIt's so hard to face an empty dawn\nE             E                   A\nAnd you were all the happiness I knew\n             B7                      A\nI'm born to lose and now I'm losing you\n\n             B7                      A\nI'm born to lose and now I'm losing you"
       },
       "drums": {
         "images": [
@@ -11071,21 +11074,6 @@
             "label": "Why-Worry-Everly-Brothers"
           }
         ]
-      }
-    }
-  },
-  {
-    "id": "smr9f3om4okw",
-    "title": "Born to lose",
-    "artist": "Shakin’ Arrows",
-    "key": "E",
-    "bpm": "",
-    "duration": "",
-    "youtube": "https://youtu.be/4c_wrc26sWs",
-    "notes": "",
-    "parts": {
-      "bass": {
-        "chords": "[Intro alleen gitaar]\nE E\n \n \n[Verse 1]\n             -                   E       E\nI'm born to lose, I've lived my life in vain\n        A                        E\nEvery dream has only brought me pain\n       E        E7              A\nAll my life I've always been so blue\n         B7                      E\nBorn to lose and now I'm losing you\n \n \n[Verse 2]\n         E         A       E      E\nBorn to lose, it seems so hard to bear\n       A                       E\nHow I long to always have you near\n E            E                             A\nYou've grown tired and now you say we're through\n         B7                      E\nBorn to lose and now I'm losing you\n \n \n[Interlude]\ncouplet\n \n \n[Verse 3]\n             E    A         E      E\nI'm born to lose, my every hope is gone\n         A                     E\nIt's so hard to face an empty dawn\nE             E                   A\nAnd you were all the happiness I knew\n             B7                      A\nI'm born to lose and now I'm losing you\n\n\n \n[Interlude]\ncouplet\n \n \n[Verse 3]\n             E    A         E      E\nI'm born to lose, my every hope is gone\n         A                     E\nIt's so hard to face an empty dawn\nE             E                   A\nAnd you were all the happiness I knew\n             B7                      A\nI'm born to lose and now I'm losing you\n\n             B7                      A\nI'm born to lose and now I'm losing you"
       }
     }
   },
