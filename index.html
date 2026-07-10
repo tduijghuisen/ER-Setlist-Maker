@@ -298,8 +298,19 @@
   .show-date .dd{font-family:'Bangers',sans-serif; font-size:26px; line-height:.85;}
   .show-date .mm{font-family:'Archivo Black',sans-serif; font-size:11px; font-style:italic;}
   .show-date .yy{font-family:'Archivo Black',sans-serif; font-size:10px; font-style:italic; line-height:1; margin-top:3px; opacity:.92;}
-  .show-toggle{justify-self:end; font-family:'Bangers',sans-serif; font-size:20px; color:var(--ink); line-height:1; transition:transform .22s;}
-  .show-item.open .show-toggle{transform:rotate(180deg);}
+  /* Clear, labelled expand button per agenda item ("MEER ▾") — obvious there's more underneath. */
+  .show-toggle{justify-self:end; display:inline-flex; align-items:center; gap:6px; font-family:'Bangers',sans-serif;
+    font-size:17px; letter-spacing:.5px; color:var(--paper-2); background:var(--blue); border:3px solid var(--ink);
+    border-radius:99px; padding:5px 13px; box-shadow:3px 3px 0 var(--sh); white-space:nowrap; line-height:1;}
+  .show.is-clickable:hover .show-toggle{background:var(--blue-2);}
+  .show-toggle .st-chev{font-size:15px; display:inline-block; transition:transform .22s; animation:showChev 1.3s ease-in-out infinite;}
+  .show-toggle .st-open{display:none;}
+  .show-item.open .show-toggle{background:var(--ink);}
+  .show-item.open .show-toggle .st-closed{display:none;}
+  .show-item.open .show-toggle .st-open{display:inline;}
+  .show-item.open .show-toggle .st-chev{transform:rotate(180deg); animation:none;}
+  @keyframes showChev{0%,100%{transform:translateY(0);} 50%{transform:translateY(3px);}}
+  @media(prefers-reduced-motion:reduce){.show-toggle .st-chev{animation:none;}}
   .show-detail{overflow:hidden; max-height:0; transition:max-height .3s ease;}
   .show-item.open .show-detail{max-height:1400px;}
   .show-detail-in{display:flex; gap:16px; align-items:flex-start; margin-top:8px; padding:15px;
@@ -825,7 +836,7 @@ function showRowHtml(s, hl){
       (expandable?' role="button" tabindex="0" aria-expanded="false"':'')+'>'+
     '<div class="show-date"><div class="dd">'+dp.dd+'</div><div class="mm">'+dp.mm+'</div><div class="yy">'+dp.yy+'</div></div>'+
     '<div class="show-info"><div class="show-info-txt"><b>'+esc(s.description)+'</b><span>'+esc(s.location)+'</span></div></div>'+
-    (expandable?'<span class="show-toggle" aria-hidden="true">▾</span>':'')+
+    (expandable?'<span class="show-toggle" aria-hidden="true"><span class="st-closed">'+(lang?'MORE':'MEER')+'</span><span class="st-open">'+(lang?'LESS':'MINDER')+'</span><span class="st-chev">▾</span></span>':'')+
     '</div>';
   if(!expandable) return '<div class="show-item">'+head+'</div>';
   var flyer = s.flyer ? '<button type="button" class="show-flyer" data-full="'+esc(s.flyer)+'" aria-label="'+(lang?'Enlarge flyer':'Vergroot de flyer')+'"><img src="'+esc(s.thumb||s.flyer)+'" alt="Flyer '+esc(s.description)+'" loading="lazy" /></button>' : '';
