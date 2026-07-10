@@ -334,6 +334,21 @@
   .shows-fold.archive summary{background:var(--paper-2);}
   .shows-fold.archive .show{opacity:.72;}
   .shows-note{font-weight:700; font-size:13px; color:var(--red-2); margin-top:4px;}
+  /* Eye-catching "there are more shows!" expander — pulses to invite a click, calms down once open. */
+  .shows-fold .when-open{display:none;}
+  .shows-fold[open] .when-closed{display:none;}
+  .shows-fold[open] .when-open{display:inline;}
+  .shows-fold.more summary{background:var(--red); color:var(--paper-2); font-size:24px; letter-spacing:.4px;
+    animation:foldPulse 1.7s ease-in-out infinite;}
+  .shows-fold.more summary:hover{background:var(--red-2);}
+  .shows-fold.more[open] summary{animation:none; background:var(--yellow); color:var(--ink); font-size:21px;}
+  .shows-fold.more summary::after{content:'';}
+  .shows-fold.more .fold-hand{display:inline-block; font-size:22px; animation:foldBounce 1s ease-in-out infinite;}
+  .shows-fold.more[open] .fold-hand{display:none;}
+  @keyframes foldPulse{0%,100%{transform:scale(1); box-shadow:4px 4px 0 var(--sh);}
+    50%{transform:scale(1.05) rotate(-1deg); box-shadow:7px 7px 0 var(--sh);}}
+  @keyframes foldBounce{0%,100%{transform:translateY(0);} 50%{transform:translateY(5px);}}
+  @media(prefers-reduced-motion:reduce){.shows-fold.more summary,.shows-fold.more .fold-hand{animation:none;}}
 
   /* video */
   .video-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
@@ -594,7 +609,7 @@
         <img src="assets/live/live-crowd.jpg" alt="The Explosion Rockets — zanger en gitaristen live" loading="lazy" width="1600" height="1073" />
       </figure>
       <div id="showsList"></div>
-      <details class="shows-fold" id="showsMore" style="display:none">
+      <details class="shows-fold more" id="showsMore" style="display:none">
         <summary></summary>
         <div class="shows-extra"></div>
       </details>
@@ -827,7 +842,7 @@ function showRowHtml(s, hl){
 function fillFold(id, rows, label){
   var el=document.getElementById(id); if(!el) return;
   if(rows.length){ el.style.display=''; el.querySelector('.shows-extra').innerHTML=rows.map(function(s){return showRowHtml(s,false);}).join('');
-    el.querySelector('summary').textContent=label; }
+    el.querySelector('summary').innerHTML=label; }
   else { el.style.display='none'; el.querySelector('.shows-extra').innerHTML=''; }
 }
 function renderShows(){
@@ -836,7 +851,11 @@ function renderShows(){
   var sp=splitShows(), up=sp.up, past=sp.past;
   l.innerHTML = up.length ? up.slice(0,4).map(function(s,i){ return showRowHtml(s, i===0); }).join('')
     : '<p class="shows-empty">'+(lang?'No upcoming shows announced right now — check back soon!':'Op dit moment geen aankomende shows aangekondigd — kom snel terug!')+'</p>';
-  fillFold('showsMore', up.slice(4), (lang?'Show all upcoming shows':'Toon alle aankomende shows'));
+  var moreN=up.slice(4).length;
+  var moreLabel=lang
+    ? '<span class="when-closed">'+moreN+' more show'+(moreN===1?'':'s')+' — tap to see them! <span class="fold-hand">👇</span></span><span class="when-open">Show fewer ▴</span>'
+    : '<span class="when-closed">Nog '+moreN+' optreden'+(moreN===1?'':'s')+' — klik om te zien! <span class="fold-hand">👇</span></span><span class="when-open">Toon minder ▴</span>';
+  fillFold('showsMore', up.slice(4), moreLabel);
   fillFold('showsArchive', past, (lang?'View past shows':'Bekijk historie')+' ('+past.length+')');
 }
 function loadVideos(){
