@@ -114,10 +114,10 @@
   {
     "date": "2026-12-20",
     "description": "Rock And Roll Christmas Dance Party ",
-    "location": "'Bet Kolen' - TILBURG  - 15:00 - Broekhovenseweg 111 ",
-    "flyer": "",
-    "thumb": "",
-    "ticket": ""
+    "location": "'Bet Kolen' - TILBURG  - 14:30 - Broekhovenseweg 111 ",
+    "flyer": "assets/shows/rock-and-roll-christmas-dance-party-2026-12-20-mrj2e7cc.jpg",
+    "thumb": "assets/shows/rock-and-roll-christmas-dance-party-2026-12-20-mrj2e7cc-thumb.jpg",
+    "ticket": "https://www.ticketkantoor.nl/shop/BetKolen"
   },
   {
     "date": "2027-01-03",
