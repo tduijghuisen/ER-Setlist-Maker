@@ -115,6 +115,9 @@
   .pipe-head{display:flex;align-items:center;gap:9px;flex-wrap:nowrap;min-width:0;}
   .pipe-name{cursor:pointer;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:800;}
   .pipe-sub{font-size:12px;color:#6b6354;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1 1 auto;min-width:0;}
+  .pipe-detail{border-top:2px dashed #d8cdb4;margin-top:8px;padding-top:8px;font-size:14px;display:flex;flex-direction:column;gap:4px;}
+  .pipe-flbl{font-weight:800;color:#6b6354;}
+  .pipe-notes{white-space:pre-wrap;margin-top:4px;}
   @media(max-width:640px){.pipe-head{flex-wrap:wrap;}}
 </style>
 </head>
@@ -239,9 +242,8 @@
         <h2 style="margin:0;">Booking-pipeline</h2>
         <span class="sp" style="margin-left:auto;"></span>
         <button class="btn ghost sm" id="reloadPipeBtn" type="button">Opnieuw laden</button>
-        <button class="btn g" id="addPipeBtn" type="button">+ Contact/locatie</button>
       </div>
-      <p class="muted" style="margin-top:6px;">🔒 Privé — alleen zichtbaar voor ingelogde bandleden (opgeslagen buiten de openbare site). Welke festivals/locaties zijn benaderd en wat de status is.</p>
+      <p class="muted" style="margin-top:6px;">🔒 Alleen-lezen · privé — welke festivals/locaties zijn benaderd en wat de status is. <b>Beheerd in Notion</b> (Teun); het CMS toont hier een live kopie voor de hele band. Wijzigen gaat via Notion.</p>
       <div id="pipeSummary" class="pipe-summary"></div>
       <div class="pipe-filters">
         <input type="text" id="pipeSearch" placeholder="Zoek op naam, plaats, contact…">
@@ -249,13 +251,6 @@
         <select id="pipePrioFilter"><option value="">Alle prioriteiten</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select>
       </div>
       <div id="pipeList" style="margin-top:12px;"></div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;align-items:center;">
-        <button class="btn r" id="savePipeBtn" type="button">💾 Pipeline publiceren</button>
-        <details class="help"><summary>Beginbestand importeren (eenmalig)</summary>
-          <p class="muted" style="margin-top:6px;">Laad hier het door Claude aangeleverde <code>pipeline.json</code> om de pipeline de eerste keer te vullen. Daarna klik je “💾 Pipeline publiceren”.</p>
-          <input type="file" id="pipeImport" accept="application/json,.json">
-        </details>
-      </div>
     </div>
 
   </div>
@@ -860,30 +855,22 @@ var PIPE_TYPE=['Festival rockabilly/vintage','Festival algemeen','Poppodium','Cl
 var PIPE_LAND=['NL','BE','DE','UK','LU','Overig'];
 function stColor(s){for(var i=0;i<PIPE_STATUS.length;i++)if(PIPE_STATUS[i].k===s)return PIPE_STATUS[i].c;return '#eee';}
 function prioColor(p){for(var i=0;i<PIPE_PRIO.length;i++)if(PIPE_PRIO[i].k===p)return PIPE_PRIO[i].c;return '#eee';}
-async function apiPipelineGet(){
-  var r=await fetch(WORKER+'/api/pipeline',{headers:apiHeaders(false),cache:'no-store'});
+async function apiPipelineGet(fresh){
+  var r=await fetch(WORKER+'/api/pipeline'+(fresh?'?fresh=1':''),{headers:apiHeaders(false),cache:'no-store'});
   if(r.status===401)throw new Error('unauthorized');
   var j=await r.json().catch(function(){return {ok:false};});
   if(!j.ok)throw new Error(j.error||('HTTP '+r.status));
   return j.pipeline||[];
 }
-async function apiPipelineSave(arr){
-  var r=await fetch(WORKER+'/api/pipeline',{method:'POST',headers:apiHeaders(true),body:JSON.stringify({pipeline:arr})});
-  if(r.status===401)throw new Error('unauthorized');
-  var j=await r.json().catch(function(){return {ok:false,error:'HTTP '+r.status};});
-  if(!j.ok)throw new Error(j.error||('HTTP '+r.status));
-  return j;
-}
-async function loadPipeline(){
+async function loadPipeline(fresh){
   if(!session()){pipeline=[];renderPipeline();return;}
-  statusMsg('Pipeline laden…');
-  try{ pipeline=await apiPipelineGet(); pipeLoaded=true;
-    pipeline.forEach(function(p,i){if(!p.id)p.id=newId('p');});
-    statusMsg('Pipeline geladen.');
+  statusMsg(fresh?'Pipeline verversen uit Notion…':'Pipeline laden…');
+  try{ pipeline=await apiPipelineGet(fresh===true); pipeLoaded=true;
+    statusMsg('Pipeline geladen ('+pipeline.length+') — live uit Notion.');
   }catch(e){
     if(String(e.message)==='unauthorized'){logout();return;}
     pipeline=[];
-    if(/not configured/.test(e.message)){ statusMsg('Pipeline-opslag is nog niet ingesteld (KV). Zie de instructies.',true); }
+    if(/notion not connected/i.test(e.message)){ statusMsg('Notion is nog niet gekoppeld — zie de instructies.',true); }
     else statusMsg('Pipeline laden mislukt: '+e.message,true);
   }
   renderPipeline();
@@ -913,6 +900,7 @@ function renderPipeline(){
     .filter(function(o){var p=o.p; if(pipeStatusF&&(p.status||'')!==pipeStatusF)return false; if(pipePrioF&&(p.prio||'')!==pipePrioF)return false;
       if(!q)return true; return ((p.naam||'')+' '+(p.plaats||'')+' '+(p.contact||'')+' '+(p.land||'')+' '+(p.type||'')).toLowerCase().indexOf(q)>=0;})
     .sort(function(a,b){var pa=prioRank[a.p.prio||'']-prioRank[b.p.prio||''];if(pa)return pa;return (a.p.naam||'').localeCompare(b.p.naam||'',{sensitivity:'base'});});
+  function fld(lbl,val){return val?'<div><span class="pipe-flbl">'+esc(lbl)+'</span> '+esc(val)+'</div>':'';}
   var html=rows.map(function(o){var p=o.p,i=o.i;
     var sub=[p.plaats,p.land].filter(Boolean).join(' · ')+(p.type?' — '+p.type:'');
     var head='<div class="pipe-head">'+
@@ -920,53 +908,26 @@ function renderPipeline(){
         (p.prio?'<span class="priobadge" style="background:'+prioColor(p.prio)+'">'+esc(p.prio)+'</span>':'')+
         '<span class="pipe-name" onclick="togglePipe('+i+')" title="Klik om in/uit te klappen">'+esc(p.naam||'Naamloos')+'</span>'+
         '<span class="stbadge" style="background:'+stColor(p.status)+'">'+esc(p.status||'—')+'</span>'+
-        '<span class="headbtns"><button class="btn r sm" type="button" onclick="delPipe('+i+')">Verwijderen</button></span>'+
       '</div>'+
       '<div class="pipe-sub">'+esc(sub)+(p.contact?' · '+esc(p.contact):'')+'</div>';
     if(!p._open) return '<div class="show-card">'+head+'</div>';
-    function opt(list,v){return list.map(function(x){return '<option value="'+esc(x)+'"'+(x===v?' selected':'')+'>'+esc(x)+'</option>';}).join('');}
+    var links=[];
+    if(p.web)links.push('<a class="openlink" href="'+esc(/^https?:/.test(p.web)?p.web:'https://'+p.web)+'" target="_blank" rel="noopener">↗ Website</a>');
+    if(p.email)links.push('<a class="openlink" href="mailto:'+esc(p.email)+'">✉ '+esc(p.email)+'</a>');
+    if(p.url)links.push('<a class="openlink" href="'+esc(p.url)+'" target="_blank" rel="noopener">✎ In Notion</a>');
     return '<div class="show-card">'+head+
-      '<div class="row"><div><label>Naam</label><input type="text" value="'+esc(p.naam)+'" oninput="updPipe('+i+',\'naam\',this.value)"></div>'+
-        '<div><label>Type</label><select onchange="updPipe('+i+',\'type\',this.value)"><option value="">—</option>'+opt(PIPE_TYPE,p.type)+'</select></div></div>'+
-      '<div class="song-sub"><div><label>Status</label><select onchange="updPipe('+i+',\'status\',this.value);renderPipeline()"><option value="">—</option>'+opt(PIPE_STATUS.map(function(s){return s.k;}),p.status)+'</select></div>'+
-        '<div><label>Prioriteit</label><select onchange="updPipe('+i+',\'prio\',this.value);renderPipeline()"><option value="">—</option>'+opt(['A','B','C'],p.prio)+'</select></div>'+
-        '<div><label>Land</label><select onchange="updPipe('+i+',\'land\',this.value)"><option value="">—</option>'+opt(PIPE_LAND,p.land)+'</select></div>'+
-        '<div><label>Plaats</label><input type="text" value="'+esc(p.plaats)+'" oninput="updPipe('+i+',\'plaats\',this.value)"></div></div>'+
-      '<div class="row"><div><label>Contactpersoon</label><input type="text" value="'+esc(p.contact)+'" oninput="updPipe('+i+',\'contact\',this.value)"></div>'+
-        '<div><label>E-mail</label><input type="text" value="'+esc(p.email)+'" oninput="updPipe('+i+',\'email\',this.value)"></div></div>'+
-      '<div class="row"><div><label>Website</label><input type="text" value="'+esc(p.web)+'" oninput="updPipe('+i+',\'web\',this.value)"></div>'+
-        '<div><label>Boekingswindow</label><input type="text" value="'+esc(p.window)+'" placeholder="bv. sep–jan voor zomer" oninput="updPipe('+i+',\'window\',this.value)"></div></div>'+
-      '<div class="song-sub"><div><label>Laatste contact</label><input type="date" value="'+esc(p.laatste)+'" onchange="updPipe('+i+',\'laatste\',this.value)"></div>'+
-        '<div><label>Volgende actie</label><input type="date" value="'+esc(p.volgende)+'" onchange="updPipe('+i+',\'volgende\',this.value)"></div></div>'+
-      '<label>Notities</label><textarea oninput="updPipe('+i+',\'notities\',this.value)">'+esc(p.notities)+'</textarea>'+
-      ((p.web||p.email)?'<div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;">'+(p.web?'<a class="openlink" href="'+esc(/^https?:/.test(p.web)?p.web:'https://'+p.web)+'" target="_blank" rel="noopener">↗ Website</a>':'')+(p.email?'<a class="openlink" href="mailto:'+esc(p.email)+'">✉ Mail</a>':'')+'</div>':'')+
+      '<div class="pipe-detail">'+
+        fld('Type:',p.type)+fld('Prioriteit:',p.prio)+fld('Land:',p.land)+fld('Plaats:',p.plaats)+
+        fld('Contact:',p.contact)+fld('Boekingswindow:',p.window)+
+        fld('Laatste contact:',p.laatste?fmtDate(p.laatste):'')+fld('Volgende actie:',p.volgende?fmtDate(p.volgende):'')+
+        (p.notities?'<div class="pipe-notes"><span class="pipe-flbl">Notities:</span> '+esc(p.notities)+'</div>':'')+
+        (links.length?'<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">'+links.join('')+'</div>':'')+
+      '</div>'+
     '</div>';
   }).join('');
-  el.innerHTML=html||'<p class="muted">'+(pipeline.length?'Geen resultaten met deze filters.':'Nog geen pipeline-entries. Voeg toe met “+ Contact/locatie” of importeer het beginbestand.')+'</p>';
+  el.innerHTML=html||'<p class="muted">'+(pipeline.length?'Geen resultaten met deze filters.':'Nog geen pipeline-entries in Notion (of Notion nog niet gekoppeld).')+'</p>';
 }
-function updPipe(i,k,v){pipeline[i][k]=v;}
 function togglePipe(i){pipeline[i]._open=!pipeline[i]._open;renderPipeline();}
-function addPipe(){pipeline.push({id:newId('p'),naam:'',type:'',status:'Nieuw',prio:'',land:'',plaats:'',contact:'',email:'',web:'',window:'',laatste:'',volgende:'',notities:'',_open:true});pipeStatusF='';pipePrioF='';pipeFilter='';if($('pipeSearch'))$('pipeSearch').value='';renderPipeline();window.scrollTo(0,document.body.scrollHeight);}
-function delPipe(i){if(confirm('Deze pipeline-entry verwijderen?')){pipeline.splice(i,1);renderPipeline();statusMsg('Verwijderd — klik op “💾 Pipeline publiceren” om op te slaan.',true);}}
-async function savePipeline(){
-  if(!session()){statusMsg('Log eerst in om te publiceren.',true);return;}
-  statusMsg('Pipeline publiceren…');
-  var clean=pipeline.map(function(p){return {id:p.id,naam:(p.naam||'').trim(),type:p.type||'',status:p.status||'',prio:p.prio||'',land:p.land||'',plaats:(p.plaats||'').trim(),contact:(p.contact||'').trim(),email:(p.email||'').trim(),web:(p.web||'').trim(),window:(p.window||'').trim(),laatste:p.laatste||'',volgende:p.volgende||'',notities:p.notities||''};});
-  try{ var j=await apiPipelineSave(clean); statusMsg('Pipeline opgeslagen ('+j.count+' entries) — privé, alleen voor ingelogde bandleden.'); }
-  catch(e){ if(String(e.message)==='unauthorized'){logout();return;}
-    if(/not configured/.test(e.message)) statusMsg('Pipeline-opslag (KV) is nog niet ingesteld — zie de instructies.',true);
-    else statusMsg('Opslaan mislukt: '+e.message,true); }
-}
-function importPipelineFile(input){
-  var f=input.files&&input.files[0]; if(!f)return;
-  var rd=new FileReader();
-  rd.onload=function(){ try{ var arr=JSON.parse(rd.result); if(!Array.isArray(arr))throw new Error('geen lijst');
-      arr.forEach(function(p){if(!p.id)p.id=newId('p');});
-      pipeline=arr; pipeLoaded=true; renderPipeline();
-      statusMsg(arr.length+' entries ingeladen — klik op “💾 Pipeline publiceren” om ze privé op te slaan.'); }
-    catch(e){ statusMsg('Kon bestand niet lezen: '+e.message,true); } };
-  rd.readAsText(f); input.value='';
-}
 /* ---------- PDF export (via print) ---------- */
 var PRINT_CSS='*{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#111;margin:0;padding:26px 30px;}h1{font-size:23px;margin:0 0 2px;}.meta{color:#555;font-size:13px;margin:0 0 12px;}.meta a{color:#1E83C9;}pre.sheet{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.4;white-space:pre-wrap;margin:0;}.notes{margin-top:14px;font-size:13px;color:#333;white-space:pre-wrap;}ol.set{font-size:15px;line-height:1.7;padding-left:26px;margin:4px 0 8px;}ol.set .k{color:#666;font-size:13px;}.setsec{font-size:15px;margin:16px 0 2px;text-transform:uppercase;letter-spacing:.04em;color:#B81E16;}.sheet-img{display:block;max-width:100%;max-height:245mm;margin:8px 0;}.song{page-break-before:always;}@media print{@page{margin:15mm;}}';
 function isTouchDevice(){return (navigator.maxTouchPoints||0)>0||(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches);}
@@ -1091,10 +1052,7 @@ $('setShuffleBtn').addEventListener('click',renderSuggestions);
 $('setSuggestAll').addEventListener('change',function(){if(this.value){addSuggestion(this.value);this.value='';}});
 $('repSearch').addEventListener('input',function(){repFilter=this.value;renderSongs();});
 $('repEmpty').addEventListener('change',function(){repEmptyOnly=this.checked;renderSongs();});
-$('reloadPipeBtn').addEventListener('click',loadPipeline);
-$('addPipeBtn').addEventListener('click',addPipe);
-$('savePipeBtn').addEventListener('click',savePipeline);
-$('pipeImport').addEventListener('change',function(){importPipelineFile(this);});
+$('reloadPipeBtn').addEventListener('click',function(){loadPipeline(true);});
 $('pipeSearch').addEventListener('input',function(){pipeFilter=this.value;renderPipeline();});
 $('pipeStatusFilter').addEventListener('change',function(){pipeStatusF=this.value;renderPipeline();});
 $('pipePrioFilter').addEventListener('change',function(){pipePrioF=this.value;renderPipeline();});

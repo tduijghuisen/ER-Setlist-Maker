@@ -147,6 +147,56 @@ async function commitFiles(env, files, message) {
   return commit;
 }
 
+/* ---------- Notion (read-only booking pipeline) ---------- */
+const NOTION_DB = "3ce0d3af63c74afab01b3345a969943e"; // ER Booking Pipeline
+function nText(p) { // rich_text / title -> plain string
+  if (!p) return "";
+  const arr = p.title || p.rich_text || [];
+  return arr.map((t) => t.plain_text || "").join("").trim();
+}
+function nSel(p) { return (p && p.select && p.select.name) || ""; }
+function nDate(p) { return (p && p.date && p.date.start) ? String(p.date.start).slice(0, 10) : ""; }
+function mapNotionRow(page) {
+  const pr = page.properties || {};
+  return {
+    id: page.id,
+    naam: nText(pr["Naam"]),
+    type: nSel(pr["Type"]),
+    status: nSel(pr["Status"]),
+    prio: nSel(pr["Prioriteit"]),
+    land: nSel(pr["Land"]),
+    plaats: nText(pr["Plaats"]),
+    contact: nText(pr["Contactpersoon"]),
+    email: (pr["E-mail"] && pr["E-mail"].email) || "",
+    web: (pr["Website"] && pr["Website"].url) || "",
+    window: nText(pr["Boekingswindow"]),
+    laatste: nDate(pr["Laatste contact"]),
+    volgende: nDate(pr["Volgende actie"]),
+    notities: nText(pr["Notities"]),
+    url: page.url || "",
+  };
+}
+async function fetchNotionPipeline(env) {
+  const rows = [];
+  let cursor = undefined;
+  do {
+    const r = await fetch("https://api.notion.com/v1/databases/" + NOTION_DB + "/query", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + env.NOTION_TOKEN,
+        "Notion-Version": "2022-06-28",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cursor ? { page_size: 100, start_cursor: cursor } : { page_size: 100 }),
+    });
+    if (!r.ok) throw new Error("notion " + r.status + " " + (await r.text()).slice(0, 160));
+    const j = await r.json();
+    (j.results || []).forEach((pg) => rows.push(mapNotionRow(pg)));
+    cursor = j.has_more ? j.next_cursor : undefined;
+  } while (cursor);
+  return rows;
+}
+
 /* ---------- session ---------- */
 async function sessionFrom(request, env) {
   const auth = request.headers.get("Authorization") || "";
@@ -273,25 +323,31 @@ export default {
       }
     }
 
-    /* ----- booking pipeline (PRIVATE — stored in Cloudflare KV, never in the
-       public repo/site). Session required. Bind a KV namespace as PIPELINE_KV. */
+    /* ----- booking pipeline (READ-ONLY mirror of the Notion database).
+       Managed in Notion; the Worker fetches it live via the Notion API and
+       serves it to the CMS. Never stored in the public repo/site. Uses the
+       PIPELINE_KV namespace only as a short (5 min) cache. Session required. */
     if (path === "/api/pipeline") {
       const s = await sessionFrom(request, env);
       if (!s) return json({ ok: false, error: "unauthorized" }, 401, origin);
-      if (!env.PIPELINE_KV) return json({ ok: false, error: "pipeline storage not configured" }, 503, origin);
-      if (request.method === "GET") {
-        let arr = [];
-        try { const v = await env.PIPELINE_KV.get("pipeline"); arr = v ? JSON.parse(v) : []; } catch (e) { arr = []; }
-        return json({ ok: true, pipeline: Array.isArray(arr) ? arr : [] }, 200, origin);
+      if (request.method !== "GET") return json({ ok: false, error: "read-only (managed in Notion)" }, 405, origin);
+      if (!env.NOTION_TOKEN) return json({ ok: false, error: "notion not connected" }, 503, origin);
+      const fresh = url.searchParams.get("fresh") === "1";
+      try {
+        if (!fresh && env.PIPELINE_KV) {
+          const cached = await env.PIPELINE_KV.get("pipeline_cache", { type: "json" });
+          if (cached && cached.ts && (Date.now() - cached.ts) < 5 * 60 * 1000) {
+            return json({ ok: true, pipeline: cached.rows, readonly: true, source: "notion", cached: true }, 200, origin);
+          }
+        }
+        const rows = await fetchNotionPipeline(env);
+        if (env.PIPELINE_KV) {
+          try { await env.PIPELINE_KV.put("pipeline_cache", JSON.stringify({ ts: Date.now(), rows }), { expirationTtl: 3600 }); } catch (e) {}
+        }
+        return json({ ok: true, pipeline: rows, readonly: true, source: "notion", cached: false }, 200, origin);
+      } catch (e) {
+        return json({ ok: false, error: String(e.message || e) }, 502, origin);
       }
-      if (request.method === "POST") {
-        let body;
-        try { body = await request.json(); } catch (e) { return json({ ok: false, error: "bad json" }, 400, origin); }
-        if (!Array.isArray(body.pipeline)) return json({ ok: false, error: "pipeline must be an array" }, 400, origin);
-        await env.PIPELINE_KV.put("pipeline", JSON.stringify(body.pipeline));
-        return json({ ok: true, count: body.pipeline.length }, 200, origin);
-      }
-      return json({ ok: false, error: "method not allowed" }, 405, origin);
     }
 
     return json({ ok: false, error: "not found" }, 404, origin);
