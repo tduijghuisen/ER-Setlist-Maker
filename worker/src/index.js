@@ -273,6 +273,27 @@ export default {
       }
     }
 
+    /* ----- booking pipeline (PRIVATE — stored in Cloudflare KV, never in the
+       public repo/site). Session required. Bind a KV namespace as PIPELINE_KV. */
+    if (path === "/api/pipeline") {
+      const s = await sessionFrom(request, env);
+      if (!s) return json({ ok: false, error: "unauthorized" }, 401, origin);
+      if (!env.PIPELINE_KV) return json({ ok: false, error: "pipeline storage not configured" }, 503, origin);
+      if (request.method === "GET") {
+        let arr = [];
+        try { const v = await env.PIPELINE_KV.get("pipeline"); arr = v ? JSON.parse(v) : []; } catch (e) { arr = []; }
+        return json({ ok: true, pipeline: Array.isArray(arr) ? arr : [] }, 200, origin);
+      }
+      if (request.method === "POST") {
+        let body;
+        try { body = await request.json(); } catch (e) { return json({ ok: false, error: "bad json" }, 400, origin); }
+        if (!Array.isArray(body.pipeline)) return json({ ok: false, error: "pipeline must be an array" }, 400, origin);
+        await env.PIPELINE_KV.put("pipeline", JSON.stringify(body.pipeline));
+        return json({ ok: true, count: body.pipeline.length }, 200, origin);
+      }
+      return json({ ok: false, error: "method not allowed" }, 405, origin);
+    }
+
     return json({ ok: false, error: "not found" }, 404, origin);
   },
 };

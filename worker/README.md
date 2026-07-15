@@ -31,6 +31,29 @@ Add each as an **encrypted secret**:
 - `GET  /api/read?path=data/…` — read a repo file (session required)
 - `POST /api/commit` — commit files in one commit `{message, files:[{path,base64}]}`
   (session required)
+- `GET  /api/pipeline` — read the private booking pipeline (session required)
+- `POST /api/pipeline` — save the pipeline `{pipeline:[…]}` (session required)
+
+## Private booking pipeline (Cloudflare KV)
+
+The booking pipeline holds contacts/e-mails/statuses and must **not** live in the
+public repo/site. It is stored in a **KV namespace** bound as `PIPELINE_KV` and
+served only through the session-gated `/api/pipeline` endpoints. If the binding is
+absent the endpoints return `503 pipeline storage not configured`.
+
+Set up once:
+
+```bash
+cd worker
+npx wrangler kv namespace create PIPELINE_KV   # prints an id
+```
+Then add to `wrangler.toml` and redeploy (Workers Builds redeploys on push):
+
+```toml
+[[kv_namespaces]]
+binding = "PIPELINE_KV"
+id = "<the id from the command above>"
+```
 
 Session tokens are HMAC-signed with `SESSION_SECRET`, valid 30 days, and only
 work against this Worker (they are not GitHub credentials).
