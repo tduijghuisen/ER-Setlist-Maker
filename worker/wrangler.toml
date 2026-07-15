@@ -1,3 +1,8 @@
 name = "er-cms"
 main = "src/index.js"
 compatibility_date = "2025-06-01"
+
+# Private booking-pipeline storage (never in the public repo/site).
+[[kv_namespaces]]
+binding = "PIPELINE_KV"
+id = "92a0c3ad0e844049a3786d548a93029f"
