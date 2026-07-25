@@ -1840,7 +1840,14 @@
     "notes": "",
     "parts": {
       "bass": {
-        "chords": "Live versie:\n\n178  bpm                           “DANCE ON”            The Shadows\n\nintro 0 - 04 - 2"
+        "chords": "Live versie:\n\n178  bpm                           “DANCE ON”            The Shadows\n\nintro 0 - 04 - 2",
+        "images": [
+          {
+            "image": "assets/repertoire/dance-on-bass-ms0vo37t-0.jpg",
+            "imageThumb": "assets/repertoire/dance-on-bass-ms0vo37t-0-thumb.jpg",
+            "label": "Acr4572941199609601364635"
+          }
+        ]
       },
       "drums": {
         "images": [
