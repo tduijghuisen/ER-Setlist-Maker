@@ -11082,5 +11082,20 @@
         ]
       }
     }
+  },
+  {
+    "id": "smt65gn0jls4",
+    "title": "A boy named Sue",
+    "artist": "Johnny Cash",
+    "key": "Bb",
+    "bpm": "",
+    "duration": "",
+    "youtube": "https://youtu.be/-Z1Ple-qYuU",
+    "notes": "",
+    "parts": {
+      "bass": {
+        "chords": "Grondtoon/lage kwart:\n\n||: Bb  | Eb  |F  |Bb :||"
+      }
+    }
   }
 ]
