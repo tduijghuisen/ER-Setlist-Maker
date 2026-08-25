@@ -143,18 +143,36 @@ h2.sec + *{margin-top:0}
   font-family:var(--f-post);text-transform:uppercase;letter-spacing:.05em;font-size:15px;
   color:var(--brown);box-shadow:4px 5px 0 rgba(51,32,15,.34);backdrop-filter:blur(3px)}
 .chip.hot{background:var(--coral);color:#fff}
-/* flyer-stijl gestapelde woorden */
-.stack{list-style:none;margin:20px 0 6px;padding:0}
-.stack li{font-family:var(--f-post);text-transform:uppercase;color:#FFF6E4;
-  font-size:clamp(30px,6.6vw,60px);line-height:.94;letter-spacing:.01em;
-  text-shadow:0 3px 0 var(--rust), 0 6px 16px rgba(51,32,15,.75);
-  opacity:0;transform:translateY(26px) scale(.94);
-  animation:stackin .7s cubic-bezier(.2,.9,.3,1.35) forwards;
-  animation-delay:calc(.35s + var(--s) * .13s)}
-.stack li:nth-child(2){font-size:clamp(25px,5.4vw,49px);color:#FFE9CE}
-.stack li:nth-child(3){font-size:clamp(27px,5.9vw,53px)}
-.stack li:nth-child(4){font-size:clamp(24px,5.2vw,47px);color:#FFE9CE}
-@keyframes stackin{to{opacity:1;transform:none}}
+/* flyer-woorden: één voor één het beeld in knallen, doorlopend */
+.stack{position:relative;list-style:none;margin:24px 0 4px;padding:0;
+  height:clamp(46px,9.4vw,92px)}
+.stack li{position:absolute;left:0;right:0;top:0;
+  font-family:var(--f-post);text-transform:uppercase;
+  font-size:clamp(34px,7.8vw,76px);line-height:1.06;letter-spacing:.015em;
+  color:#FFF6E4;
+  text-shadow:0 4px 0 var(--rust), 0 8px 0 rgba(51,32,15,.55), 0 10px 26px rgba(51,32,15,.8);
+  opacity:0;transform:scale(.35);will-change:transform,opacity;
+  animation:bang var(--cycle,6.8s) cubic-bezier(.18,.9,.28,1.4) infinite}
+.stack li:nth-child(1){animation-delay:0s}
+.stack li:nth-child(2){animation-delay:calc(var(--cycle,6.8s) * .25);color:var(--mustard)}
+.stack li:nth-child(3){animation-delay:calc(var(--cycle,6.8s) * .5)}
+.stack li:nth-child(4){animation-delay:calc(var(--cycle,6.8s) * .75);color:var(--mustard)}
+@keyframes bang{
+  0%   {opacity:0; transform:scale(.32) rotate(-7deg)}
+  4%   {opacity:1; transform:scale(1.18) rotate(2.5deg)}   /* de klap */
+  8%   {transform:scale(.94) rotate(-1.5deg)}
+  12%  {transform:scale(1.04) rotate(.6deg)}
+  16%  {transform:scale(1) rotate(0)}
+  21%  {opacity:1; transform:scale(1)}
+  24%  {opacity:0; transform:scale(1.32) rotate(3deg)}     /* er weer uit */
+  100% {opacity:0; transform:scale(.32)}
+}
+/* zonder beweging: gewoon alle vier onder elkaar */
+@media(prefers-reduced-motion:reduce){
+  .stack{height:auto}
+  .stack li{position:relative;opacity:1;transform:none;animation:none;
+    font-size:clamp(24px,5.2vw,44px);line-height:1.12}
+}
 .hero-lead{letter-spacing:.01em}
 .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .scrollcue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;
@@ -401,10 +419,10 @@ body.locked{overflow:hidden}
     <img class="hero-logo" src="img/logo.png"
          alt="Festival op Wielen" width="1200" height="986" fetchpriority="high" />
         <ul class="stack" aria-label="Wat je kunt verwachten">
-      <li style="--s:0">Live bands</li>
-      <li style="--s:1">Foodtrucks</li>
-      <li style="--s:2">Oldtimers</li>
-      <li style="--s:3">Festivalmarkt</li>
+      <li>Live bands</li>
+      <li>Foodtrucks</li>
+      <li>Oldtimers</li>
+      <li>Festivalmarkt</li>
     </ul>
     <p class="hero-lead">Waar muziek, mensen en het moment samenkomen.</p>
 
