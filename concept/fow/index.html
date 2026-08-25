@@ -27,7 +27,7 @@ body{
   margin:0; font-family:var(--f-body); color:var(--brown);
   background:var(--cream); overflow-x:hidden; font-size:17px; line-height:1.65;
 }
-img{max-width:100%; display:block}
+img{max-width:100%; display:block; height:auto}
 a{color:inherit}
 
 /* ---------- groovy background ---------- */
@@ -87,26 +87,43 @@ h3{font-family:var(--f-post);font-size:22px;letter-spacing:.02em;margin:0 0 6px;
 @media(max-width:760px){.nav ul{display:none}}
 
 /* ---------- hero ---------- */
-.hero{padding:52px 0 40px;text-align:center}
-.logo-type{font-family:var(--f-disp);line-height:.86;margin:0;
-  font-size:clamp(52px,13.5vw,148px);color:var(--mustard);
-  text-shadow:
-    3px 3px 0 var(--orange-2), 6px 7px 0 var(--rust), 10px 12px 0 var(--sh);
-  letter-spacing:.01em}
-.logo-type .l2{display:block;color:var(--orange);
-  text-shadow:3px 3px 0 var(--coral-2), 6px 7px 0 var(--rust), 10px 12px 0 var(--sh);}
-.peace{display:inline-block;vertical-align:-.13em;width:.86em;height:.86em;margin:0 .04em}
-.tag{display:inline-block;margin:20px 0 6px;font-family:var(--f-post);text-transform:uppercase;
-  letter-spacing:.2em;font-size:clamp(14px,2.4vw,20px);color:var(--brown)}
-.chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:22px 0 26px}
-.chip{display:inline-flex;align-items:center;gap:8px;background:var(--cream-2);
+.hero{position:relative;min-height:min(94vh,860px);display:flex;align-items:center;
+  justify-content:center;text-align:center;overflow:hidden;padding:58px 0 92px}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 62%}
+.hero-bg::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,
+    rgba(51,32,15,.34) 0%, rgba(75,42,24,.14) 26%,
+    rgba(75,42,24,.10) 46%, rgba(253,242,223,.30) 76%, var(--cream) 100%);}
+.hero-inner{position:relative;z-index:2}
+.hero-logo{width:min(600px,80vw);margin:0 auto;
+  filter:drop-shadow(6px 8px 0 rgba(51,32,15,.34)) drop-shadow(0 4px 22px rgba(0,0,0,.4));
+  animation:pop .8s cubic-bezier(.2,.9,.3,1.3) both}
+@keyframes pop{from{opacity:0;transform:scale(.86) translateY(16px)}to{opacity:1;transform:none}}
+.hero .tag{display:inline-block;margin:16px 0 4px;font-family:var(--f-post);
+  text-transform:uppercase;letter-spacing:.24em;font-size:clamp(13px,2.3vw,20px);
+  color:#FFF6E4;text-shadow:0 2px 3px rgba(51,32,15,.75),0 0 22px rgba(51,32,15,.5)}
+.hero-lead{max-width:660px;margin:12px auto 0;font-size:clamp(17px,2.1vw,21px);font-weight:800;
+  color:#FFF6E4;text-shadow:0 2px 4px rgba(51,32,15,.8),0 0 26px rgba(51,32,15,.55)}
+.chips{display:flex;flex-wrap:wrap;gap:11px;justify-content:center;margin:24px 0 26px}
+.chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,249,236,.94);
   border:3px solid var(--brown);border-radius:99px;padding:9px 18px;
   font-family:var(--f-post);text-transform:uppercase;letter-spacing:.05em;font-size:15px;
-  box-shadow:4px 5px 0 var(--sh)}
+  color:var(--brown);box-shadow:4px 5px 0 rgba(51,32,15,.34);backdrop-filter:blur(3px)}
 .chip.hot{background:var(--coral);color:#fff}
-.hero-photo{margin:34px auto 0;max-width:1000px;border:4px solid var(--brown);border-radius:26px;
-  overflow:hidden;box-shadow:10px 12px 0 var(--sh);transform:rotate(-.8deg)}
-.hero-photo img{width:100%;height:auto}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.scrollcue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;
+  width:30px;height:48px;border:3px solid var(--brown);border-radius:99px;
+  background:rgba(255,249,236,.7);display:flex;justify-content:center;padding-top:7px}
+.scrollcue span{width:5px;height:11px;border-radius:99px;background:var(--brown);
+  animation:cue 1.5s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:translateY(0);opacity:1}55%{transform:translateY(15px);opacity:.25}}
+@media(max-width:620px){
+  .hero{min-height:auto;padding:40px 0 78px}
+  .hero-logo{width:88vw}
+  .hero-bg img{object-position:50% 58%}
+  .nb{display:none}
+}
 
 /* ---------- ticker ---------- */
 .ticker{background:var(--coral);border-top:3px solid var(--brown);border-bottom:3px solid var(--brown);
@@ -125,6 +142,11 @@ h3{font-family:var(--f-post);font-size:22px;letter-spacing:.02em;margin:0 0 6px;
   .daisy.d-l{left:2px !important;top:-4px !important}
 }
 @media(max-width:430px){ .daisy{display:none} }
+
+.moodband{padding:0}
+.moodfig{margin:0;border-top:4px solid var(--brown);border-bottom:4px solid var(--brown);
+  overflow:hidden;max-height:420px;display:flex}
+.moodfig img{width:100%;object-fit:cover}
 
 /* ---------- grids ---------- */
 .grid{display:grid;gap:22px}
@@ -248,21 +270,17 @@ body.locked{overflow:hidden}
 
 <!-- HERO -->
 <header class="hero">
-  <div class="wrap" style="position:relative">
-    <svg class="daisy d-l" style="width:92px;left:-6px;top:-14px;transform:rotate(-12deg)" viewBox="0 0 100 100" aria-hidden="true"><g fill="#F3A7B6"><ellipse cx="50" cy="18" rx="13" ry="22"/><ellipse cx="50" cy="82" rx="13" ry="22"/><ellipse cx="18" cy="50" rx="22" ry="13"/><ellipse cx="82" cy="50" rx="22" ry="13"/><ellipse cx="27" cy="27" rx="20" ry="12" transform="rotate(-45 27 27)"/><ellipse cx="73" cy="73" rx="20" ry="12" transform="rotate(-45 73 73)"/><ellipse cx="73" cy="27" rx="20" ry="12" transform="rotate(45 73 27)"/><ellipse cx="27" cy="73" rx="20" ry="12" transform="rotate(45 27 73)"/></g><circle cx="50" cy="50" r="15" fill="#F6C445"/></svg>
-    <svg class="daisy d-r" style="width:76px;right:4px;top:34px;transform:rotate(16deg)" viewBox="0 0 100 100" aria-hidden="true"><g fill="#EF8A2E"><ellipse cx="50" cy="18" rx="13" ry="22"/><ellipse cx="50" cy="82" rx="13" ry="22"/><ellipse cx="18" cy="50" rx="22" ry="13"/><ellipse cx="82" cy="50" rx="22" ry="13"/><ellipse cx="27" cy="27" rx="20" ry="12" transform="rotate(-45 27 27)"/><ellipse cx="73" cy="73" rx="20" ry="12" transform="rotate(-45 73 73)"/><ellipse cx="73" cy="27" rx="20" ry="12" transform="rotate(45 73 27)"/><ellipse cx="27" cy="73" rx="20" ry="12" transform="rotate(45 27 73)"/></g><circle cx="50" cy="50" r="15" fill="#FFF9EC"/></svg>
+  <div class="hero-bg" aria-hidden="true">
+    <img src="img/hero-wide.jpg" alt="" width="2200" height="933" fetchpriority="high" />
+  </div>
 
-    <h1 class="logo-type">
-      Festival<span class="l2">
-        <svg class="peace" viewBox="0 0 100 100" aria-hidden="true">
-          <circle cx="50" cy="50" r="41" fill="#FFF9EC" stroke="#B4552B" stroke-width="9"/>
-          <path d="M50 9v82M50 50 22 78M50 50l28 28" fill="none" stroke="#B4552B" stroke-width="9" stroke-linecap="round"/>
-        </svg>P Wielen</span>
-    </h1>
+  <div class="hero-inner wrap">
+    <img class="hero-logo" src="img/logo.png"
+         alt="Festival op Wielen" width="1200" height="986" fetchpriority="high" />
     <span class="tag">Brabantse gezelligheid</span>
-    <p class="lead" style="max-width:640px;margin:10px auto 0">
-      Waar muziek, mensen en het moment samenkomen. Een dag vol oldtimers, livemuziek en
-      flower-power onder de Brabantse lucht.
+    <p class="hero-lead">
+      Waar muziek, mensen en het moment samenkomen.<br class="nb" />
+      Een dag vol oldtimers, livemuziek en flower-power onder de Brabantse lucht.
     </p>
 
     <div class="chips">
@@ -272,13 +290,13 @@ body.locked{overflow:hidden}
       <span class="chip hot">Gratis entree</span>
     </div>
 
-    <a class="btn coral" href="#meedoen">Kom met je oldtimer →</a>
-    <a class="btn ghost" href="#lineup" style="margin-left:10px">Bekijk de line-up</a>
-
-    <figure class="hero-photo">
-      <img src="img/hero.jpg" alt="Festivalterrein met oldtimers, een VW-busje en publiek bij het podium in het gouden avondlicht" width="1800" height="1005" />
-    </figure>
+    <div class="hero-cta">
+      <a class="btn coral" href="#meedoen">Kom met je oldtimer →</a>
+      <a class="btn" href="#lineup">Bekijk de line-up</a>
+    </div>
   </div>
+
+  <a class="scrollcue" href="#over" aria-label="Naar beneden"><span></span></a>
 </header>
 
 <div class="ticker" aria-hidden="true">
@@ -303,6 +321,13 @@ body.locked{overflow:hidden}
       <img src="img/markt.jpg" alt="Hippie- en vintagemarkt met kraampjes vol retro kleding en vondsten" width="1000" height="747" loading="lazy" />
     </figure>
   </div>
+</section>
+
+<!-- SFEERBAND -->
+<section class="moodband" aria-hidden="false">
+  <figure class="moodfig">
+    <img src="img/hero.jpg" alt="Publiek danst bij het podium tussen de geparkeerde oldtimers" width="1800" height="1005" loading="lazy" />
+  </figure>
 </section>
 
 <!-- TE DOEN -->
