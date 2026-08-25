@@ -204,6 +204,52 @@ footer h4{font-family:var(--f-post);text-transform:uppercase;letter-spacing:.08e
 .wave.mustard{color:var(--mustard)}
 .wave.sage{color:var(--sage)}
 
+/* ---------- animated headings ---------- */
+h2.sec .ch{display:inline-block;white-space:pre;opacity:0;
+  transform:translateY(28px) rotate(-9deg) scale(.72);
+  transition:opacity .5s cubic-bezier(.2,.9,.3,1.4), transform .5s cubic-bezier(.2,.9,.3,1.4)}
+h2.sec.lit .ch{opacity:1;transform:none;transition-delay:calc(var(--i) * 34ms)}
+h2.sec{cursor:default}
+h2.sec:hover .ch{animation:wiggle .55s ease both;animation-delay:calc(var(--i) * 26ms)}
+@keyframes wiggle{
+  30%{transform:translateY(-9px) rotate(-6deg) scale(1.07)}
+  60%{transform:translateY(2px) rotate(3deg) scale(.98)}
+  100%{transform:none}
+}
+.eyebrow{position:relative;display:inline-block;opacity:0;transform:translateY(10px);
+  transition:opacity .45s ease,transform .45s ease}
+.lit-eb .eyebrow, .eyebrow.lit{opacity:1;transform:none}
+
+/* ---------- retro sticker badges ---------- */
+.sticker{position:absolute;z-index:6;width:132px;height:132px;display:grid;place-items:center;
+  text-align:center;pointer-events:none;filter:drop-shadow(4px 6px 0 var(--sh))}
+.sticker svg{position:absolute;inset:0;width:100%;height:100%}
+.sticker b{position:relative;font-family:var(--f-post);text-transform:uppercase;
+  font-size:15px;line-height:1.05;letter-spacing:.04em;color:var(--brown);
+  max-width:78%;transform:rotate(-8deg)}
+.sticker.spin svg{animation:spin 26s linear infinite;transform-origin:50% 50%}
+.sticker.pulse{animation:stpulse 3.4s ease-in-out infinite}
+@keyframes stpulse{0%,100%{transform:rotate(-11deg) scale(1)}50%{transform:rotate(-11deg) scale(1.07)}}
+
+/* small pill badges on cards */
+.badge{display:inline-block;font-family:var(--f-post);text-transform:uppercase;
+  font-size:11px;letter-spacing:.11em;padding:4px 11px;border:2px solid var(--brown);
+  border-radius:99px;background:var(--mustard);color:var(--brown);
+  box-shadow:2px 3px 0 var(--sh);vertical-align:middle}
+.badge.coral{background:var(--coral);color:#fff}
+.badge.sage{background:var(--sage);color:#fff}
+.badge.cream{background:var(--cream-2)}
+.doe .bhead{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+.doe .bhead h3{margin:0}
+
+@media(prefers-reduced-motion:reduce){
+  h2.sec .ch{opacity:1 !important;transform:none !important;transition:none !important}
+  .sticker.spin svg,.sticker.pulse{animation:none}
+  .eyebrow{opacity:1;transform:none}
+}
+@media(max-width:820px){ .sticker{width:104px;height:104px} .sticker b{font-size:12px} }
+@media(max-width:620px){ .sticker.hide-sm{display:none} }
+
 /* ---------- reveal ---------- */
 .rv{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
 .rv.in{opacity:1;transform:none}
@@ -296,6 +342,7 @@ body.locked{overflow:hidden}
     </div>
   </div>
 
+  <span class="sticker pulse hide-sm" style="right:6vw;top:15vh;transform:rotate(-11deg)" aria-hidden="true"><svg viewBox="0 0 100 100"><polygon points="50.00,0.00 55.62,10.90 64.09,2.03 66.41,14.07 77.03,7.94 75.87,20.15 87.79,17.26 83.23,28.64 95.48,29.23 87.90,38.87 99.49,42.88 89.50,50.00 99.49,57.12 87.90,61.13 95.48,70.77 83.23,71.36 87.79,82.74 75.87,79.85 77.03,92.06 66.41,85.93 64.09,97.97 55.62,89.10 50.00,100.00 44.38,89.10 35.91,97.97 33.59,85.93 22.97,92.06 24.13,79.85 12.21,82.74 16.77,71.36 4.52,70.77 12.10,61.13 0.51,57.12 10.50,50.00 0.51,42.88 12.10,38.87 4.52,29.23 16.77,28.64 12.21,17.26 24.13,20.15 22.97,7.94 33.59,14.07 35.91,2.03 44.38,10.90" fill="#F6C445"/><circle cx="50" cy="50" r="33" fill="none" stroke="#B4552B" stroke-width="2.5" stroke-dasharray="4 3"/></svg><b>Sixties<br>&amp;<br>Seventies</b></span>
   <a class="scrollcue" href="#over" aria-label="Naar beneden"><span></span></a>
 </header>
 
@@ -338,17 +385,17 @@ body.locked{overflow:hidden}
       <h2 class="sec">Alles op wielen</h2>
     </div>
     <div class="grid g3">
-      <div class="card doe rv"><div class="ico">🎸</div><h3>Live bands</h3>
+      <div class="card doe rv"><div class="ico">🎸</div><div class="bhead"><h3>Live bands</h3><span class="badge">Hele dag</span></div>
         <p>Rock-'n-roll, sixties en een flinke scheut Woodstock. De hele middag en avond door.</p></div>
-      <div class="card doe rv"><div class="ico">🚗</div><h3>Oldtimers</h3>
+      <div class="card doe rv"><div class="ico">🚗</div><div class="bhead"><h3>Oldtimers</h3><span class="badge coral">Te-koop plein</span></div>
         <p>Auto's, motoren en brommers — van showroomstaat tot heerlijk doorleefd.</p></div>
-      <div class="card doe rv"><div class="ico">🚐</div><h3>Campers &amp; caravans</h3>
+      <div class="card doe rv"><div class="ico">🚐</div><div class="bhead"><h3>Campers &amp; caravans</h3><span class="badge sage">Retro</span></div>
         <p>Retro busjes en vintage caravans, dwars tussen het publiek geparkeerd.</p></div>
-      <div class="card doe rv"><div class="ico">🌸</div><h3>Hippie &amp; vintage markt</h3>
+      <div class="card doe rv"><div class="ico">🌸</div><div class="bhead"><h3>Hippie &amp; vintage markt</h3><span class="badge cream">Struinen</span></div>
         <p>Kleding, accessoires, platen en woonvondsten. Struinen tot je iets vindt.</p></div>
-      <div class="card doe rv"><div class="ico">🍔</div><h3>Foodtrucks</h3>
+      <div class="card doe rv"><div class="ico">🍔</div><div class="bhead"><h3>Foodtrucks</h3><span class="badge">Zoet &amp; hartig</span></div>
         <p>Van hartige klassiekers tot zoete lekkernijen, met een fris glas erbij.</p></div>
-      <div class="card doe rv"><div class="ico">💈</div><h3>Barberbus &amp; kids</h3>
+      <div class="card doe rv"><div class="ico">💈</div><div class="bhead"><h3>Barberbus &amp; kids</h3><span class="badge sage">Kids corner</span></div>
         <p>Even in het scheermes? En voor de kleinsten een eigen kids-corner.</p></div>
     </div>
   </div>
@@ -383,6 +430,7 @@ body.locked{overflow:hidden}
     <div class="rv">
       <p class="eyebrow">Line-up</p>
       <h2 class="sec">De hele dag muziek</h2>
+      <p style="margin:8px 0 0"><span class="badge coral">Onder voorbehoud</span> <span class="badge cream">Concept-invulling</span></p>
       <div class="card" style="margin-top:18px;padding:10px 20px">
         <div class="slot"><span class="time">15:00</span><span class="who">DJ Vinyl</span><span class="what">Sixties &amp; seventies platen</span></div>
         <div class="slot"><span class="time">16:30</span><span class="who">Woodstock Tribute</span><span class="what">Flower power classics</span></div>
@@ -416,6 +464,7 @@ body.locked{overflow:hidden}
 <!-- PRAKTISCH -->
 <section id="praktisch">
   <div class="wrap">
+    <span class="sticker spin hide-sm" style="left:5vw;top:14px;transform:rotate(9deg)" aria-hidden="true"><svg viewBox="0 0 100 100"><polygon points="50.00,0.00 55.62,10.90 64.09,2.03 66.41,14.07 77.03,7.94 75.87,20.15 87.79,17.26 83.23,28.64 95.48,29.23 87.90,38.87 99.49,42.88 89.50,50.00 99.49,57.12 87.90,61.13 95.48,70.77 83.23,71.36 87.79,82.74 75.87,79.85 77.03,92.06 66.41,85.93 64.09,97.97 55.62,89.10 50.00,100.00 44.38,89.10 35.91,97.97 33.59,85.93 22.97,92.06 24.13,79.85 12.21,82.74 16.77,71.36 4.52,70.77 12.10,61.13 0.51,57.12 10.50,50.00 0.51,42.88 12.10,38.87 4.52,29.23 16.77,28.64 12.21,17.26 24.13,20.15 22.97,7.94 33.59,14.07 35.91,2.03 44.38,10.90" fill="#EE7B62"/><circle cx="50" cy="50" r="33" fill="none" stroke="#FFF9EC" stroke-width="2.5" stroke-dasharray="4 3"/></svg><b>Za 18<br>april</b></span>
     <div class="center rv" style="margin-bottom:30px">
       <p class="eyebrow">Praktisch</p>
       <h2 class="sec">Waar &amp; wanneer</h2>
@@ -424,7 +473,7 @@ body.locked{overflow:hidden}
       <div class="card"><div class="k">Datum</div><div class="v">Za 18 april<small>2026</small></div></div>
       <div class="card"><div class="k">Tijd</div><div class="v">15:00–00:00<small>Loop binnen wanneer je wilt</small></div></div>
       <div class="card"><div class="k">Locatie</div><div class="v">Zevenbergen<small>Oude Suikerfabriek · Blokweg</small></div></div>
-      <div class="card"><div class="k">Entree</div><div class="v">Gratis<small>Voor alle bezoekers</small></div></div>
+      <div class="card"><div class="k">Entree</div><div class="v">Gratis<small><span class="badge">Ook de kids</span></small></div></div>
     </div>
   </div>
 </section>
@@ -501,6 +550,32 @@ body.locked{overflow:hidden}
     var t=document.getElementById('tick'), html='';
     for(var r=0;r<2;r++){ words.forEach(function(w){ html+='<span>'+w+'</span>'; }); }
     t.innerHTML=html;
+    /* split section headings into animatable characters */
+    document.querySelectorAll('h2.sec').forEach(function(hd){
+      var txt=hd.textContent, frag=document.createDocumentFragment(), n=0;
+      txt.split('').forEach(function(c){
+        var s=document.createElement('span');
+        s.className='ch'; s.textContent=c;
+        s.style.setProperty('--i', n++);
+        frag.appendChild(s);
+      });
+      hd.textContent=''; hd.appendChild(frag);
+      if('IntersectionObserver' in window){
+        var ho=new IntersectionObserver(function(en){
+          en.forEach(function(x){ if(x.isIntersecting){ x.target.classList.add('lit'); ho.unobserve(x.target);} });
+        },{rootMargin:'0px 0px -12% 0px'});
+        ho.observe(hd);
+      } else { hd.classList.add('lit'); }
+    });
+    /* eyebrows fade in with their section */
+    document.querySelectorAll('.eyebrow').forEach(function(eb){
+      if('IntersectionObserver' in window){
+        var eo=new IntersectionObserver(function(en){
+          en.forEach(function(x){ if(x.isIntersecting){ x.target.classList.add('lit'); eo.unobserve(x.target);} });
+        },{rootMargin:'0px 0px -8% 0px'});
+        eo.observe(eb);
+      } else { eb.classList.add('lit'); }
+    });
     /* reveal */
     var els=[].slice.call(document.querySelectorAll('.rv'));
     if('IntersectionObserver' in window){
