@@ -28,6 +28,7 @@ body{
   background:var(--cream); overflow-x:hidden; font-size:17px; line-height:1.65;
 }
 img{max-width:100%; display:block; height:auto}
+figure{margin:0}
 a{color:inherit}
 
 /* ---------- groovy background ---------- */
@@ -49,13 +50,23 @@ a{color:inherit}
 
 /* ---------- shared ---------- */
 .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
-section{position:relative;padding:76px 0}
+section{position:relative;padding:clamp(54px,6.2vw,74px) 0}
 .eyebrow{font-family:var(--f-post);letter-spacing:.14em;text-transform:uppercase;
   font-size:14px;color:var(--rust);margin:0 0 10px}
-h2.sec{font-family:var(--f-disp);font-size:clamp(34px,6vw,62px);line-height:.98;margin:0 0 6px;
+h2.sec{font-family:var(--f-disp);font-size:clamp(34px,6vw,62px);line-height:1.08;margin:0 0 18px;
   color:var(--coral-2); text-shadow:3px 4px 0 var(--mustard), 6px 8px 0 var(--sh);}
 h3{font-family:var(--f-post);font-size:22px;letter-spacing:.02em;margin:0 0 6px;text-transform:uppercase}
 .lead{font-size:clamp(18px,2.2vw,21px);font-weight:700}
+h2.sec + *{margin-top:0}
+.eyebrow{margin:0 0 9px}
+.subbadges{margin:0 0 16px}
+/* geen dubbele lucht onderin kaarten */
+.card > *:last-child{margin-bottom:0}
+.btn-row{margin:22px 0 0}
+@media(max-width:620px){
+  h2.sec{margin-bottom:14px}
+  .info .card{padding:18px 14px}
+}
 .center{text-align:center}
 
 .card{background:var(--cream-2);border:3px solid var(--brown);border-radius:22px;
@@ -205,7 +216,8 @@ footer h4{font-family:var(--f-post);text-transform:uppercase;letter-spacing:.08e
 .wave.sage{color:var(--sage)}
 
 /* ---------- animated headings ---------- */
-h2.sec .ch{display:inline-block;white-space:pre;opacity:0;
+h2.sec .wd{display:inline-block;white-space:nowrap}
+h2.sec .ch{display:inline-block;opacity:0;
   transform:translateY(28px) rotate(-9deg) scale(.72);
   transition:opacity .5s cubic-bezier(.2,.9,.3,1.4), transform .5s cubic-bezier(.2,.9,.3,1.4)}
 h2.sec.lit .ch{opacity:1;transform:none;transition-delay:calc(var(--i) * 34ms)}
@@ -216,7 +228,7 @@ h2.sec:hover .ch{animation:wiggle .55s ease both;animation-delay:calc(var(--i) *
   60%{transform:translateY(2px) rotate(3deg) scale(.98)}
   100%{transform:none}
 }
-.eyebrow{position:relative;display:inline-block;opacity:0;transform:translateY(10px);
+.eyebrow{position:relative;display:block;opacity:0;transform:translateY(10px);
   transition:opacity .45s ease,transform .45s ease}
 .lit-eb .eyebrow, .eyebrow.lit{opacity:1;transform:none}
 
@@ -239,7 +251,7 @@ h2.sec:hover .ch{animation:wiggle .55s ease both;animation-delay:calc(var(--i) *
 .badge.coral{background:var(--coral);color:#fff}
 .badge.sage{background:var(--sage);color:#fff}
 .badge.cream{background:var(--cream-2)}
-.doe .bhead{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+.doe .bhead{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:11px}
 .doe .bhead h3{margin:0}
 
 @media(prefers-reduced-motion:reduce){
@@ -380,7 +392,7 @@ body.locked{overflow:hidden}
 <!-- TE DOEN -->
 <section id="doen">
   <div class="wrap">
-    <div class="center rv" style="margin-bottom:34px">
+    <div class="center rv" style="margin-bottom:32px">
       <p class="eyebrow">Wat is er te doen</p>
       <h2 class="sec">Alles op wielen</h2>
     </div>
@@ -416,7 +428,7 @@ body.locked{overflow:hidden}
         klassiekers. Eigenaren staan er gewoon bij, dus vraag gerust door — de mooiste verhalen
         staan niet op het bordje.</p>
       <p class="lead">Volledig gerestaureerd of juist met karakter — alles mag er zijn.</p>
-      <p style="margin-top:14px"><a class="btn" href="#meedoen">Meld je klassieker aan →</a></p>
+      <p class="btn-row"><a class="btn" href="#meedoen">Meld je klassieker aan →</a></p>
     </div>
   </div>
 </section>
@@ -430,7 +442,7 @@ body.locked{overflow:hidden}
     <div class="rv">
       <p class="eyebrow">Line-up</p>
       <h2 class="sec">De hele dag muziek</h2>
-      <p style="margin:8px 0 0"><span class="badge coral">Onder voorbehoud</span> <span class="badge cream">Concept-invulling</span></p>
+      <p class="subbadges"><span class="badge coral">Onder voorbehoud</span> <span class="badge cream">Concept-invulling</span></p>
       <div class="card" style="margin-top:18px;padding:10px 20px">
         <div class="slot"><span class="time">15:00</span><span class="who">DJ Vinyl</span><span class="what">Sixties &amp; seventies platen</span></div>
         <div class="slot"><span class="time">16:30</span><span class="who">Woodstock Tribute</span><span class="what">Flower power classics</span></div>
@@ -465,7 +477,7 @@ body.locked{overflow:hidden}
 <section id="praktisch">
   <div class="wrap">
     <span class="sticker spin hide-sm" style="left:5vw;top:14px;transform:rotate(9deg)" aria-hidden="true"><svg viewBox="0 0 100 100"><polygon points="50.00,0.00 55.62,10.90 64.09,2.03 66.41,14.07 77.03,7.94 75.87,20.15 87.79,17.26 83.23,28.64 95.48,29.23 87.90,38.87 99.49,42.88 89.50,50.00 99.49,57.12 87.90,61.13 95.48,70.77 83.23,71.36 87.79,82.74 75.87,79.85 77.03,92.06 66.41,85.93 64.09,97.97 55.62,89.10 50.00,100.00 44.38,89.10 35.91,97.97 33.59,85.93 22.97,92.06 24.13,79.85 12.21,82.74 16.77,71.36 4.52,70.77 12.10,61.13 0.51,57.12 10.50,50.00 0.51,42.88 12.10,38.87 4.52,29.23 16.77,28.64 12.21,17.26 24.13,20.15 22.97,7.94 33.59,14.07 35.91,2.03 44.38,10.90" fill="#EE7B62"/><circle cx="50" cy="50" r="33" fill="none" stroke="#FFF9EC" stroke-width="2.5" stroke-dasharray="4 3"/></svg><b>Za 18<br>april</b></span>
-    <div class="center rv" style="margin-bottom:30px">
+    <div class="center rv" style="margin-bottom:32px">
       <p class="eyebrow">Praktisch</p>
       <h2 class="sec">Waar &amp; wanneer</h2>
     </div>
@@ -482,7 +494,7 @@ body.locked{overflow:hidden}
 <section id="meedoen" class="cta">
   <div class="wrap rv">
     <h2 class="sec">Kom je met je oldtimer?</h2>
-    <p class="lead" style="max-width:640px;margin:6px auto 22px">
+    <p class="lead" style="max-width:640px;margin:0 auto 26px">
       Auto, motor of brommer — meld 'm aan en zet 'm zaterdag tussen de klassiekers.
       Deelname is gratis, plek is beperkt.
     </p>
@@ -553,11 +565,19 @@ body.locked{overflow:hidden}
     /* split section headings into animatable characters */
     document.querySelectorAll('h2.sec').forEach(function(hd){
       var txt=hd.textContent, frag=document.createDocumentFragment(), n=0;
-      txt.split('').forEach(function(c){
-        var s=document.createElement('span');
-        s.className='ch'; s.textContent=c;
-        s.style.setProperty('--i', n++);
-        frag.appendChild(s);
+      /* split per WORD first so a heading never breaks mid-word,
+         then per character inside each word for the stagger */
+      txt.split(/(\s+)/).forEach(function(word){
+        if(word===''){ return; }
+        if(/^\s+$/.test(word)){ frag.appendChild(document.createTextNode(word)); return; }
+        var w=document.createElement('span'); w.className='wd';
+        word.split('').forEach(function(c){
+          var s=document.createElement('span');
+          s.className='ch'; s.textContent=c;
+          s.style.setProperty('--i', n++);
+          w.appendChild(s);
+        });
+        frag.appendChild(w);
       });
       hd.textContent=''; hd.appendChild(frag);
       if('IntersectionObserver' in window){
