@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+<title>Festival op Wielen — concept</title>
+<meta name="description" content="Conceptpresentatie" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Bubbles&family=Anton&family=Nunito:ital,wght@0,400;0,700;0,900;1,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF2DF; --cream-2:#FFF9EC; --peach:#FFDDBB;
+  --orange:#EF8A2E; --orange-2:#D96A18;
+  --coral:#EE7B62; --coral-2:#D8503C;
+  --pink:#F3A7B6; --mustard:#F6C445; --sage:#7FB3A4;
+  --rust:#B4552B; --brown:#4B2A18; --brown-2:#33200F;
+  --sh:rgba(75,42,24,.32);
+  --f-disp:'Rubik Bubbles',system-ui,sans-serif;
+  --f-post:'Anton',Impact,sans-serif;
+  --f-body:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  margin:0; font-family:var(--f-body); color:var(--brown);
+  background:var(--cream); overflow-x:hidden; font-size:17px; line-height:1.65;
+}
+img{max-width:100%; display:block}
+a{color:inherit}
+
+/* ---------- groovy background ---------- */
+.bgwrap{position:fixed; inset:0; z-index:-2; overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, #FFE9CE 0%, var(--cream) 55%, #F7E3C6 100%);}
+.rays{position:absolute; left:50%; top:-30vh; width:190vmax; height:190vmax; transform:translateX(-50%);
+  background:repeating-conic-gradient(from 0deg at 50% 50%,
+    rgba(239,138,46,.10) 0deg 7deg, rgba(255,255,255,0) 7deg 14deg);
+  animation:spin 150s linear infinite; opacity:.55;}
+@keyframes spin{to{transform:translateX(-50%) rotate(360deg)}}
+.blob{position:absolute; border-radius:50%; filter:blur(70px); opacity:.34}
+.blob.b1{width:52vw;height:52vw;left:-14vw;top:14vh;background:var(--pink)}
+.blob.b2{width:44vw;height:44vw;right:-12vw;top:44vh;background:var(--mustard)}
+.blob.b3{width:40vw;height:40vw;left:22vw;bottom:-10vh;background:var(--sage);opacity:.24}
+.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+  background-image:radial-gradient(rgba(75,42,24,.13) 1px, transparent 1px);
+  background-size:4px 4px;}
+
+/* ---------- shared ---------- */
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+section{position:relative;padding:76px 0}
+.eyebrow{font-family:var(--f-post);letter-spacing:.14em;text-transform:uppercase;
+  font-size:14px;color:var(--rust);margin:0 0 10px}
+h2.sec{font-family:var(--f-disp);font-size:clamp(34px,6vw,62px);line-height:.98;margin:0 0 6px;
+  color:var(--coral-2); text-shadow:3px 4px 0 var(--mustard), 6px 8px 0 var(--sh);}
+h3{font-family:var(--f-post);font-size:22px;letter-spacing:.02em;margin:0 0 6px;text-transform:uppercase}
+.lead{font-size:clamp(18px,2.2vw,21px);font-weight:700}
+.center{text-align:center}
+
+.card{background:var(--cream-2);border:3px solid var(--brown);border-radius:22px;
+  box-shadow:7px 9px 0 var(--sh); padding:26px;}
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--f-post);
+  text-transform:uppercase;letter-spacing:.05em;font-size:17px;text-decoration:none;
+  padding:14px 26px;border:3px solid var(--brown);border-radius:99px;
+  background:var(--mustard);color:var(--brown);box-shadow:5px 6px 0 var(--sh);
+  transition:transform .12s ease, box-shadow .12s ease; cursor:pointer}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:8px 9px 0 var(--sh)}
+.btn:active{transform:translate(2px,3px);box-shadow:2px 3px 0 var(--sh)}
+.btn.coral{background:var(--coral);color:#fff}
+.btn.ghost{background:transparent}
+
+/* ---------- concept ribbon ---------- */
+.conceptbar{position:relative;z-index:5;background:var(--brown);color:var(--cream);
+  font-family:var(--f-post);letter-spacing:.12em;text-transform:uppercase;font-size:12px;
+  text-align:center;padding:8px 14px}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:40;backdrop-filter:blur(8px);
+  background:rgba(253,242,223,.82);border-bottom:3px solid var(--brown)}
+.nav .wrap{display:flex;align-items:center;gap:18px;padding-top:11px;padding-bottom:11px}
+.nav .mark{font-family:var(--f-disp);font-size:20px;color:var(--coral-2);white-space:nowrap}
+.nav ul{display:flex;gap:18px;list-style:none;margin:0 0 0 auto;padding:0;flex-wrap:wrap}
+.nav a{font-family:var(--f-post);text-transform:uppercase;font-size:14px;letter-spacing:.06em;
+  text-decoration:none;padding:4px 2px;border-bottom:3px solid transparent}
+.nav a:hover{border-color:var(--coral)}
+@media(max-width:760px){.nav ul{display:none}}
+
+/* ---------- hero ---------- */
+.hero{padding:52px 0 40px;text-align:center}
+.logo-type{font-family:var(--f-disp);line-height:.86;margin:0;
+  font-size:clamp(52px,13.5vw,148px);color:var(--mustard);
+  text-shadow:
+    3px 3px 0 var(--orange-2), 6px 7px 0 var(--rust), 10px 12px 0 var(--sh);
+  letter-spacing:.01em}
+.logo-type .l2{display:block;color:var(--orange);
+  text-shadow:3px 3px 0 var(--coral-2), 6px 7px 0 var(--rust), 10px 12px 0 var(--sh);}
+.peace{display:inline-block;vertical-align:-.13em;width:.86em;height:.86em;margin:0 .04em}
+.tag{display:inline-block;margin:20px 0 6px;font-family:var(--f-post);text-transform:uppercase;
+  letter-spacing:.2em;font-size:clamp(14px,2.4vw,20px);color:var(--brown)}
+.chips{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:22px 0 26px}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--cream-2);
+  border:3px solid var(--brown);border-radius:99px;padding:9px 18px;
+  font-family:var(--f-post);text-transform:uppercase;letter-spacing:.05em;font-size:15px;
+  box-shadow:4px 5px 0 var(--sh)}
+.chip.hot{background:var(--coral);color:#fff}
+.hero-photo{margin:34px auto 0;max-width:1000px;border:4px solid var(--brown);border-radius:26px;
+  overflow:hidden;box-shadow:10px 12px 0 var(--sh);transform:rotate(-.8deg)}
+.hero-photo img{width:100%;height:auto}
+
+/* ---------- ticker ---------- */
+.ticker{background:var(--coral);border-top:3px solid var(--brown);border-bottom:3px solid var(--brown);
+  overflow:hidden;padding:12px 0}
+.ticker-track{display:flex;gap:34px;white-space:nowrap;width:max-content;animation:roll 34s linear infinite}
+.ticker span{font-family:var(--f-post);text-transform:uppercase;letter-spacing:.1em;
+  font-size:19px;color:var(--cream-2)}
+@keyframes roll{to{transform:translateX(-50%)}}
+
+/* ---------- flowers ---------- */
+.daisy{position:absolute;pointer-events:none;opacity:.95;z-index:1}
+.bolt{position:absolute;pointer-events:none;opacity:.75;z-index:0}
+@media(max-width:760px){
+  .daisy{width:54px !important;opacity:.9}
+  .daisy.d-r{right:2px !important;top:6px !important}
+  .daisy.d-l{left:2px !important;top:-4px !important}
+}
+@media(max-width:430px){ .daisy{display:none} }
+
+/* ---------- grids ---------- */
+.grid{display:grid;gap:22px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:880px){.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.g3,.g2{grid-template-columns:1fr}}
+.doe{position:relative;overflow:hidden}
+.doe .ico{font-size:34px;line-height:1;margin-bottom:10px}
+.doe:nth-child(3n+1){background:var(--cream-2)}
+.doe:nth-child(3n+2){background:#FFF1DC}
+.doe:nth-child(3n+3){background:#FFE9E2}
+
+/* ---------- split ---------- */
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center}
+@media(max-width:820px){.split{grid-template-columns:1fr}}
+.photo{border:4px solid var(--brown);border-radius:22px;overflow:hidden;box-shadow:8px 10px 0 var(--sh)}
+.photo.tilt{transform:rotate(1.2deg)}
+.photo.tilt-l{transform:rotate(-1.4deg)}
+
+/* ---------- lineup ---------- */
+.slot{display:flex;align-items:center;gap:16px;padding:15px 18px;border-bottom:3px dashed rgba(75,42,24,.28)}
+.slot:last-child{border-bottom:0}
+.slot .time{font-family:var(--f-post);font-size:19px;color:var(--rust);min-width:74px}
+.slot .who{font-family:var(--f-post);font-size:20px;text-transform:uppercase;letter-spacing:.02em}
+.slot .what{margin-left:auto;font-size:14px;font-weight:700;opacity:.72;text-align:right}
+@media(max-width:560px){.slot{flex-wrap:wrap;gap:6px 14px}.slot .what{margin-left:0;width:100%;text-align:left}}
+
+/* ---------- info ---------- */
+.info{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:860px){.info{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.info{grid-template-columns:1fr}}
+.info .card{text-align:center;padding:22px 16px}
+.info .k{font-family:var(--f-post);text-transform:uppercase;font-size:13px;letter-spacing:.1em;
+  color:var(--rust);margin-bottom:6px}
+.info .v{font-family:var(--f-disp);font-size:23px;line-height:1.15;color:var(--coral-2)}
+.info .v small{display:block;font-family:var(--f-body);font-size:14px;font-weight:700;color:var(--brown);margin-top:4px}
+
+/* ---------- cta band ---------- */
+.cta{background:var(--mustard);border-top:4px solid var(--brown);border-bottom:4px solid var(--brown);
+  text-align:center}
+.cta h2.sec{color:var(--brown);text-shadow:3px 4px 0 var(--cream-2), 6px 8px 0 var(--sh)}
+
+/* ---------- footer ---------- */
+footer{background:var(--brown);color:var(--peach);padding:52px 0 34px;position:relative}
+footer a{color:var(--mustard)}
+footer .fgrid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:26px}
+@media(max-width:760px){footer .fgrid{grid-template-columns:1fr}}
+footer h4{font-family:var(--f-post);text-transform:uppercase;letter-spacing:.08em;font-size:15px;
+  margin:0 0 10px;color:var(--mustard)}
+.disclaim{margin-top:30px;padding-top:18px;border-top:2px solid rgba(255,221,187,.28);
+  font-size:13px;opacity:.85}
+
+.wave{display:block;width:100%;height:46px;margin:0;color:var(--coral)}
+.wave.mustard{color:var(--mustard)}
+.wave.sage{color:var(--sage)}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- gate ---------- */
+#gate{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
+  padding:22px;background:
+    radial-gradient(120% 90% at 50% 0%, #FFE9CE 0%, #FDF2DF 55%, #F1DCBC 100%);}
+#gate .gcard{max-width:440px;width:100%;text-align:center}
+#gate .gtitle{font-family:var(--f-disp);font-size:clamp(30px,7vw,46px);line-height:.95;
+  color:var(--coral-2);text-shadow:3px 4px 0 var(--mustard),6px 8px 0 var(--sh);margin:0 0 8px}
+#gate input{width:100%;margin:18px 0 6px;padding:15px 18px;font-family:var(--f-post);
+  font-size:20px;letter-spacing:.16em;text-align:center;text-transform:uppercase;
+  border:3px solid var(--brown);border-radius:14px;background:var(--cream-2);color:var(--brown)}
+#gate input:focus{outline:none;border-color:var(--coral);box-shadow:0 0 0 4px rgba(238,123,98,.28)}
+#gate .err{min-height:22px;color:var(--coral-2);font-weight:900;font-size:14px;margin-top:8px}
+.hidden{display:none !important}
+body.locked{overflow:hidden}
+</style>
+</head>
+<body class="locked">
+
+<!-- ============ CODE GATE ============ -->
+<div id="gate">
+  <div class="gcard card">
+    <svg class="peace" viewBox="0 0 100 100" style="width:56px;height:56px;margin:0 auto 10px" aria-hidden="true">
+      <circle cx="50" cy="50" r="42" fill="none" stroke="#4B2A18" stroke-width="9"/>
+      <path d="M50 8v84M50 50 20 80M50 50l30 30" fill="none" stroke="#4B2A18" stroke-width="9" stroke-linecap="round"/>
+    </svg>
+    <h1 class="gtitle">Even je code</h1>
+    <p style="margin:6px 0 0;font-weight:700">Deze conceptpagina is besloten.</p>
+    <form id="gform" autocomplete="off">
+      <input id="gcode" type="password" inputmode="text" placeholder="CODE" aria-label="Toegangscode" />
+      <div class="err" id="gerr" role="alert"></div>
+      <button class="btn coral" type="submit" style="width:100%;justify-content:center">Naar het concept</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ SITE ============ -->
+<div id="site" class="hidden">
+
+<div class="bgwrap" aria-hidden="true">
+  <div class="rays"></div>
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="conceptbar">✿ Conceptpresentatie · niet openbaar · geen officiële uitgave van Festival op Wielen ✿</div>
+
+<nav class="nav">
+  <div class="wrap">
+    <span class="mark">Festival op Wielen</span>
+    <ul>
+      <li><a href="#over">Het festival</a></li>
+      <li><a href="#doen">Te doen</a></li>
+      <li><a href="#oldtimers">Oldtimers</a></li>
+      <li><a href="#lineup">Line-up</a></li>
+      <li><a href="#praktisch">Praktisch</a></li>
+      <li><a href="#meedoen">Meedoen</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap" style="position:relative">
+    <svg class="daisy d-l" style="width:92px;left:-6px;top:-14px;transform:rotate(-12deg)" viewBox="0 0 100 100" aria-hidden="true"><g fill="#F3A7B6"><ellipse cx="50" cy="18" rx="13" ry="22"/><ellipse cx="50" cy="82" rx="13" ry="22"/><ellipse cx="18" cy="50" rx="22" ry="13"/><ellipse cx="82" cy="50" rx="22" ry="13"/><ellipse cx="27" cy="27" rx="20" ry="12" transform="rotate(-45 27 27)"/><ellipse cx="73" cy="73" rx="20" ry="12" transform="rotate(-45 73 73)"/><ellipse cx="73" cy="27" rx="20" ry="12" transform="rotate(45 73 27)"/><ellipse cx="27" cy="73" rx="20" ry="12" transform="rotate(45 27 73)"/></g><circle cx="50" cy="50" r="15" fill="#F6C445"/></svg>
+    <svg class="daisy d-r" style="width:76px;right:4px;top:34px;transform:rotate(16deg)" viewBox="0 0 100 100" aria-hidden="true"><g fill="#EF8A2E"><ellipse cx="50" cy="18" rx="13" ry="22"/><ellipse cx="50" cy="82" rx="13" ry="22"/><ellipse cx="18" cy="50" rx="22" ry="13"/><ellipse cx="82" cy="50" rx="22" ry="13"/><ellipse cx="27" cy="27" rx="20" ry="12" transform="rotate(-45 27 27)"/><ellipse cx="73" cy="73" rx="20" ry="12" transform="rotate(-45 73 73)"/><ellipse cx="73" cy="27" rx="20" ry="12" transform="rotate(45 73 27)"/><ellipse cx="27" cy="73" rx="20" ry="12" transform="rotate(45 27 73)"/></g><circle cx="50" cy="50" r="15" fill="#FFF9EC"/></svg>
+
+    <h1 class="logo-type">
+      Festival<span class="l2">
+        <svg class="peace" viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="41" fill="#FFF9EC" stroke="#B4552B" stroke-width="9"/>
+          <path d="M50 9v82M50 50 22 78M50 50l28 28" fill="none" stroke="#B4552B" stroke-width="9" stroke-linecap="round"/>
+        </svg>P Wielen</span>
+    </h1>
+    <span class="tag">Brabantse gezelligheid</span>
+    <p class="lead" style="max-width:640px;margin:10px auto 0">
+      Waar muziek, mensen en het moment samenkomen. Een dag vol oldtimers, livemuziek en
+      flower-power onder de Brabantse lucht.
+    </p>
+
+    <div class="chips">
+      <span class="chip">✿ Zaterdag 18 april</span>
+      <span class="chip">15:00 – 00:00</span>
+      <span class="chip">Zevenbergen</span>
+      <span class="chip hot">Gratis entree</span>
+    </div>
+
+    <a class="btn coral" href="#meedoen">Kom met je oldtimer →</a>
+    <a class="btn ghost" href="#lineup" style="margin-left:10px">Bekijk de line-up</a>
+
+    <figure class="hero-photo">
+      <img src="img/hero.jpg" alt="Festivalterrein met oldtimers, een VW-busje en publiek bij het podium in het gouden avondlicht" width="1800" height="1005" />
+    </figure>
+  </div>
+</header>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="tick"></div>
+</div>
+
+<!-- OVER -->
+<section id="over">
+  <div class="wrap split">
+    <div class="rv">
+      <p class="eyebrow">Back to the 60s &amp; 70s</p>
+      <h2 class="sec">Het festival voor levensgenieters</h2>
+      <p class="lead">Geen strakke schema's, maar een dag die rolt zoals hij rolt.</p>
+      <p>Op het terrein van de Oude Suikerfabriek staat alles in het teken van muziek, vrijheid en
+        vintage pracht. Tussen glimmende klassiekers, retro campers en vintage caravans slenter je
+        van de hippiemarkt naar de foodtrucks, met livemuziek die je zó terugzet in de tijd van
+        flower power en rock-'n-roll.</p>
+      <p>Volledig gerestaureerd of juist met karakter: alles mag er zijn. Neem je stoeltje mee,
+        pak een burger, en laat de middag overlopen in de avond.</p>
+    </div>
+    <figure class="photo tilt rv">
+      <img src="img/markt.jpg" alt="Hippie- en vintagemarkt met kraampjes vol retro kleding en vondsten" width="1000" height="747" loading="lazy" />
+    </figure>
+  </div>
+</section>
+
+<!-- TE DOEN -->
+<section id="doen">
+  <div class="wrap">
+    <div class="center rv" style="margin-bottom:34px">
+      <p class="eyebrow">Wat is er te doen</p>
+      <h2 class="sec">Alles op wielen</h2>
+    </div>
+    <div class="grid g3">
+      <div class="card doe rv"><div class="ico">🎸</div><h3>Live bands</h3>
+        <p>Rock-'n-roll, sixties en een flinke scheut Woodstock. De hele middag en avond door.</p></div>
+      <div class="card doe rv"><div class="ico">🚗</div><h3>Oldtimers</h3>
+        <p>Auto's, motoren en brommers — van showroomstaat tot heerlijk doorleefd.</p></div>
+      <div class="card doe rv"><div class="ico">🚐</div><h3>Campers &amp; caravans</h3>
+        <p>Retro busjes en vintage caravans, dwars tussen het publiek geparkeerd.</p></div>
+      <div class="card doe rv"><div class="ico">🌸</div><h3>Hippie &amp; vintage markt</h3>
+        <p>Kleding, accessoires, platen en woonvondsten. Struinen tot je iets vindt.</p></div>
+      <div class="card doe rv"><div class="ico">🍔</div><h3>Foodtrucks</h3>
+        <p>Van hartige klassiekers tot zoete lekkernijen, met een fris glas erbij.</p></div>
+      <div class="card doe rv"><div class="ico">💈</div><h3>Barberbus &amp; kids</h3>
+        <p>Even in het scheermes? En voor de kleinsten een eigen kids-corner.</p></div>
+    </div>
+  </div>
+</section>
+
+<svg class="wave mustard" viewBox="0 0 1200 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0,30 C150,4 250,44 400,26 C550,8 650,44 800,28 C950,12 1050,40 1200,22 L1200,46 L0,46 Z" fill="currentColor" opacity=".55"/><path d="M0,38 C150,16 250,50 400,34 C550,18 650,50 800,36 C950,22 1050,48 1200,32 L1200,46 L0,46 Z" fill="currentColor"/></svg>
+
+<!-- OLDTIMERS -->
+<section id="oldtimers">
+  <div class="wrap split">
+    <figure class="photo tilt-l rv" style="order:-1">
+      <img src="img/cars.jpg" alt="Rij glimmende klassieke auto's op het gras in het gouden avondlicht" width="1000" height="747" loading="lazy" />
+    </figure>
+    <div class="rv">
+      <p class="eyebrow">Oldtimers</p>
+      <h2 class="sec">Chroom in het gras</h2>
+      <p>Van een strak gepoetste Amerikaan tot een brommer met verhalen: het hele terrein staat vol
+        klassiekers. Eigenaren staan er gewoon bij, dus vraag gerust door — de mooiste verhalen
+        staan niet op het bordje.</p>
+      <p class="lead">Volledig gerestaureerd of juist met karakter — alles mag er zijn.</p>
+      <p style="margin-top:14px"><a class="btn" href="#meedoen">Meld je klassieker aan →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- LINEUP -->
+<section id="lineup">
+  <div class="wrap split">
+    <figure class="photo tilt-l rv" style="order:-1">
+      <img src="img/band.jpg" alt="Band op het podium met dansend publiek in de schemering" width="1000" height="747" loading="lazy" />
+    </figure>
+    <div class="rv">
+      <p class="eyebrow">Line-up</p>
+      <h2 class="sec">De hele dag muziek</h2>
+      <div class="card" style="margin-top:18px;padding:10px 20px">
+        <div class="slot"><span class="time">15:00</span><span class="who">DJ Vinyl</span><span class="what">Sixties &amp; seventies platen</span></div>
+        <div class="slot"><span class="time">16:30</span><span class="who">Woodstock Tribute</span><span class="what">Flower power classics</span></div>
+        <div class="slot"><span class="time">18:30</span><span class="who">Drukwerk</span><span class="what">Nederpop &amp; meezingers</span></div>
+        <div class="slot"><span class="time">20:30</span><span class="who">Rock-'n-roll act</span><span class="what">Dansvloer vol</span></div>
+        <div class="slot"><span class="time">22:30</span><span class="who">Afterparty</span><span class="what">Tot de lichten aan gaan</span></div>
+      </div>
+      <p style="font-size:14px;opacity:.75;margin-top:12px">Indicatieve invulling voor dit concept — namen en tijden onder voorbehoud.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOD -->
+<section>
+  <div class="wrap split">
+    <div class="rv">
+      <p class="eyebrow">Eten &amp; drinken</p>
+      <h2 class="sec">Foodtrucks &amp; koud bier</h2>
+      <p>Een rij foodtrucks langs het terrein, een caravanbar in het midden en genoeg plek om
+        neer te ploffen. Van burgers en friet tot iets zoets voor later op de avond.</p>
+      <p class="lead">Blijf plakken tot de lampjes aangaan.</p>
+    </div>
+    <figure class="photo tilt rv">
+      <img src="img/food.jpg" alt="Foodtrucks en een caravanbar met lampjes in de avond" width="1000" height="747" loading="lazy" />
+    </figure>
+  </div>
+</section>
+
+<svg class="wave sage" viewBox="0 0 1200 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0,30 C150,4 250,44 400,26 C550,8 650,44 800,28 C950,12 1050,40 1200,22 L1200,46 L0,46 Z" fill="currentColor" opacity=".55"/><path d="M0,38 C150,16 250,50 400,34 C550,18 650,50 800,36 C950,22 1050,48 1200,32 L1200,46 L0,46 Z" fill="currentColor"/></svg>
+
+<!-- PRAKTISCH -->
+<section id="praktisch">
+  <div class="wrap">
+    <div class="center rv" style="margin-bottom:30px">
+      <p class="eyebrow">Praktisch</p>
+      <h2 class="sec">Waar &amp; wanneer</h2>
+    </div>
+    <div class="info rv">
+      <div class="card"><div class="k">Datum</div><div class="v">Za 18 april<small>2026</small></div></div>
+      <div class="card"><div class="k">Tijd</div><div class="v">15:00–00:00<small>Loop binnen wanneer je wilt</small></div></div>
+      <div class="card"><div class="k">Locatie</div><div class="v">Zevenbergen<small>Oude Suikerfabriek · Blokweg</small></div></div>
+      <div class="card"><div class="k">Entree</div><div class="v">Gratis<small>Voor alle bezoekers</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MEEDOEN -->
+<section id="meedoen" class="cta">
+  <div class="wrap rv">
+    <h2 class="sec">Kom je met je oldtimer?</h2>
+    <p class="lead" style="max-width:640px;margin:6px auto 22px">
+      Auto, motor of brommer — meld 'm aan en zet 'm zaterdag tussen de klassiekers.
+      Deelname is gratis, plek is beperkt.
+    </p>
+    <a class="btn coral" href="#contact">Meld je voertuig aan</a>
+    <a class="btn ghost" href="#contact" style="margin-left:10px">Standhouder worden</a>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <h4>Festival op Wielen</h4>
+        <p style="margin:0">Een dag waar auto's, muziek en gezelligheid samenkomen.<br>
+        Oude Suikerfabriek · Blokweg · Zevenbergen (Moerdijk)</p>
+      </div>
+      <div>
+        <h4>Organisatie</h4>
+        <p style="margin:0">Nezz Events<br>
+        <a href="mailto:nezzevents@gmail.com">nezzevents@gmail.com</a><br>
+        <a href="tel:+31611956885">06 11 95 68 85</a></p>
+      </div>
+      <div>
+        <h4>Volg het festival</h4>
+        <p style="margin:0">
+          <a href="https://www.facebook.com/festivalopwielen/" target="_blank" rel="noopener">Facebook</a><br>
+          <a href="https://www.festivalopwielen.nl" target="_blank" rel="noopener">festivalopwielen.nl</a>
+        </p>
+      </div>
+    </div>
+    <p class="disclaim">
+      <strong>Concept.</strong> Deze pagina is een niet-openbare ontwerpstudie, gemaakt ter illustratie.
+      Het is geen officiële uiting van Festival op Wielen of Nezz Events. Line-up, tijden en teksten
+      zijn deels ingevuld als voorbeeld. Beeld is AI-gegenereerd en toont niet het werkelijke evenement.
+    </p>
+  </div>
+</footer>
+
+</div><!-- /site -->
+
+<script>
+(function(){
+  var CODE='vanessa', KEY='fow_ok';
+  var gate=document.getElementById('gate'), site=document.getElementById('site');
+  function open_(){
+    gate.classList.add('hidden'); site.classList.remove('hidden');
+    document.body.classList.remove('locked'); boot();
+  }
+  try{ if(sessionStorage.getItem(KEY)==='1') open_(); }catch(e){}
+  document.getElementById('gform').addEventListener('submit',function(e){
+    e.preventDefault();
+    var v=(document.getElementById('gcode').value||'').trim().toLowerCase();
+    if(v===CODE){ try{sessionStorage.setItem(KEY,'1');}catch(e){} open_(); }
+    else{
+      document.getElementById('gerr').textContent='Die code klopt niet — probeer het nog eens.';
+      document.getElementById('gcode').value='';
+      document.getElementById('gcode').focus();
+    }
+  });
+  var booted=false;
+  function boot(){
+    if(booted) return; booted=true;
+    /* ticker */
+    var words=['Live bands','✿','Oldtimers','✿','Foodtrucks','✿','Hippiemarkt','✿','Retro campers','✿','Gratis entree','✿'];
+    var t=document.getElementById('tick'), html='';
+    for(var r=0;r<2;r++){ words.forEach(function(w){ html+='<span>'+w+'</span>'; }); }
+    t.innerHTML=html;
+    /* reveal */
+    var els=[].slice.call(document.querySelectorAll('.rv'));
+    if('IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(en){
+        en.forEach(function(x){ if(x.isIntersecting){ x.target.classList.add('in'); io.unobserve(x.target);} });
+      },{rootMargin:'0px 0px -8% 0px'});
+      els.forEach(function(el){ io.observe(el); });
+    } else { els.forEach(function(el){ el.classList.add('in'); }); }
+  }
+})();
+</script>
+</body>
+</html>
