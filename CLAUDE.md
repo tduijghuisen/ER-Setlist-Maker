@@ -90,10 +90,12 @@ confirm referenced `assets/...` paths exist.
 
 ## Verified band facts (for accurate copy)
 Since 1959 (Vught, as **The Jet Black Robbers**; Radio Luxembourg final) → **The Hurricane Rollers** (60s,
-Bart Strik) → **The Explosion Rockets** (70s; **Savage Kalman & The Explosion Rockets**, TROS Top 50) →
-disbanded early 80s → **reunited 1985** (40 years in 2025). **Andy Tielman Award 2014**; main act at the
-**Elvis Festival Bad Nauheim** 2023/24; shared stage with Peter Koelewijn, Chris Montez, The Blue Diamonds,
-James Burton; support act on a Jerry Lee Lewis European tour. 9 albums; **500+ shows** across Europe;
+guitar virtuoso **Bart Strik**, nicknamed the **"Jazzmaster King"**, defining influence on the E/R sound) →
+**The Explosion Rockets** (70s; **Savage Kalman & The Explosion Rockets**, TROS Top 50) →
+disbanded early 80s → **reunited 1985 by Thom Sens** (40 years in 2025). **Andy Tielman Award 2014**; main act at the
+**Elvis Festival Bad Nauheim** 2023/24; shared stage with Peter Koelewijn, Chris Montez, **Jan de Hont (ZZ en de Maskers)**,
+The Blue Diamonds, James Burton; support act on a Jerry Lee Lewis European tour. Countries played incl.
+NL, **Belgium**, Germany, Luxembourg, Spain, England, **Wales**. 9 albums; **500+ shows** across Europe;
 2025 album **"The Sun Sessions"** partly recorded at **Sun Studio, Memphis**. Featured album on the site:
 **"Reelin' & Rockin'"** (Spotify album embed). Spotify artist `50oIPfD4YcZc5xCzvMYBVZ`.
 Webshop: https://shop.ermusicevents.nl/explosion-rockets/
