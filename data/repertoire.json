@@ -329,7 +329,18 @@
     "notes": "",
     "parts": {
       "bass": {
-        "chords": "Live versie:"
+        "images": [
+          {
+            "image": "assets/repertoire/apache-bass-mtesxt1c-0.jpg",
+            "imageThumb": "assets/repertoire/apache-bass-mtesxt1c-0-thumb.jpg",
+            "label": "Scherm­afbeelding 2026-08-29 om 21.56.36"
+          },
+          {
+            "image": "assets/repertoire/apache-bass-mtesxt23-1.jpg",
+            "imageThumb": "assets/repertoire/apache-bass-mtesxt23-1-thumb.jpg",
+            "label": "Scherm­afbeelding 2026-08-29 om 21.56.44"
+          }
+        ]
       },
       "drums": {
         "images": [
