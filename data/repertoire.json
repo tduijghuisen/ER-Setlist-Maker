@@ -7586,7 +7586,18 @@
     "notes": "",
     "parts": {
       "bass": {
-        "chords": "In D 8e noten spelen, dubbel tempo"
+        "images": [
+          {
+            "image": "assets/repertoire/the-stranger-bass-mteuhnol-1.jpg",
+            "imageThumb": "assets/repertoire/the-stranger-bass-mteuhnol-1-thumb.jpg",
+            "label": "Scherm­afbeelding 2026-08-29 om 22.40.01"
+          },
+          {
+            "image": "assets/repertoire/the-stranger-bass-mteuht9s-0.jpg",
+            "imageThumb": "assets/repertoire/the-stranger-bass-mteuht9s-0-thumb.jpg",
+            "label": "Scherm­afbeelding 2026-08-29 om 22.40.15"
+          }
+        ]
       },
       "drums": {
         "images": [
