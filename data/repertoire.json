@@ -8016,7 +8016,14 @@
     "notes": "",
     "parts": {
       "bass": {
-        "chords": "Na dal segno 2x t/m 1, 3e x naar coda"
+        "chords": "Na dal segno 2x t/m 1, 3e x naar coda",
+        "images": [
+          {
+            "image": "assets/repertoire/vilja-oh-vilja-bass-mtorueb6-0.jpg",
+            "imageThumb": "assets/repertoire/vilja-oh-vilja-bass-mtorueb6-0-thumb.jpg",
+            "label": "Scherm­afbeelding 2026-09-05 om 21.24.02"
+          }
+        ]
       },
       "drums": {
         "images": [
