@@ -59,8 +59,8 @@ Look: thick black borders, halftone, comic sticker decals, floating panels over 
 `MEMBERS`, `TIMELINE`, `SHOWS`, `VIDEOS` (YouTube IDs), `ARTISTS` (marquee). Rendered by `render*()`.
 
 Current line-up (order + roles matter): Ruud Kuijpers (lead zang), Joost Roest (leadgitaar),
-Menno Kuijpers (gitaar & zang), Martien van Engelen (toetsen & zang), Teun Duijghuisen (bas & zang),
-Frans van Esch (drums & zang). Member photos: `assets/members/<key>.jpg` (4:5).
+Menno Kuijpers (gitaar & zang), Teun Duijghuisen (bas & zang),
+Frans van Esch (drums & zang). (Martien van Engelen, toetsen, stopte in 2026 — uit de line-up gehaald.) Member photos: `assets/members/<key>.jpg` (4:5).
 
 ## Asset pipeline (Pillow + ffmpeg via pip)
 Process new uploads locally; never hotlink (external hosts are blocked, see gotchas).
