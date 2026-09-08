@@ -235,7 +235,10 @@
   .lang-en{display:none;}
 
   /* members */
-  .members-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .members-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:20px;}
+  .members-grid > .member{grid-column:span 2;}
+  /* bij 5 leden: de onderste twee centreren i.p.v. links uitlijnen */
+  .members-grid > .member:nth-child(4):nth-last-child(2){grid-column:2 / span 2;}
   .member{position:relative; background:var(--paper-2); border:5px solid var(--paper-2); overflow:hidden;
     box-shadow:8px 8px 0 var(--red); transition:transform .15s, box-shadow .15s;}
   .member:nth-child(3n+2){box-shadow:8px 8px 0 var(--yellow);} .member:nth-child(3n){box-shadow:8px 8px 0 var(--blue);}
@@ -417,7 +420,9 @@
     .nav-links.open{display:flex;} .nav-links a{border:none; border-bottom:2px solid rgba(255,255,255,.08); padding:14px 20px;}
     .nav-toggle{display:block;} .book{display:none;}
     .about-grid,.music-grid{grid-template-columns:1fr;}
-    .members-grid{grid-template-columns:1fr 1fr;}
+    .members-grid{grid-template-columns:repeat(4,1fr);}
+    .members-grid > .member:nth-child(4):nth-last-child(2){grid-column:span 2;}
+    .members-grid > .member:last-child:nth-child(odd){grid-column:2 / span 2;}
     .instruments{grid-template-columns:repeat(3,1fr);}
     .disco-row{grid-template-columns:1fr 1fr;}
     .video-grid{grid-template-columns:1fr;}
@@ -428,7 +433,9 @@
     .single-sticker{flex-basis:100%; justify-content:center; transform:none;}
     .single-sticker:hover{transform:translateY(-2px);} .single-sticker:active{transform:translate(2px,2px);}
     .stats{grid-template-columns:1fr 1fr;} .instruments{grid-template-columns:repeat(2,1fr);}
-    .members-grid{grid-template-columns:1fr 1fr;}
+    .members-grid{grid-template-columns:repeat(4,1fr);}
+    .members-grid > .member:nth-child(4):nth-last-child(2){grid-column:span 2;}
+    .members-grid > .member:last-child:nth-child(odd){grid-column:2 / span 2;}
     .show{grid-template-columns:64px 1fr;}
     .show-detail-in{flex-direction:column;}
     .show-detail-in .show-flyer img{height:auto; max-height:340px; max-width:100%;}
