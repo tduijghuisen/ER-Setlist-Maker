@@ -386,6 +386,13 @@
   .book-contact a, .book-phone a{color:var(--red-2); text-decoration:underline; text-underline-offset:2px;}
   .book-contact a:hover, .book-phone a:hover{color:var(--red);}
 
+  /* Newsletter: Sender manages the form and subscriptions. */
+  #nieuwsbrief{order:8;}
+  .newsletter-copy{max-width:640px;margin:0 auto 24px;line-height:1.7;}
+  .newsletter-form{max-width:640px;margin:0 auto;min-width:0;}
+  .newsletter-form iframe{max-width:100%;}
+  .newsletter-help{margin:20px auto 0;font-size:13px;line-height:1.6;}
+  .newsletter-help a{text-decoration:underline;}
   /* footer */
   footer{position:relative; z-index:1; background:var(--ink); color:var(--paper-2); padding:38px 20px 30px; border-top:var(--bd) solid var(--red);}
   .foot-grid{max-width:var(--maxw); margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:22px; flex-wrap:wrap;}
@@ -430,6 +437,20 @@
     *{animation:none !important; scroll-behavior:auto;} .reveal{opacity:1; transform:none;}
   }
 </style>
+<script>
+(function(s,e,n,d,er){
+  s['Sender']=er;
+  s[er]=s[er]||function(){(s[er].q=s[er].q||[]).push(arguments);};
+  s[er].l=1*new Date();
+  s[er].on=function(event,callback){
+    s[er].listeners=s[er].listeners||{};
+    (s[er].listeners[event]=s[er].listeners[event]||[]).push(callback);
+  };
+  var a=e.createElement(n),m=e.getElementsByTagName(n)[0];
+  a.async=1;a.src=d;m.parentNode.insertBefore(a,m);
+})(window,document,'script','https://cdn.sender.net/accounts_resources/universal.js','sender');
+sender('cbe481761a3968');
+</script>
 </head>
 <body>
 <!-- FIXED VIDEO BACKGROUND -->
@@ -657,6 +678,17 @@
       <p class="book-phone" data-i18n="book_phone">Telefonisch zijn we bereikbaar via <a href="tel:+31629100702">+31 6 29100702</a> (Frans van Esch)</p>
     </div>
   </section>
+<!-- NEWSLETTER -->
+<section class="sec" id="nieuwsbrief" aria-labelledby="newsletter-title">
+  <div class="panel">
+    <h2 class="sec-label" id="newsletter-title" data-i18n="newsletter_title">ROCK ’N’ ROLL IN JE MAILBOX!</h2>
+    <p class="newsletter-copy" data-i18n="newsletter_copy">Mis geen optreden of nieuwtje van The Explosion Rockets. Meld je aan voor onze nieuwsbrief en blijf op de hoogte!</p>
+    <div class="newsletter-form">
+      <div style="text-align: left" class="sender-form-field" data-sender-form-id="eERjJK"></div>
+    </div>
+    <p class="newsletter-help" data-i18n="newsletter_help">Uitschrijven kan via de link onderaan elke nieuwsbrief. Zie je het formulier niet? Mail ons op <a href="mailto:info@explosionrockets.com?subject=Nieuwsbrief">info@explosionrockets.com</a>.</p>
+  </div>
+</section>
 </div>
 
 <!-- LIGHTBOX -->
@@ -689,6 +721,7 @@
     </div>
   </div>
   <p class="foot-fine">© <span id="year"></span> THE EXPLOSION ROCKETS · ROCK 'N ROLL SINDS 1959 · KEEP ROCKIN'!</p>
+  <p class="foot-fine"><a href="#nieuwsbrief" data-i18n="newsletter_link">AANMELDEN VOOR DE NIEUWSBRIEF</a></p>
   <p class="foot-fine photo-credit" data-i18n="photo_credit">FOTO'S DOOR TANJA MEIDAM</p>
 </footer>
 
@@ -772,6 +805,10 @@ var I18N = {
   music_p:['Knallende rock-’n-roll, strak op de plaat. Beluister ons uitgelichte album <strong>Reelin’ &amp; Rockin’</strong> — en draai ’m vooral hard.','Blazing rock ’n roll, tight on record. Press play on our featured album <strong>Reelin’ &amp; Rockin’</strong> — and turn it up.'],
   shows_label:['UPCOMING SHOWS','UPCOMING SHOWS'],
   video_label:['VIDEO','VIDEO'],
+  newsletter_title:['ROCK ’N’ ROLL IN JE MAILBOX!','ROCK ’N’ ROLL IN YOUR INBOX!'],
+  newsletter_copy:['Mis geen optreden of nieuwtje van The Explosion Rockets. Meld je aan voor onze nieuwsbrief en blijf op de hoogte!','Never miss a show or news from The Explosion Rockets. Sign up for our newsletter and stay in the loop!'],
+  newsletter_link:['AANMELDEN VOOR DE NIEUWSBRIEF','SIGN UP FOR OUR NEWSLETTER'],
+  newsletter_help:['Uitschrijven kan via de link onderaan elke nieuwsbrief. Zie je het formulier niet? Mail ons op <a href="mailto:info@explosionrockets.com?subject=Nieuwsbrief">info@explosionrockets.com</a>.','You can unsubscribe using the link at the bottom of each newsletter. Can’t see the form? Email <a href="mailto:info@explosionrockets.com?subject=Newsletter">info@explosionrockets.com</a>.'],
   book_title:['BOEK DE BAND!','BOOK THE BAND!'],
   book_p:['Festival, rock-’n-roll-weekend of ander rock-’n-roll-evenement? The Explosion Rockets brengen 40 jaar podiumervaring mee, onafgebroken sinds 1985 — en een volle dansvloer gegarandeerd!','Festival, rock ’n roll weekend or another rock ’n roll event? The Explosion Rockets bring 40 years of stage experience, non-stop since 1985 — and a packed dance floor guaranteed!'],
   book_cta1:['✉ BOEKINGSAANVRAAG','✉ BOOKING REQUEST'],
