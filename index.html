@@ -64,6 +64,8 @@
   /* ---- PAGE / HERO ---- */
   .page{position:relative; z-index:1; display:flex; flex-direction:column;}
   #about{order:1;} #members{order:2;} #music{order:3;} #history{order:4;} #shows{order:5;} #video{order:6;} #booking{order:7;}
+  /* zelfde order als #members: gelijke waarden houden DOM-volgorde, dus direct erna */
+  #keys{order:2;}
   .hero2{min-height:max(460px, calc(100svh - 200px)); display:flex; flex-direction:column; align-items:center; justify-content:flex-start; text-align:center;
     padding:clamp(70px,9vh,110px) 20px 38px; gap:14px; position:relative;}
   .hero2 .logo-wrap{position:relative; display:inline-block; line-height:0; width:min(264px,48vw);
@@ -169,6 +171,20 @@
     margin:0 0 24px; display:inline-block; border-bottom:6px solid var(--yellow);}
   .panel.ink .sec-label,.panel.blue .sec-label,.panel.red .sec-label{color:var(--paper-2);}
 
+
+  /* toetsenist gezocht */
+  .keys-hook{font-family:'Bangers',sans-serif; font-size:clamp(26px,4.2vw,42px); line-height:1.05;
+    margin:0 0 12px; color:var(--yellow); text-shadow:3px 3px 0 var(--ink);}
+  .keys-body h4{font-family:'Archivo Black',sans-serif; font-style:italic; font-size:16px;
+    letter-spacing:.02em; margin:22px 0 6px; color:var(--yellow);}
+  .keys-body p{margin:0 0 10px;}
+  .keys-perks{list-style:none; padding:0; margin:10px 0 18px; display:grid; gap:9px;}
+  .keys-perks li{position:relative; padding-left:30px; font-size:15px;}
+  .keys-perks li::before{content:'★'; position:absolute; left:2px; top:-1px; color:var(--yellow); font-size:19px; line-height:1.3;}
+  .keys-close{font-family:'Bangers',sans-serif; font-size:clamp(20px,2.7vw,28px); margin:18px 0 4px !important;}
+  .keys-fine{font-size:14px; margin-top:12px;}
+  .keys-fine a{color:var(--yellow);}
+
   /* decal stickers */
   .decal{position:absolute; z-index:20; pointer-events:none; width:clamp(64px,8vw,112px);
     filter:drop-shadow(3px 4px 0 rgba(0,0,0,.22)); animation:wiggle 3.4s ease-in-out infinite;}
@@ -233,6 +249,10 @@
   .history-text p{font-size:14px; margin:0 0 12px;}
   .history-text .oldmembers{font-size:13px; line-height:1.7;}
   .lang-en{display:none;}
+  /* applyLang zet deze klassen; puur inline display werkte niet omdat
+     het wissen van de inline stijl terugvalt op .lang-en{display:none} */
+  .lang-en.lang-on{display:block;}
+  .lang-nl.lang-off{display:none;}
 
   /* members */
   .members-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:20px;}
@@ -563,6 +583,82 @@ sender('cbe481761a3968');
     </div>
   </section>
 
+  <!-- TOETSENIST GEZOCHT -->
+  <section class="sec" id="keys">
+    <div class="panel blue reveal">
+      <img class="decal" src="assets/stickers/crash.png" alt="" style="top:-28px; right:-12px;" />
+      <h2 class="sec-label" data-i18n="keys_label">TOETSENIST GEZOCHT</h2>
+
+      <div class="lang-nl keys-body">
+        <p class="keys-hook">Ben jij onze nieuwe toetsenist?</p>
+        <p>The Explosion Rockets, dé rock-’n-rollsensatie van de Benelux, is op zoek naar een
+          toetsenist die er met ons vol voor gaat.</p>
+
+        <h4>Wie zijn wij?</h4>
+        <p>Rock ’n roll sinds 1959 en onafgebroken op de planken sinds 1985. Bekend om energieke
+          shows, strakke uitvoeringen en een onvervalste sound. Meer dan 500 optredens door heel
+          Europa — van grote festivals tot intieme clubs — met zo’n 25 tot 30 shows per jaar.
+          Winnaar van de Andy Tielman Award en hoofdact op het Elvis Festival in Bad Nauheim.
+          Ons album <em>The Sun Sessions</em> namen we deels op in Sun Studio in Memphis.</p>
+
+        <h4>Wat zoeken we?</h4>
+        <p>Een toetsenist die de groove van de jaren ’50 en ’60 in de vingers heeft: pompende
+          boogie-woogie à la Jerry Lee Lewis, en net zo makkelijk een strakke begeleiding onder
+          Buddy Holly of Cliff Richard. Technisch onderlegd én een geboren podiumbeest, met
+          ervaring in liveoptredens. Kun je ook zingen? Dan is dat een dikke plus.</p>
+
+        <h4>Wat bieden wij?</h4>
+        <ul class="keys-perks">
+          <li>Een plek in een gevestigde, gerespecteerde naam in de Europese rock-’n-rollscene.</li>
+          <li>Optredens door heel de Benelux en daarbuiten, op de meest uiteenlopende podia.</li>
+          <li>Een loyaal en enthousiast publiek dat ons al veertig jaar volgt.</li>
+          <li>Een hechte band waarin muzikale passie en vriendschap hand in hand gaan.</li>
+        </ul>
+
+        <h4>Interesse?</h4>
+        <p>Stuur ons een bericht met een korte introductie van jezelf — dan nodigen we je uit
+          om samen te spelen.</p>
+        <p class="keys-close">De toekomst van The Explosion Rockets wacht op jou!</p>
+      </div>
+
+      <div class="lang-en keys-body">
+        <p class="keys-hook">Are you our new keyboard player?</p>
+        <p>The Explosion Rockets, the rock ’n roll sensation of the Benelux, are looking for a
+          keyboard player ready to go all in with us.</p>
+
+        <h4>Who are we?</h4>
+        <p>Rock ’n roll since 1959 and on stage non-stop since 1985. Known for energetic shows,
+          tight performances and an authentic sound. More than 500 shows across Europe — from big
+          festivals to intimate clubs — at some 25 to 30 gigs a year. Winners of the Andy Tielman
+          Award and a main act at the Elvis Festival in Bad Nauheim. Our album
+          <em>The Sun Sessions</em> was partly recorded at Sun Studio in Memphis.</p>
+
+        <h4>What are we looking for?</h4>
+        <p>A keyboard player with the groove of the ’50s and ’60s in their fingers: pumping
+          boogie-woogie à la Jerry Lee Lewis, and just as comfortable laying down a tight bed under
+          Buddy Holly or Cliff Richard. Technically solid and a born performer, with live
+          experience. Can you sing too? That is a big plus.</p>
+
+        <h4>What do we offer?</h4>
+        <ul class="keys-perks">
+          <li>A place in an established, respected name in the European rock ’n roll scene.</li>
+          <li>Shows all over the Benelux and beyond, on the most varied stages.</li>
+          <li>A loyal, enthusiastic audience that has followed us for forty years.</li>
+          <li>A close-knit band where musical passion and friendship go hand in hand.</li>
+        </ul>
+
+        <h4>Interested?</h4>
+        <p>Send us a message with a short introduction — then we will invite you over for a play.</p>
+        <p class="keys-close">The future of The Explosion Rockets is waiting for you!</p>
+      </div>
+
+      <div class="b-cta">
+        <a class="cbtn cbtn-y" href="mailto:info@explosionrockets.com?cc=fv.esch@home.nl&amp;subject=Toetsenist%20-%20introductie" data-i18n="keys_cta">✉ STUUR JE INTRO</a>
+      </div>
+      <p class="keys-fine" data-i18n="keys_fine">Liever even bellen? Frans van Esch is bereikbaar via <a href="tel:+31629100702">+31 6 29100702</a>.</p>
+    </div>
+  </section>
+
   <!-- HISTORY -->
   <section class="sec" id="history">
     <div class="panel reveal">
@@ -812,6 +908,9 @@ var I18N = {
   shows_label:['UPCOMING SHOWS','UPCOMING SHOWS'],
   video_label:['VIDEO','VIDEO'],
   newsletter_title:['ROCK ’N’ ROLL IN JE MAILBOX!','ROCK ’N’ ROLL IN YOUR INBOX!'],
+  keys_label:['TOETSENIST GEZOCHT','KEYBOARD PLAYER WANTED'],
+  keys_cta:['✉ STUUR JE INTRO','✉ SEND YOUR INTRO'],
+  keys_fine:['Liever even bellen? Frans van Esch is bereikbaar via <a href="tel:+31629100702">+31 6 29100702</a>.','Rather call? Frans van Esch can be reached on <a href="tel:+31629100702">+31 6 29100702</a>.'],
   newsletter_copy:['Mis geen optreden of nieuwtje van The Explosion Rockets. Meld je aan voor onze nieuwsbrief en blijf op de hoogte!','Never miss a show or news from The Explosion Rockets. Sign up for our newsletter and stay in the loop!'],
   newsletter_link:['AANMELDEN VOOR DE NIEUWSBRIEF','SIGN UP FOR OUR NEWSLETTER'],
   newsletter_help:['Uitschrijven kan via de link onderaan elke nieuwsbrief. Zie je het formulier niet? Mail ons op <a href="mailto:info@explosionrockets.com?subject=Nieuwsbrief">info@explosionrockets.com</a>.','You can unsubscribe using the link at the bottom of each newsletter. Can’t see the form? Email <a href="mailto:info@explosionrockets.com?subject=Newsletter">info@explosionrockets.com</a>.'],
@@ -826,8 +925,8 @@ function applyLang(){
   document.querySelectorAll('[data-i18n]').forEach(function(el){ var k=el.getAttribute('data-i18n'); if(I18N[k]) el.innerHTML=I18N[k][lang]; });
   document.documentElement.lang=lang?'en':'nl';
   document.getElementById('langBtn').innerHTML=lang?'NL / <b>EN</b>':'<b>NL</b> / EN';
-  document.querySelectorAll('.lang-nl').forEach(function(el){ el.style.display=lang?'none':''; });
-  document.querySelectorAll('.lang-en').forEach(function(el){ el.style.display=lang?'':'none'; });
+  document.querySelectorAll('.lang-nl').forEach(function(el){ el.style.removeProperty('display'); el.classList.toggle('lang-off', !!lang); });
+  document.querySelectorAll('.lang-en').forEach(function(el){ el.style.removeProperty('display'); el.classList.toggle('lang-on', !!lang); });
   renderMembers(); renderTimeline(); renderShows(); renderNextShow();
 }
 function renderNextShow(){
