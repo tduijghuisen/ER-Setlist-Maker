@@ -211,9 +211,9 @@
     "date": "2027-05-16",
     "description": "(1e PINKSTERDAG) THE EXPLOSION ROCKETS FAN AVOND",
     "location": "‘Zaal Elzenburg’ / VUGHT",
-    "flyer": "",
-    "thumb": "",
-    "ticket": ""
+    "flyer": "assets/shows/1e-pinksterdag-the-explosion-rockets-fan-2027-05-16-mtuwzaqf.jpg",
+    "thumb": "assets/shows/1e-pinksterdag-the-explosion-rockets-fan-2027-05-16-mtuwzaqf-thumb.jpg",
+    "ticket": "https://www.mgtickets.nl/3443/fandag"
   },
   {
     "date": "2027-06-06",
