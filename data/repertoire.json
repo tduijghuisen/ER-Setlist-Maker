@@ -1950,7 +1950,14 @@
         "chords": "🎤 Songtekst (lyrics): https://sonichits.com/video/Johnny_Lion/Dear_One"
       },
       "bass": {
-        "chords": "in E!!!\n\nCoupleten lopend, refrein 1-35, solo 1-35"
+        "chords": "in E!!!\n\nCoupleten lopend, refrein 1-35, solo 1-35",
+        "images": [
+          {
+            "image": "assets/repertoire/dear-one-bass-muiabmhg-0.jpg",
+            "imageThumb": "assets/repertoire/dear-one-bass-muiabmhg-0-thumb.jpg",
+            "label": "DEAR ONE"
+          }
+        ]
       },
       "drums": {
         "images": [
