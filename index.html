@@ -319,7 +319,9 @@
   .show.is-clickable:focus-visible{outline:3px solid var(--blue); outline-offset:2px;}
   .show-date{background:var(--red); color:var(--paper-2); border:3px solid var(--ink); text-align:center; padding:8px 4px;}
   .show.hl .show-date{background:var(--ink);}
-  .show-date .dd{font-family:'Bangers',sans-serif; font-size:26px; line-height:.85;}
+  /* dag in de rode badge: Bangers was te zwaar/krap om te lezen op dit formaat */
+  .show-date .dd{font-family:'Inter',sans-serif; font-weight:800; font-size:25px;
+    line-height:1.08; letter-spacing:-.5px;}
   .show-date .mm{font-family:'Archivo Black',sans-serif; font-size:11px; font-style:italic;}
   .show-date .yy{font-family:'Archivo Black',sans-serif; font-size:10px; font-style:italic; line-height:1; margin-top:3px; opacity:.92;}
   /* Clear, labelled expand button per agenda item ("MEER ▾") — obvious there's more underneath. */
