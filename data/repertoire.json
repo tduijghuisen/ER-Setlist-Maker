@@ -11218,5 +11218,20 @@
         "chords": "SPELEN IN A!\n\nBas thema:\n                                                                      \nG|-----------------|------------------|-7---7---------6-7|-7---7---------6-7|| \nD|7---7---------6-7|-7---7---------6-7|-------7-10-10----|-------7-10-10----|| \nA|------7-10-10----|-------7-10-10----|------------------|------------------|| \nE|-----------------|------------------|------------------|------------------|| \n                                                                      \nACE OF SPADES (in A)  –  ±151 bpm, 4/4\nRiff in A = A–E–G–G#  (1 riff = 1 maat, A op tel 1)\nRiff in D = D–A–C–C#\n\nINTRO (0:00)                                 1 maat\n| C  .  D  . |                               (2 tellen per akkoord)\n\nDEEL 1 (0:02 – 0:32)                         19 maten\n| A | A | A | A | A | A | A | A | A ²/₄ |    8½\n| D | D | D | D ²/₄ |                        3½\n| A | A | A |                                3\n| E | E | D | D |                            4\n\nDEEL 2 (0:32 – 1:07)                         22 maten\n| A | A | A | A | A | A | A | A | A | A ²/₄ | 9½\n| D | D | D | D | D ²/₄ |                    4½\n| A | A | A | A |                            4\n| E | E | D | D |                            4\n\nDEEL 3 – solo (1:07 – 1:52)                  28 maten\n| A | A | A | A | A | A | A | A |            8\n| D | D | D | D | A | A | A | A |            8\n| D | D | D | D | A | A | A | A |            8\n| E | E | D | D |                            4\n\nOUTRO (1:52 – einde)\n| A | A | A | ...  riff herhalen, fade-out vanaf ±2:11, stil bij 2:19"
       }
     }
+  },
+  {
+    "id": "smvcln8ykr09",
+    "title": "Promised Land",
+    "artist": "Chuck Berry",
+    "key": "A",
+    "bpm": "",
+    "duration": "",
+    "youtube": "https://youtu.be/uhIHIyzqJFA",
+    "notes": "",
+    "parts": {
+      "bass": {
+        "chords": "[Verse 1]\n \nA\nLeft my home in Norfolk, Virginia,\n                 D\nCalifornia on my mind.\nE\nI straddled that Greyhound, rode him into Raleigh,\n                  A\nAnd on across Caroline.\n \n \n[Verse 2]\n \nA\nWe had motor trouble, it turned into a struggle,\n                   D\nHalf way 'cross Alabam,\nE\nAnd that 'hound broke down and left us all stranded\n                   A\nIn downtown Birmingham.\n \n \n[Verse 3]\n \nA\nRight away, I bought me a through-train ticket,\n                         D\nRight 'cross Mississippi clean\nE\nAnd I was on that midnight flyer out of Birmingham\n                   A\nSmoking into New Orleans.\n \n \n[Verse 4]\n \nA\nSomebody help me get out of Louisiana\n                               D\nJust to help me get to Houston Town\nE\nThere are people there who care a little about me\n                                A\nAnd they won't let the poor boy down\n\n\nSOLO\n\n \n \n[Verse 5]\n \nA\nSure as you're born they bought me a silk suit\n                  D\nPut luggage in my hand\nE\nAnd I woke up high over Alburquerque\n                         A\nOn a jet to the promised land\n \n \n[Verse 7]\n \nA\nWorking on a T-bone steak a la carte\n                          D\nFlying over to the Golden State\nE\nWhen the pilot told us in thirteen minutes\n                                A\nHe would set us at the terminal gate\n \n \n[Verse 8]\n \nA\nSwing low chariot come down easy\n                     D\nTaxi to the terminal zone\nE\nCut your engines and cool your wings\n                              A\nAnd let me make it to the telephone\n \n\nSOLO\n \n\n[Verse 9]\n \nA\nLos Angeles, give me No'folk, V'ginia\n                     D\nTidewater four ten o nine\nE\nTell the folks back home this is the promised land calling\n                           A\nAnd the poor boy is on the line\nE\nTell the folks back home this is the promised land calling\n                           A\nAnd the poor boy is on the line\n"
+      }
+    }
   }
 ]
