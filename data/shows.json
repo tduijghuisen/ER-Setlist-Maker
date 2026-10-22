@@ -137,11 +137,11 @@
   },
   {
     "date": "2027-01-09",
-    "description": "ELVIS' BIRTHDAY PARTY!",
+    "description": "ELVIS' BIRTHDAY PARTY! THE MEMPHIS FLASH BIRTDAY BASH!",
     "location": "ROADRUNNER'S PARADISE CLUB BERLIJN (D)",
-    "flyer": "",
-    "thumb": "",
-    "ticket": ""
+    "flyer": "assets/shows/elvis-birthday-party-2027-01-09-mvjmkkco.jpg",
+    "thumb": "assets/shows/elvis-birthday-party-2027-01-09-mvjmkkco-thumb.jpg",
+    "ticket": "https://www.eventim-light.com/de/a/698da4548e1360659b3e857f/e/6ad0b2eba47cb7abb7b270b3"
   },
   {
     "date": "2027-01-24",
