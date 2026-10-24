@@ -436,11 +436,15 @@
   .reveal{opacity:0; transform:translateY(26px); transition:opacity .6s, transform .6s;}
   .reveal.in{opacity:1; transform:none;}
 
-  @media(max-width:880px){
+  /* hamburgermenu: zodra de 7 menu-items + taal + Book us niet meer op één regel passen (~1190px) */
+  @media(max-width:1220px){
     .nav-links{position:fixed; inset:60px 0 auto 0; flex-direction:column; gap:0; background:rgba(22,19,15,.96);
       border-bottom:var(--bd) solid var(--red); padding:6px 0; display:none;}
     .nav-links.open{display:flex;} .nav-links a{border:none; border-bottom:2px solid rgba(255,255,255,.08); padding:14px 20px;}
-    .nav-toggle{display:block;} .book{display:none;}
+    .nav-toggle{display:block;}
+  }
+  @media(max-width:880px){
+    .book{display:none;}
     .about-grid,.music-grid{grid-template-columns:1fr;}
     .members-grid{grid-template-columns:repeat(4,1fr);}
     .members-grid > .member:nth-child(4):nth-last-child(2){grid-column:span 2;}
@@ -500,6 +504,7 @@ sender('cbe481761a3968');
     <a href="#history" data-i18n="nav_history">HISTORIE</a>
     <a href="#shows" data-i18n="nav_shows">AGENDA</a>
     <a href="#video" data-i18n="nav_video">VIDEO</a>
+    <a href="https://shop.ermusicevents.nl/explosion-rockets/" target="_blank" rel="noopener" data-i18n="nav_shop">WEBSHOP</a>
   </div>
   <button class="lang" id="langBtn"><b>NL</b> / EN</button>
   <a class="book f-comic" href="#booking" data-i18n="nav_book">Book us</a>
@@ -891,7 +896,7 @@ function ytThumb(id,q){ return 'https://i.ytimg.com/vi/'+id+'/'+(q||'hqdefault')
 
 var I18N = {
   nav_band:['DE BAND','THE BAND'], nav_members:['DE MANNEN','THE MEN'], nav_music:['MUZIEK','MUSIC'],
-  nav_shows:['AGENDA','AGENDA'], nav_video:['VIDEO','VIDEO'], nav_book:['Book us','Book us'], nav_history:['HISTORIE','HISTORY'],
+  nav_shows:['AGENDA','AGENDA'], nav_video:['VIDEO','VIDEO'], nav_shop:['WEBSHOP','WEBSHOP'], nav_book:['Book us','Book us'], nav_history:['HISTORIE','HISTORY'],
   hist_label:['GESCHIEDENIS','HISTORY'],
   photo_credit:['FOTO’S DOOR TANJA MEIDAM','PHOTOS BY TANJA MEIDAM'],
   hist_intro:['Van The Jet Black Robbers (1959) tot ruim 65 jaar later — met één missie: de muziek van Elvis, Buddy Holly, Cliff Richard, Jerry Lee Lewis en Chuck Berry levend houden.','From The Jet Black Robbers (1959) to 65+ years later — with one mission: keeping the music of Elvis, Buddy Holly, Cliff Richard, Jerry Lee Lewis and Chuck Berry alive.'],
