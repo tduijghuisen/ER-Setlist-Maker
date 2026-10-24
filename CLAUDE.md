@@ -45,8 +45,9 @@ Look: thick black borders, halftone, comic sticker decals, floating panels over 
 - Fixed background **video** (`.bgfx`): desktop/mobile source picked by viewport, poster fallback,
   interlace scanlines + dark veil. Boomerang clips loop seamlessly (native `loop`).
 - Transparent **nav** that fades to `--sh` background on scroll (`.nav.scrolled`).
-  Links: De Band · De Mannen · Muziek · Historie · Agenda · Video · **Webshop** (external, new tab).
-  Collapses to the hamburger at **≤1220px** (own media query — the 7 links + NL/EN + Book us need ~1190px);
+  Links: De Band · Muziek · Historie · Agenda · Video · **Webshop** (external, new tab). De Mannen is
+  deliberately left out of the menu to save room (the section itself stays on the page).
+  Collapses to the hamburger at **≤1090px** (own media query — the 6 links + NL/EN + Book us need ~1060px);
   "Book us" only hides at ≤880px.
 - **Hero**: big logo + tagline ("Rockin' & Rollin' since 1959") + CTAs + "next show" chip.
 - Section order is controlled by **flexbox `order`** on `.page` (DOM order differs!):

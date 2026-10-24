@@ -436,8 +436,8 @@
   .reveal{opacity:0; transform:translateY(26px); transition:opacity .6s, transform .6s;}
   .reveal.in{opacity:1; transform:none;}
 
-  /* hamburgermenu: zodra de 7 menu-items + taal + Book us niet meer op één regel passen (~1190px) */
-  @media(max-width:1220px){
+  /* hamburgermenu: zodra de 6 menu-items + taal + Book us niet meer op één regel passen (~1060px) */
+  @media(max-width:1090px){
     .nav-links{position:fixed; inset:60px 0 auto 0; flex-direction:column; gap:0; background:rgba(22,19,15,.96);
       border-bottom:var(--bd) solid var(--red); padding:6px 0; display:none;}
     .nav-links.open{display:flex;} .nav-links a{border:none; border-bottom:2px solid rgba(255,255,255,.08); padding:14px 20px;}
@@ -499,7 +499,6 @@ sender('cbe481761a3968');
   <a class="brand" href="#top"><span class="mark f-comic">THE <span class="a">EXPLOSION</span> ROCKETS</span></a>
   <div class="nav-links" id="navLinks">
     <a href="#about" data-i18n="nav_band">DE BAND</a>
-    <a href="#members" data-i18n="nav_members">DE MANNEN</a>
     <a href="#music" data-i18n="nav_music">MUZIEK</a>
     <a href="#history" data-i18n="nav_history">HISTORIE</a>
     <a href="#shows" data-i18n="nav_shows">AGENDA</a>
