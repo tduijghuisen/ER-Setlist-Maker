@@ -176,6 +176,14 @@
     "ticket": ""
   },
   {
+    "date": "2027-03-21",
+    "description": "LP RELEASE PARTY!",
+    "location": "AMERICAN VINTAGE UNLIMITED -  Ericssonstraat 2- RIJEN(NB)",
+    "flyer": "assets/shows/lp-release-party-2027-03-21-mvnitecv.jpg",
+    "thumb": "assets/shows/lp-release-party-2027-03-21-mvnitecv-thumb.jpg",
+    "ticket": ""
+  },
+  {
     "date": "2027-04-04",
     "description": "The Explosion Rockets 2 — 'Het Witte Schaap' ",
     "location": "'Het Witte Schaap' · BREDA -  Wegedoornpage 2 - 14:30",
@@ -286,6 +294,14 @@
     "flyer": "",
     "thumb": "",
     "ticket": "https://www.boogaloopromotions.com/rock-n-roll/weekends/"
+  },
+  {
+    "date": "2027-10-10",
+    "description": "ROCK AND ROLL SWINGIN' DANCE PARTY",
+    "location": "'DE POST'- Tripkouw 29 - MIDWOUD (NH)",
+    "flyer": "",
+    "thumb": "",
+    "ticket": ""
   },
   {
     "date": "2027-10-17",
