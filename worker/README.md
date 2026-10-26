@@ -20,6 +20,8 @@ Add each as an **encrypted secret**:
 | `SESSION_SECRET` | Random 32-byte hex (`openssl rand -hex 32`) |
 | `ALLOWED_EMAILS` | Comma-separated allowed Google e-mails |
 | `NOTION_TOKEN` | Notion internal integration secret (read-only booking pipeline) |
+| `FOW_EMAILS` | *(optional)* Comma-separated Google e-mails of **Festival op Wielen** editors (see below) |
+| `EXTRA_ORIGINS` | *(optional)* Extra site origins allowed to use the Worker, e.g. `https://festivalopwielen.nl` once the festival site moves |
 
 ## Endpoints
 
@@ -28,7 +30,7 @@ Add each as an **encrypted secret**:
 - `GET  /auth/callback` — Google redirect target (set as the Authorized redirect
   URI: `https://er-cms.explosionrockets.workers.dev/auth/callback`). Redirects
   back to the CMS with `#token=<session>` (or `#error=...`).
-- `GET  /auth/me` — returns `{email}` for a valid `Authorization: Bearer` session
+- `GET  /auth/me` — returns `{email, role}` (`band` or `fow`) for a valid `Authorization: Bearer` session
 - `GET  /api/read?path=data/…` — read a repo file (session required)
 - `POST /api/commit` — commit files in one commit `{message, files:[{path,base64}]}`
   (session required)
@@ -56,3 +58,21 @@ binding stays in `wrangler.toml` (used as the cache).
 
 Session tokens are HMAC-signed with `SESSION_SECRET`, valid 30 days, and only
 work against this Worker (they are not GitHub credentials).
+
+## Roles
+
+Access is decided **per request** from the two e-mail lists, so removing an
+address revokes it immediately (existing sessions included).
+
+| Role | Who | May read | May write |
+|------|-----|----------|-----------|
+| `band` | `ALLOWED_EMAILS` | `data/`, `assets/`, `concept/fow/content.json` | `data/`, `assets/`, festival content + photos |
+| `fow` | `FOW_EMAILS` | `concept/fow/content.json` only | `concept/fow/content.json` and **new** photos `concept/fow/img/u/<name>.jpg\|png` |
+
+`fow` editors cannot overwrite existing files, touch the page code, the band data
+or the booking pipeline. A `content.json` that is not valid JSON (or lacks `hero`)
+is refused, so a publish can never break the festival page.
+
+The festival CMS lives at `/concept/fow/beheer/` and keeps its own session
+(`fow_session`), separate from the band CMS.
+

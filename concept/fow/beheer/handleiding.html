@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Handleiding — Beheer Festival op Wielen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Bubbles&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FDF2DF;--cream-2:#FFF9EC;--coral:#EE7B62;--coral-2:#D8503C;--mustard:#F6C445;--sage:#7FB3A4;--sage-2:#4F8A79;
+  --rust:#B4552B;--brown:#4B2A18;--muted:#7A5A45;--sh:rgba(75,42,24,.22)}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Nunito',system-ui,sans-serif;background:var(--cream);color:var(--brown);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 80px}
+h1{font-family:'Rubik Bubbles',system-ui,sans-serif;font-weight:400;color:var(--coral-2);font-size:clamp(30px,5vw,44px);line-height:1.1;margin:10px 0 6px}
+h2{font-family:'Rubik Bubbles',system-ui,sans-serif;font-weight:400;color:var(--coral-2);font-size:27px;margin:44px 0 10px;line-height:1.15}
+h3{font-size:19px;margin:22px 0 4px}
+p{margin:0 0 12px}
+a{color:var(--rust);font-weight:800}
+.lead{font-size:19px}
+.card{background:var(--cream-2);border:3px solid var(--brown);border-radius:20px;padding:18px 22px;box-shadow:5px 6px 0 var(--sh);margin:16px 0}
+.quick{background:#FFF3C7}
+.safe{background:#E3F1EC;border-color:var(--sage-2)}
+.quick ol,.card ol{margin:6px 0 0;padding-left:24px}
+.quick li,.card li{margin:6px 0}
+.toc{columns:2;column-gap:28px;padding-left:22px;margin:6px 0 0}
+.toc li{margin:4px 0;break-inside:avoid}
+@media(max-width:600px){.toc{columns:1}}
+figure{margin:14px 0 22px}
+figure img{width:100%;height:auto;border:3px solid var(--brown);border-radius:14px;box-shadow:5px 6px 0 var(--sh);display:block}
+figure.phone{max-width:300px}
+figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+.duo{display:flex;gap:20px;flex-wrap:wrap}
+.duo figure{flex:1;min-width:220px;max-width:300px}
+.k{display:inline-block;border:2px solid var(--brown);border-radius:999px;padding:0 10px;font-weight:900;background:var(--cream-2);white-space:nowrap;font-size:15px}
+.k.red{background:var(--coral);color:#fff}
+.k.y{background:var(--mustard)}
+table{border-collapse:collapse;width:100%;margin:8px 0 16px;font-size:16px}
+td,th{border:2px solid #E6CFAE;padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#F7E3C6}
+.faq h3{color:var(--rust)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;border:3px solid var(--brown);border-radius:999px;padding:8px 18px;background:var(--coral);color:#fff;text-decoration:none;font-weight:900;box-shadow:3px 4px 0 var(--sh)}
+@media print{
+  body{background:#fff;font-size:12pt} .wrap{max-width:none;padding:0}
+  .card{box-shadow:none;break-inside:avoid} figure{break-inside:avoid} figure img{box-shadow:none}
+  .noprint{display:none} h2{break-after:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top noprint">
+    <a class="btn" href="./">← Naar het beheer</a>
+    <a href="#" onclick="window.print();return false">🖨️ Afdrukken</a>
+  </div>
+
+  <h1>Handleiding<br>Beheer Festival op Wielen</h1>
+  <p class="lead">Met het beheer pas je zelf de teksten en foto's van de website aan, zonder dat je iets van websites hoeft te weten. Deze handleiding legt alles stap voor stap uit.</p>
+
+  <div class="card quick">
+    <b>⏱️ In één minuut:</b>
+    <ol>
+      <li>Ga naar <a href="./">het beheer</a> en klik op <span class="k red">Inloggen met Google</span>.</li>
+      <li>Klik op een onderdeel, bijvoorbeeld <b>Line-up</b>, en pas de tekst aan.</li>
+      <li>Kijk in het <b>voorbeeld</b> of het er goed uitziet.</li>
+      <li>Klik bovenaan op <span class="k red">🚀 Publiceren</span>. Na 1 à 2 minuten staat het online.</li>
+    </ol>
+  </div>
+
+  <div class="card safe">
+    <b>✅ Je kunt niets kapotmaken.</b> Zolang je niet op <b>Publiceren</b> klikt, verandert er niets aan de echte website. En de opmaak (kleuren, lettertypes, de draaiende krans) staat vast: jij past alleen de inhoud aan.
+  </div>
+
+  <b>Inhoud</b>
+  <ol class="toc">
+    <li><a href="#inloggen">Inloggen</a></li>
+    <li><a href="#scherm">Het scherm</a></li>
+    <li><a href="#tekst">Tekst aanpassen</a></li>
+    <li><a href="#waar">Waar staat dit?</a></li>
+    <li><a href="#fotos">Foto's vervangen</a></li>
+    <li><a href="#lijsten">Toevoegen, verschuiven, verwijderen</a></li>
+    <li><a href="#knoppen">Knoppen en links</a></li>
+    <li><a href="#publiceren">Publiceren</a></li>
+    <li><a href="#foutje">Foutje gemaakt?</a></li>
+    <li><a href="#telefoon">Werken op je telefoon</a></li>
+    <li><a href="#onderdelen">Alle onderdelen op een rij</a></li>
+    <li><a href="#faq">Vragen</a></li>
+  </ol>
+
+  <h2 id="inloggen">1. Inloggen</h2>
+  <p>Ga naar het beheer. Bewaar dit adres als bladwijzer:</p>
+  <p class="card" style="font-weight:900;font-size:18px;word-break:break-all">https://explosionrockets.com/concept/fow/beheer/</p>
+  <p>Klik op <span class="k red">Inloggen met Google</span> en kies je Google-account (je Gmail). Daarna kom je vanzelf terug in het beheer.</p>
+  <figure><img src="img/01-inloggen.jpg" alt="Het inlogscherm met de knop Inloggen met Google" loading="lazy" width="1200" height="724"><figcaption>Het inlogscherm.</figcaption></figure>
+  <p><b>Lukt het niet?</b> Alleen e-mailadressen die op de lijst staan komen binnen. Zie je de melding <i>"Dit Google-account heeft (nog) geen toegang"</i>, log dan in met het e-mailadres dat je aan Teun hebt doorgegeven, of vraag hem je toe te voegen.</p>
+  <p>Je blijft 30 dagen ingelogd op hetzelfde apparaat. Uitloggen doe je rechtsboven met <b>Uitloggen</b>.</p>
+
+  <h2 id="scherm">2. Het scherm</h2>
+  <figure><img src="img/02-overzicht.jpg" alt="Het beheer: links de onderdelen, rechts het voorbeeld van de website" loading="lazy" width="1200" height="724"><figcaption>Links pas je dingen aan, rechts zie je meteen het voorbeeld.</figcaption></figure>
+  <table>
+    <tr><th>Waar</th><th>Wat het is</th></tr>
+    <tr><td><b>Links</b></td><td>Alle onderdelen van de website, van boven naar beneden genummerd. Klik op een onderdeel om het open te klappen.</td></tr>
+    <tr><td><b>Rechts</b></td><td>Het <b>voorbeeld</b>: zo komt de website eruit te zien. Alleen jij ziet dit; het is nog niet live. Met <span class="k">💻 Computer</span> en <span class="k">📱 Telefoon</span> kies je hoe groot het scherm is.</td></tr>
+    <tr><td><b>Bovenaan</b></td><td>Het bolletje laat zien of er <b>wijzigingen nog niet gepubliceerd</b> zijn (geel) of dat <b>alles gepubliceerd</b> is (groen). Daarnaast de knoppen <span class="k">↺ Wijzigingen weggooien</span> en <span class="k red">🚀 Publiceren</span>.</td></tr>
+  </table>
+
+  <h2 id="tekst">3. Tekst aanpassen</h2>
+  <p>Klap een onderdeel open en klik in een vakje. Typ je nieuwe tekst. In het voorbeeld zie je het meteen veranderen.</p>
+  <figure><img src="img/03-tekst.jpg" alt="Een tekstveld met uitleg, en het voorbeeld dat de gewijzigde titel laat oplichten" loading="lazy" width="1200" height="724"><figcaption>Bij elk vakje staat in het klein wat het is. Een aangepast vakje krijgt het labeltje <span class="k red" style="font-size:12px">gewijzigd</span>.</figcaption></figure>
+  <ul>
+    <li><b>Kopje</b> is het kleine regeltje bóven een grote titel. <b>Titel</b> is de grote, bewegende kop.</li>
+    <li>Onder een vakje staat hoeveel tekens je ongeveer kwijt kunt, bijvoorbeeld <i>"23 / ±40 tekens"</i>. Wordt het oranje, dan is de tekst misschien te lang voor de pagina. Het mag wel, maar kijk dan even in het voorbeeld.</li>
+    <li>In grote tekstvakken begin je een <b>nieuwe alinea door een lege regel</b> te laten (twee keer Enter).</li>
+    <li>Bij de ronde stickers betekent <b>Enter</b> een nieuwe regel op de sticker.</li>
+  </ul>
+
+  <h2 id="waar">4. Waar staat dit?</h2>
+  <p>Weet je niet waar een tekst op de website staat? Klik op <span class="k" style="background:#FFDDBB">👁 Waar staat dit?</span>. Het voorbeeld springt erheen en dat stukje knippert even met een gestreepte rand.</p>
+  <p>Als je in een vakje klikt, springt het voorbeeld er ook vanzelf naartoe.</p>
+  <p><i>Let op:</i> de twee draaiende stickers zie je alleen op een groter scherm. Kies dan <span class="k">💻 Computer</span> in het voorbeeld.</p>
+
+  <h2 id="fotos">5. Foto's vervangen</h2>
+  <p>Klik bij een foto op <span class="k y">📷 Andere foto kiezen</span> en kies een foto van je computer of telefoon.</p>
+  <figure><img src="img/04-foto.jpg" alt="Een fotoveld met een nieuwe foto en een gele waarschuwing" loading="lazy" width="1200" height="724"><figcaption>Is een foto erg klein of staand, dan krijg je een gele tip. Je mag hem toch gebruiken.</figcaption></figure>
+  <ul>
+    <li><b>Liggende foto's</b> werken het best. Staande foto's worden in een liggend kader gezet, dus de boven- en onderkant vallen weg.</li>
+    <li>Gebruik een foto van minstens zo'n <b>1200 pixels breed</b>. Foto's van een moderne telefoon zijn altijd groot genoeg.</li>
+    <li>Je hoeft foto's niet zelf kleiner te maken: het beheer doet dat automatisch, zodat de website snel blijft.</li>
+    <li>Vul ook de <b>korte beschrijving</b> in, bijvoorbeeld <i>"Publiek danst bij het podium"</i>. Die wordt voorgelezen aan blinde bezoekers en helpt Google.</li>
+    <li>Voor het <b>logo</b> gebruik je het liefst een <b>PNG met doorzichtige achtergrond</b>, anders staat er een wit vlak achter.</li>
+    <li>De bewegende achtergrondvideo kun je niet zelf vervangen. Wil je die anders? Vraag het Teun.</li>
+  </ul>
+
+  <h2 id="lijsten">6. Toevoegen, verschuiven, verwijderen</h2>
+  <p>Sommige onderdelen zijn lijstjes: de <b>bands in de line-up</b>, de <b>kaartjes</b> bij "Te doen", de <b>info-vakjes</b>, de <b>woorden</b> bovenaan en de <b>links</b> onderaan.</p>
+  <figure><img src="img/05-lijst.jpg" alt="De line-up met knoppen om acts te verschuiven en te verwijderen" loading="lazy" width="1200" height="724"><figcaption>Elke act heeft zijn eigen vakjes en knoppen.</figcaption></figure>
+  <table>
+    <tr><th>Knop</th><th>Wat hij doet</th></tr>
+    <tr><td><span class="k">＋ Nog een … toevoegen</span></td><td>Voegt er onderaan eentje bij. Vul daarna de vakjes in.</td></tr>
+    <tr><td><span class="k">↑</span> <span class="k">↓</span></td><td>Schuift iets omhoog of omlaag, bijvoorbeeld om de line-up op tijd te zetten.</td></tr>
+    <tr><td><span class="k">🗑</span></td><td>Haalt iets weg (je krijgt eerst de vraag of je het zeker weet). Per ongeluk? Klik direct op <span class="k y">Ongedaan maken</span> in de melding onderin.</td></tr>
+    <tr><td><span class="k" style="background:#FFDDBB">👁</span></td><td>Laat zien waar dit ene item op de pagina staat.</td></tr>
+  </table>
+  <p>Bij de <b>kaartjes</b> kies je ook een plaatje (emoji) en de <b>kleur van het labeltje</b> (geel, koraal, groen of crème). Op de computer staan de kaartjes met <b>3 naast elkaar</b>, dus 3, 6 of 9 kaartjes ziet er het netst uit.</p>
+
+  <h2 id="knoppen">7. Knoppen en links</h2>
+  <p>Bij een knop vul je twee dingen in: de <b>tekst op de knop</b> en <b>waar de knop naartoe gaat</b>. Kies in het lijstje een blok op de pagina (bijvoorbeeld <i>"Naar de line-up"</i>) of kies <i>"Naar een andere website of e-mailadres…"</i>.</p>
+  <ul>
+    <li>Een webadres moet beginnen met <b>https://</b>. Tip: open de pagina in je browser en kopieer het adres uit de adresbalk.</li>
+    <li>Een e-mailadres mag je gewoon intypen, bijvoorbeeld <i>naam@gmail.com</i>.</li>
+    <li>Wil je een knop helemaal niet tonen? <b>Maak de tekst leeg.</b></li>
+  </ul>
+
+  <h2 id="publiceren">8. Publiceren</h2>
+  <p>Tevreden? Klik bovenaan op <span class="k red">🚀 Publiceren</span>. Je krijgt eerst een overzicht van wat er verandert.</p>
+  <div class="duo">
+    <figure><img src="img/06-publiceren.jpg" alt="Het venster Klaar om te publiceren met een lijst van gewijzigde onderdelen" loading="lazy" width="1200" height="724"><figcaption>Controleer het lijstje en klik op <b>Ja, publiceren</b>.</figcaption></figure>
+    <figure><img src="img/07-gelukt.jpg" alt="Het venster Gepubliceerd" loading="lazy" width="1200" height="724"><figcaption>Gelukt! Na 1 à 2 minuten verschijnt <b>✅ Staat online</b>.</figcaption></figure>
+  </div>
+  <ul>
+    <li>Het duurt <b>1 à 2 minuten</b> voordat de wijziging op de website staat. Het beheer laat je weten wanneer het zover is.</li>
+    <li>Had je de website al open? <b>Ververs de pagina</b> dan even.</li>
+    <li>Is iets vergeten of leeg (bijvoorbeeld een lege titel), dan zegt het beheer dat eerst. Klik op <b>Ga erheen</b> om het meteen te verbeteren.</li>
+    <li>Ging er iets mis? Dan zijn je wijzigingen <b>niet verloren</b>. Probeer het over een minuutje opnieuw.</li>
+  </ul>
+
+  <h2 id="foutje">9. Foutje gemaakt?</h2>
+  <table>
+    <tr><th>Wat wil je?</th><th>Zo doe je dat</th></tr>
+    <tr><td>Eén vakje terugzetten naar wat online staat</td><td>Klik bij dat vakje op <b>↺ herstel</b>.</td></tr>
+    <tr><td>Alles terugzetten naar wat online staat</td><td>Klik bovenaan op <span class="k">↺ Wijzigingen weggooien</span>.</td></tr>
+    <tr><td>Iets per ongeluk verwijderd</td><td>Klik meteen op <span class="k y">Ongedaan maken</span> in de melding onderin.</td></tr>
+    <tr><td>Iets verkeerds gepubliceerd</td><td>Geen paniek: pas het aan en publiceer opnieuw.</td></tr>
+  </table>
+  <p><b>Je werk wordt tussendoor automatisch bewaard</b>, op <b>dit apparaat</b>. Sluit je per ongeluk het venster, dan vraagt het beheer de volgende keer of je verder wilt werken. Maar: begin je op je laptop, dan zie je die wijzigingen niet op je telefoon. Publiceer dus op het apparaat waar je bent begonnen.</p>
+
+  <h2 id="telefoon">10. Werken op je telefoon</h2>
+  <p>Het beheer werkt ook op een telefoon. Onderin wissel je tussen <span class="k">✏️ Bewerken</span> en <span class="k">👀 Voorbeeld</span>. Een klik op 👁 brengt je direct naar het voorbeeld.</p>
+  <div class="duo">
+    <figure class="phone"><img src="img/08-telefoon.jpg" alt="Het beheer op een telefoon: een kaartje met emoji's om uit te kiezen" loading="lazy" width="560" height="1120"><figcaption>Bewerken op de telefoon.</figcaption></figure>
+    <figure class="phone"><img src="img/09-telefoon-voorbeeld.jpg" alt="Het voorbeeld van de website op een telefoon" loading="lazy" width="560" height="1120"><figcaption>Het voorbeeld op de telefoon.</figcaption></figure>
+  </div>
+  <p>Foto's kiezen gaat op de telefoon vaak zelfs makkelijker: je kiest ze zo uit je fotorol.</p>
+
+  <h2 id="onderdelen">11. Alle onderdelen op een rij</h2>
+  <table>
+    <tr><th>#</th><th>Onderdeel</th><th>Wat staat erin</th></tr>
+    <tr><td>1</td><td>Bovenaan: het openingsbeeld</td><td>Logo, de rollende woorden, ondertitel, info-bolletjes (datum, tijd…), twee knoppen en de gele sticker.</td></tr>
+    <tr><td>2</td><td>De rollende tekstbalken</td><td>De woorden in de twee lichtkranten.</td></tr>
+    <tr><td>3</td><td>Blok "Over het festival"</td><td>Introductietekst en een foto.</td></tr>
+    <tr><td>4</td><td>Brede sfeerfoto</td><td>De foto over de hele breedte.</td></tr>
+    <tr><td>5</td><td>Te doen</td><td>De kaartjes met wat er te beleven is.</td></tr>
+    <tr><td>6</td><td>Blok "Oldtimers"</td><td>Tekst, knop en foto.</td></tr>
+    <tr><td>7</td><td>Line-up</td><td>Labeltjes, het tijdschema met de acts, kleine tekst en foto.</td></tr>
+    <tr><td>8</td><td>Blok "Eten & drinken"</td><td>Tekst en foto.</td></tr>
+    <tr><td>9</td><td>Praktische info</td><td>De vakjes met datum, tijd, locatie en entree, plus de ronde sticker.</td></tr>
+    <tr><td>10</td><td>Oproep "Meedoen"</td><td>Titel, tekst en twee knoppen.</td></tr>
+    <tr><td>11</td><td>Onderaan: contactgegevens</td><td>Omschrijving, adres, organisatie, e-mail, telefoon en links (Facebook enz.).</td></tr>
+    <tr><td>12</td><td>Algemeen</td><td>De naam van het festival, de tekst van de menuknoppen, en de titel en beschrijving voor Google.</td></tr>
+  </table>
+  <p><b>Wat je niet zelf aanpast:</b> de vormgeving (kleuren, lettertypes, animaties), de achtergrondvideo, en zolang dit een conceptpagina is ook de toegangscode, de balk "Conceptpresentatie" en de kleine lettertjes onderaan. Wil je daar iets aan veranderen? Vraag het Teun.</p>
+
+  <h2 id="faq">12. Vragen</h2>
+  <div class="faq">
+    <h3>Ik heb gepubliceerd, maar zie mijn wijziging niet.</h3>
+    <p>Wacht 1 à 2 minuten en <b>ververs de pagina</b>. Op een telefoon helpt het soms om het tabblad te sluiten en de website opnieuw te openen.</p>
+    <h3>Mijn foto wordt niet geaccepteerd.</h3>
+    <p>Foto's van een iPhone (<i>HEIC</i>) lukken soms niet op een computer. Kies dan de foto vanaf je telefoon zelf, of sla hem eerst op als JPG.</p>
+    <h3>Kunnen twee mensen tegelijk werken?</h3>
+    <p>Liever niet. Wie het laatst publiceert, "wint": die versie komt online. Spreek dus af wie wanneer aanpassingen doet. Heeft iemand anders tussendoor gepubliceerd, dan waarschuwt het beheer je.</p>
+    <h3>Kan ik de pagina-indeling of kleuren veranderen?</h3>
+    <p>Nee, dat staat vast, zodat het er altijd goed uitziet. Je kunt wel onderdelen langer of korter maken en items toevoegen of weghalen. Voor andere wensen: vraag het Teun.</p>
+    <h3>Ik ben bang dat ik iets kapotmaak.</h3>
+    <p>Dat kan niet. Zolang je niet publiceert, ziet niemand je wijzigingen. En ook na het publiceren kun je alles weer terugzetten en opnieuw publiceren.</p>
+  </div>
+
+  <p class="noprint" style="margin-top:40px"><a class="btn" href="./">← Naar het beheer</a></p>
+</div>
+</body>
+</html>

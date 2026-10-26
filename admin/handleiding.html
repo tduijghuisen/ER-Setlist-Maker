@@ -236,6 +236,7 @@
         <tr><td><code>GITHUB_TOKEN</code></td><td>De ene sleutel waarmee de Worker namens de band in de repo mag schrijven (fijnmazig token, alleen "Contents: lezen &amp; schrijven").</td></tr>
         <tr><td><code>SESSION_SECRET</code></td><td>Willekeurige geheime code waarmee de "toegangsbewijzen" van bandleden worden ondertekend.</td></tr>
         <tr><td><code>ALLOWED_EMAILS</code></td><td>De lijst met toegelaten e-mailadressen van bandleden (met komma's gescheiden).</td></tr>
+        <tr><td><code>FOW_EMAILS</code></td><td>(Optioneel) E-mailadressen van wie de <b>Festival op Wielen</b>-pagina beheert (bv. Vanessa). Die mogen alléén de festivalteksten en -foto's aanpassen, nergens anders bij.</td></tr>
       </tbody>
     </table>
     <div class="callout warn"><b>Nooit doen:</b> deze sleutels in de code of in een bestand in de repo zetten.
@@ -252,6 +253,8 @@
       <li>Bewerk <code>ALLOWED_EMAILS</code>: voeg het Google-e-mailadres toe (of verwijder het), met komma's ertussen.</li>
       <li>Opslaan. Het bandlid kan daarna inloggen met "Inloggen met Google".</li>
     </ol>
+    <p>Voor het beheer van de <b>Festival op Wielen</b>-pagina (<code>/concept/fow/beheer/</code>) werkt het hetzelfde,
+      maar dan met <code>FOW_EMAILS</code>. Iemand op die lijst kan alleen de festivalpagina aanpassen.</p>
 
     <h3>"Inloggen mislukt" of iedereen kan er niet in</h3>
     <ul>

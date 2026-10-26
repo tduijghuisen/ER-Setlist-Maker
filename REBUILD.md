@@ -120,6 +120,8 @@ cd worker && npx wrangler deploy
 | `GITHUB_TOKEN` | fine-grained PAT, repo `ER-Setlist-Maker`, **Contents: Read and write** |
 | `SESSION_SECRET` | random 32-byte hex (`openssl rand -hex 32`) |
 | `ALLOWED_EMAILS` | comma-separated allowed Google e-mails |
+| `FOW_EMAILS` | *(optional)* Festival op Wielen editors — may only edit `concept/fow/content.json` + add photos |
+| `EXTRA_ORIGINS` | *(optional)* extra site origins (e.g. a future own festival domain) |
 
 The **workers.dev subdomain** must be registered once for the account (this was done via
 the Cloudflare API: `PUT /accounts/<id>/workers/subdomain {"subdomain":"explosionrockets"}`),
@@ -206,6 +208,7 @@ Confirm any referenced `assets/…` paths exist.
 ## 10. Common recovery tasks
 
 - **Add/remove a band member:** edit `ALLOWED_EMAILS` in the Cloudflare Worker secrets.
+- **Add/remove a Festival op Wielen editor:** edit `FOW_EMAILS` (same place).
 - **GitHub token expired (401s in the CMS):** create a new fine-grained PAT (Contents:
   R/W) and overwrite the `GITHUB_TOKEN` Worker secret.
 - **Login broken:** verify the Google redirect URI matches exactly, check secret *names*,

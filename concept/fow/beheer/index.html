@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Beheer — Festival op Wielen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Bubbles&family=Anton&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FDF2DF; --cream-2:#FFF9EC; --peach:#FFDDBB;
+  --orange:#EF8A2E; --coral:#EE7B62; --coral-2:#D8503C;
+  --mustard:#F6C445; --sage:#7FB3A4; --sage-2:#4F8A79;
+  --rust:#B4552B; --brown:#4B2A18; --brown-2:#33200F; --muted:#7A5A45;
+  --line:#E6CFAE; --sh:rgba(75,42,24,.22);
+  --f-disp:'Rubik Bubbles',system-ui,sans-serif;
+  --f-post:'Anton',Impact,sans-serif;
+  --f-body:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--f-body);color:var(--brown);background:var(--cream);font-size:16px;line-height:1.5}
+button,input,textarea,select{font:inherit;color:inherit}
+a{color:var(--rust)}
+[hidden]{display:none !important}
+.hidden{display:none !important}
+
+/* ---------- knoppen ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:3px solid var(--brown);
+  background:var(--cream-2);border-radius:999px;padding:9px 18px;font-weight:900;cursor:pointer;
+  box-shadow:3px 4px 0 var(--sh);transition:transform .1s,box-shadow .1s,background .15s;text-decoration:none;white-space:nowrap}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 5px 0 var(--sh)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--sh)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:3px 4px 0 var(--sh)}
+.btn.primary{background:var(--coral);color:#fff}
+.btn.primary:hover:not(:disabled){background:var(--coral-2)}
+.btn.yellow{background:var(--mustard)}
+.btn.small{padding:5px 12px;font-size:14px;border-width:2px;box-shadow:2px 3px 0 var(--sh)}
+.btn.ghost{background:transparent;box-shadow:none;border-color:transparent;text-decoration:underline;padding:5px 8px}
+.btn.ghost:hover{transform:none;box-shadow:none;background:rgba(75,42,24,.07)}
+.iconbtn{border:2px solid var(--brown);background:var(--cream-2);border-radius:10px;width:36px;height:36px;
+  display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex:none}
+.iconbtn:hover{background:var(--peach)}
+.iconbtn:disabled{opacity:.3;cursor:not-allowed}
+.iconbtn.danger:hover{background:#FBD3CB}
+
+/* ---------- inlogscherm ---------- */
+#login{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(120% 90% at 50% 0%,#FFE9CE 0%,var(--cream) 60%,#F7E3C6 100%)}
+.logincard{background:var(--cream-2);border:4px solid var(--brown);border-radius:24px;box-shadow:8px 10px 0 var(--sh);
+  max-width:480px;width:100%;padding:34px 30px;text-align:center}
+.logincard img{width:min(260px,70%);margin:0 auto 6px;display:block}
+.logincard h1{font-family:var(--f-disp);font-weight:400;font-size:30px;margin:6px 0 10px;color:var(--coral-2)}
+.logincard p{margin:0 0 18px}
+.gbtn{width:100%;font-size:18px;padding:13px 18px}
+.gbtn svg{width:22px;height:22px;flex:none}
+.err{background:#FBE0D9;border:2px solid var(--coral-2);border-radius:14px;padding:12px 14px;margin:0 0 16px;text-align:left;font-weight:700}
+.fine{font-size:14px;color:var(--muted)}
+
+/* ---------- app-indeling ---------- */
+#app{display:flex;flex-direction:column;height:100%}
+.topbar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--brown);color:var(--cream);
+  border-bottom:4px solid var(--coral);flex-wrap:wrap;position:relative;z-index:5}
+.brand{font-family:var(--f-disp);font-size:22px;color:var(--mustard);line-height:1;white-space:nowrap}
+.brand small{display:block;font-family:var(--f-body);font-weight:800;font-size:12px;color:var(--peach);letter-spacing:.06em;text-transform:uppercase;margin-top:3px}
+.status{display:flex;align-items:center;gap:8px;background:rgba(255,249,236,.1);border-radius:999px;padding:6px 12px;font-weight:800;font-size:14px}
+.status .dot{width:11px;height:11px;border-radius:50%;background:#7FD3A0;flex:none}
+.status.dirty .dot{background:var(--mustard);box-shadow:0 0 0 4px rgba(246,196,69,.25)}
+.spacer{flex:1}
+.topbar .btn{border-color:var(--cream-2);color:var(--brown)}
+.topbar .btn.primary{color:#fff}
+.topbar .btn.ghost{color:var(--cream);border-color:transparent}
+.who{font-size:13px;color:var(--peach);text-align:right;line-height:1.25}
+.who a{color:var(--mustard)}
+.testmode{background:var(--mustard);color:var(--brown);font-weight:900;text-align:center;padding:5px;font-size:14px}
+
+.main{flex:1;display:grid;grid-template-columns:minmax(380px,520px) minmax(0,1fr);min-height:0}
+.edpane,.pvpane{min-width:0}
+.edpane{overflow-y:auto;padding:18px 18px 120px;background:var(--cream);border-right:3px solid var(--brown)}
+.pvpane{display:flex;flex-direction:column;min-height:0;background:#E9D5B8}
+.pvbar{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#F3E2C8;border-bottom:2px solid var(--line);flex-wrap:wrap}
+.pvbar b{font-size:14px}
+.seg{display:inline-flex;border:2px solid var(--brown);border-radius:999px;overflow:hidden}
+.seg button{border:0;background:var(--cream-2);padding:5px 12px;font-weight:800;cursor:pointer;font-size:14px}
+.seg button.on{background:var(--brown);color:var(--cream)}
+.pvnote{font-size:13px;color:var(--muted)}
+.pvwrap{flex:1;position:relative;overflow:hidden;display:flex;justify-content:center;align-items:flex-start;padding:14px}
+.pvframe{flex:none;background:#fff;border:3px solid var(--brown);border-radius:12px;overflow:hidden;box-shadow:6px 8px 0 var(--sh);transform-origin:top left;position:relative}
+.pvframe.phone{border-width:10px;border-radius:34px}
+.pvframe iframe{border:0;display:block;width:100%;height:100%}
+.pvlabel{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:var(--brown);color:var(--cream);
+  font-weight:800;font-size:12px;border-radius:999px;padding:3px 12px;z-index:2;pointer-events:none;opacity:.9}
+
+/* tabbladen op telefoon */
+.mtabs{display:none}
+@media(max-width:900px){
+  .main{grid-template-columns:minmax(0,1fr)}
+  .edpane{border-right:0;padding-bottom:110px}
+  .pvpane{display:none}
+  body.show-preview .edpane{display:none}
+  body.show-preview .pvpane{display:flex}
+  .mtabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--brown);padding:8px;gap:8px;
+    border-top:4px solid var(--coral)}
+  .mtabs button{flex:1;border:2px solid var(--cream);background:transparent;color:var(--cream);border-radius:14px;padding:11px;font-weight:900;font-size:16px}
+  .mtabs button.on{background:var(--cream);color:var(--brown)}
+  .topbar{padding:8px 10px;gap:8px}
+  .brand{font-size:18px}
+  .who{display:none}
+  .topbar .hide-m{display:none}
+}
+
+/* ---------- welkom ---------- */
+.welcome{background:var(--cream-2);border:3px solid var(--brown);border-radius:20px;padding:18px 20px;margin-bottom:18px;box-shadow:5px 6px 0 var(--sh)}
+.welcome h2{font-family:var(--f-disp);font-weight:400;color:var(--coral-2);font-size:24px;margin:0 0 8px}
+.welcome ol{margin:6px 0 12px;padding-left:22px}
+.welcome li{margin:5px 0}
+.safe{background:#E3F1EC;border:2px solid var(--sage-2);border-radius:14px;padding:10px 12px;font-weight:700;font-size:15px;margin:10px 0}
+.banner{border:3px solid var(--brown);border-radius:16px;padding:14px 16px;margin-bottom:16px;background:#FFF3C7;font-weight:700}
+.banner .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+/* ---------- secties ---------- */
+.sec{background:var(--cream-2);border:3px solid var(--brown);border-radius:18px;margin-bottom:14px;box-shadow:4px 5px 0 var(--sh);overflow:hidden}
+.sechead{display:flex;align-items:center;gap:12px;width:100%;border:0;background:transparent;text-align:left;padding:14px 16px;cursor:pointer}
+.sechead:hover{background:rgba(246,196,69,.15)}
+.secnum{flex:none;width:34px;height:34px;border-radius:50%;background:var(--mustard);border:2px solid var(--brown);
+  display:flex;align-items:center;justify-content:center;font-weight:900}
+.sectitle{flex:1;min-width:0}
+.sectitle b{display:block;font-size:17px;line-height:1.25}
+.sectitle span{display:block;font-size:14px;color:var(--muted);line-height:1.35;margin-top:2px}
+.chev{flex:none;font-size:20px;transition:transform .2s}
+.sec.open .chev{transform:rotate(90deg)}
+.changes{flex:none;background:var(--coral);color:#fff;border-radius:999px;font-size:12px;font-weight:900;padding:2px 9px}
+.secbody{display:none;padding:4px 16px 18px;border-top:2px dashed var(--line)}
+.sec.open .secbody{display:block}
+.secwhere{display:flex;justify-content:flex-end;margin:6px 0 2px}
+
+/* ---------- velden ---------- */
+.field{margin:16px 0 0;padding:0}
+.flabel{display:flex;align-items:center;gap:8px;font-weight:900;font-size:16px;margin-bottom:3px}
+.flabel .grow{flex:1}
+.fhelp{font-size:14px;color:var(--muted);margin:0 0 7px;line-height:1.45}
+.fhelp b{color:var(--brown)}
+.changed-dot{display:none;font-size:12px;font-weight:900;color:#fff;background:var(--coral);border-radius:999px;padding:1px 8px}
+.field.changed > .flabel .changed-dot{display:inline-block}
+.reset{display:none;font-size:13px;font-weight:800;background:none;border:0;color:var(--rust);text-decoration:underline;cursor:pointer;padding:0}
+.field.changed > .flabel .reset{display:inline}
+input[type=text],input[type=email],input[type=tel],input[type=url],textarea,select{
+  width:100%;border:2px solid var(--brown);border-radius:12px;background:#fff;padding:10px 12px;font-size:16px;line-height:1.45}
+textarea{resize:vertical;min-height:88px}
+input:focus,textarea:focus,select:focus{outline:3px solid var(--mustard);outline-offset:1px}
+.counter{font-size:12px;color:var(--muted);text-align:right;margin-top:3px}
+.counter.long{color:var(--coral-2);font-weight:800}
+.eye{border:2px solid var(--brown);background:var(--peach);border-radius:999px;font-size:13px;font-weight:800;padding:3px 10px;cursor:pointer;white-space:nowrap}
+.eye:hover{background:var(--mustard)}
+
+/* foto */
+.imgfield{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.thumb{width:180px;max-width:100%;aspect-ratio:4/3;border:3px solid var(--brown);border-radius:12px;overflow:hidden;background:
+  repeating-conic-gradient(#eee 0 25%,#fff 0 50%) 0 0/16px 16px;flex:none}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb.logo img{object-fit:contain}
+.imgside{flex:1;min-width:200px}
+.imgside .btn{margin-bottom:8px}
+.warn{background:#FFF3C7;border:2px solid var(--mustard);border-radius:10px;padding:8px 10px;font-size:14px;font-weight:700;margin-top:8px}
+.uploading{font-weight:800;color:var(--rust)}
+
+/* lijsten */
+.items{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.item{border:2px solid var(--brown);border-radius:14px;background:#fff;padding:10px 12px 12px}
+.itemhead{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.itemhead b{flex:1;font-size:15px}
+.item .field{margin-top:8px}
+.item .flabel{font-size:14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:110px 1fr;gap:10px}
+@media(max-width:480px){.row2,.row3{grid-template-columns:1fr}}
+.wordrow{display:flex;gap:6px;align-items:center}
+.wordrow input{flex:1}
+.addbtn{margin-top:10px}
+
+/* kleuren & emoji */
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{border:2px solid var(--brown);border-radius:999px;padding:4px 12px;font-weight:800;font-size:13px;cursor:pointer;text-transform:uppercase;font-family:var(--f-post);letter-spacing:.04em}
+.sw.on{outline:3px solid var(--brown);outline-offset:2px}
+.sw.geel{background:var(--mustard)} .sw.koraal{background:var(--coral);color:#fff} .sw.groen{background:var(--sage);color:#fff} .sw.creme{background:#FFF9EC}
+.emojis{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.emojis button{border:2px solid transparent;background:#FBEBD2;border-radius:10px;font-size:20px;width:38px;height:38px;cursor:pointer}
+.emojis button.on{border-color:var(--brown);background:var(--mustard)}
+.toggle{display:flex;align-items:center;gap:10px;font-weight:700;cursor:pointer}
+.toggle input{width:22px;height:22px;accent-color:var(--coral)}
+
+/* ---------- vensters & meldingen ---------- */
+.modal{position:fixed;inset:0;background:rgba(51,32,15,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.dialog{background:var(--cream-2);border:4px solid var(--brown);border-radius:22px;box-shadow:8px 10px 0 var(--sh);max-width:560px;width:100%;
+  max-height:90vh;overflow:auto;padding:24px}
+.dialog h2{font-family:var(--f-disp);font-weight:400;color:var(--coral-2);margin:0 0 10px;font-size:26px}
+.dialog ul{padding-left:20px}
+.dialog .row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}
+.dialog .big{font-size:52px;text-align:center;line-height:1;margin-bottom:6px}
+.progressline{height:10px;border:2px solid var(--brown);border-radius:99px;overflow:hidden;background:#fff;margin:14px 0 6px}
+.progressline i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mustard),var(--coral));transition:width .4s}
+#toasts{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:var(--brown);color:var(--cream);border-radius:14px;padding:11px 16px;font-weight:800;box-shadow:4px 5px 0 var(--sh);
+  display:flex;gap:12px;align-items:center;pointer-events:auto;max-width:92vw}
+.toast button{background:var(--mustard);color:var(--brown);border:0;border-radius:999px;padding:4px 12px;font-weight:900;cursor:pointer}
+@media(max-width:900px){#toasts{bottom:86px}}
+.helpgrid h3{margin:16px 0 4px;font-size:17px}
+.helpgrid p{margin:0 0 8px}
+.spin{display:inline-block;width:18px;height:18px;border:3px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.loading{display:flex;align-items:center;justify-content:center;gap:12px;height:100%;font-weight:800;font-size:18px}
+</style>
+</head>
+<body>
+
+<!-- ================= INLOGGEN ================= -->
+<div id="login" hidden>
+  <div class="logincard">
+    <img src="../img/logo-mark.png" alt="Festival op Wielen">
+    <h1>Beheer</h1>
+    <p>Hier pas je de teksten en foto's van de <b>Festival op Wielen</b>-website aan. Log in met je Google-account.</p>
+    <div class="err" id="loginErr" hidden></div>
+    <button class="btn primary gbtn" id="loginBtn" type="button">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+      Inloggen met Google
+    </button>
+    <p class="fine" style="margin-top:16px">Alleen e-mailadressen die op de lijst staan komen binnen.<br>
+      Lukt het niet? Neem contact op met Teun.</p>
+    <p class="fine"><a href="handleiding.html" target="_blank" rel="noopener">📖 Handleiding lezen</a></p>
+  </div>
+</div>
+
+<!-- ================= CMS ================= -->
+<div id="app" hidden>
+  <div class="testmode" id="testmode" hidden>🧪 TESTMODUS (alleen op deze computer) — publiceren wordt nagebootst, er gaat niets naar de echte website</div>
+  <header class="topbar">
+    <div class="brand">Festival op Wielen<small>Beheer van de website</small></div>
+    <div class="status" id="status"><span class="dot"></span><span id="statusText">Alles is gepubliceerd</span></div>
+    <div class="spacer"></div>
+    <button class="btn ghost small hide-m" id="helpBtn" type="button">❓ Hulp</button>
+    <button class="btn small" id="discardBtn" type="button" disabled>↺ <span class="hide-m">Wijzigingen</span> weggooien</button>
+    <button class="btn primary" id="publishBtn" type="button" disabled>🚀 Publiceren</button>
+    <div class="who hide-m"><span id="whoEmail"></span><br><a href="#" id="logoutBtn">Uitloggen</a></div>
+  </header>
+
+  <div class="main">
+    <section class="edpane" id="edpane" aria-label="Bewerken">
+      <div class="welcome" id="welcome">
+        <h2>Welkom! Zo werkt het</h2>
+        <ol>
+          <li><b>Klik hieronder op een onderdeel</b> van de website om het open te klappen.</li>
+          <li><b>Pas de tekst aan of kies een andere foto.</b> In het voorbeeld <span class="dsk">rechts</span><span class="mob">(knop "Voorbeeld" onderin)</span> zie je meteen hoe het eruitziet.</li>
+          <li>Weet je niet waar iets staat? Klik op <b>👁 Waar staat dit?</b> — het voorbeeld springt erheen en laat het oplichten.</li>
+          <li>Tevreden? Klik bovenaan op <b>🚀 Publiceren</b>. Na 1 à 2 minuten staat het op de echte website.</li>
+        </ol>
+        <div class="safe">✅ Je kunt niets kapotmaken. Zolang je niet op Publiceren klikt, verandert er niets aan de echte website. Je werk wordt tussendoor vanzelf bewaard op dit apparaat.</div>
+        <button class="btn small" type="button" id="welcomeClose">Begrepen, verbergen</button>
+        <a class="btn ghost small" href="handleiding.html" target="_blank" rel="noopener">📖 Volledige handleiding</a>
+      </div>
+      <div id="banners"></div>
+      <div id="sections"><div class="loading"><span class="spin"></span> Website-inhoud ophalen…</div></div>
+    </section>
+
+    <section class="pvpane" id="pvpane" aria-label="Voorbeeld">
+      <div class="pvbar">
+        <b>👀 Voorbeeld</b>
+        <div class="seg" role="group" aria-label="Schermgrootte">
+          <button type="button" data-dev="desktop" class="on">💻 Computer</button>
+          <button type="button" data-dev="phone">📱 Telefoon</button>
+        </div>
+        <span class="pvnote">Dit is nog niet live — alleen jij ziet dit.</span>
+      </div>
+      <div class="pvwrap" id="pvwrap">
+        <div class="pvframe" id="pvframe">
+          <span class="pvlabel" id="pvlabel">Voorbeeld · nog niet gepubliceerd</span>
+          <iframe id="pv" title="Voorbeeld van de website" src="about:blank"></iframe>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <nav class="mtabs" aria-label="Wisselen">
+    <button type="button" class="on" data-tab="edit">✏️ Bewerken</button>
+    <button type="button" data-tab="preview">👀 Voorbeeld</button>
+  </nav>
+</div>
+
+<div id="modal" class="modal" hidden><div class="dialog" id="dialog" role="dialog" aria-modal="true"></div></div>
+<div id="toasts" aria-live="polite"></div>
+<input type="file" id="filepick" accept="image/*" hidden>
+
+<script>
+(function(){
+'use strict';
+var WORKER='https://er-cms.explosionrockets.workers.dev';
+var CONTENT_PATH='concept/fow/content.json';
+var UPLOAD_DIR='concept/fow/img/u/';
+var LS_SESSION='fow_session', LS_DRAFT='fow_draft', LS_WELCOME='fow_welcome_hidden';
+var TEST=/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+
+/* ============ hulpjes ============ */
+function $(s,r){ return (r||document).querySelector(s); }
+function $$(s,r){ return [].slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function getP(o,path){ return String(path).split('.').reduce(function(a,k){ return a==null?undefined:a[k]; },o); }
+function setP(o,path,v){
+  var ks=String(path).split('.'), last=ks.pop(), t=o;
+  ks.forEach(function(k){ if(t[k]==null) t[k]={}; t=t[k]; });
+  t[last]=v;
+}
+function same(a,b){ return JSON.stringify(a)===JSON.stringify(b); }
+function stripMeta(c){ var x=clone(c); delete x._bijgewerkt; delete x._door; return x; }
+function fmtDate(iso){
+  if(!iso) return '';
+  var d=new Date(iso); if(isNaN(d)) return '';
+  return d.toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'})+' om '+d.toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});
+}
+function toast(msg,actionLabel,action,ms){
+  var t=document.createElement('div'); t.className='toast';
+  t.appendChild(document.createTextNode(msg));
+  if(actionLabel){ var b=document.createElement('button'); b.type='button'; b.textContent=actionLabel;
+    b.onclick=function(){ action(); t.remove(); }; t.appendChild(b); }
+  $('#toasts').appendChild(t);
+  setTimeout(function(){ t.remove(); }, ms||5000);
+}
+function modal(html){ $('#dialog').innerHTML=html; $('#modal').hidden=false; var f=$('#dialog button'); if(f) f.focus(); }
+function closeModal(){ $('#modal').hidden=true; $('#dialog').innerHTML=''; }
+$('#modal').addEventListener('click',function(e){ if(e.target.id==='modal' && !$('#dialog').dataset.lock) closeModal(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !$('#modal').hidden && !$('#dialog').dataset.lock) closeModal(); });
+
+/* ============ opslag voor nog niet gepubliceerde foto's (IndexedDB) ============ */
+var IDB={db:null,mem:{},
+  open:function(){ var self=this; return new Promise(function(res){
+    try{ var r=indexedDB.open('fow-beheer',1);
+      r.onupgradeneeded=function(){ r.result.createObjectStore('img'); };
+      r.onsuccess=function(){ self.db=r.result; res(self.db); };
+      r.onerror=function(){ res(null); };
+    }catch(e){ res(null); } }); },
+  tx:function(mode,fn){ var self=this; return (self.db?Promise.resolve(self.db):self.open()).then(function(db){
+    if(!db) return fn(null);
+    return new Promise(function(res,rej){ var t=db.transaction('img',mode), st=t.objectStore('img'), out=fn(st);
+      t.oncomplete=function(){ res(out&&out.result!==undefined?out.result:out); }; t.onerror=function(){ rej(t.error); }; }); }); },
+  put:function(k,v){ var self=this; self.mem[k]=v; return self.tx('readwrite',function(st){ return st?st.put(v,k):null; }).catch(function(){}); },
+  get:function(k){ var self=this; if(self.mem[k]) return Promise.resolve(self.mem[k]);
+    return self.tx('readonly',function(st){ return st?st.get(k):null; }).then(function(v){ if(v) self.mem[k]=v; return v||null; }).catch(function(){ return null; }); },
+  clear:function(){ this.mem={}; return this.tx('readwrite',function(st){ return st?st.clear():null; }).catch(function(){}); }
+};
+var objUrls={};
+var justPublished={};   /* net gepubliceerde foto's: toon de eigen kopie tot de website is bijgewerkt */
+function pendingId(src){ var m=/^pending:([\w-]+)$/.exec(src||''); return m?m[1]:null; }
+function urlFor(src){
+  var id=pendingId(src);
+  if(id) return objUrls[id]||'';
+  if(justPublished[src]) return justPublished[src];
+  return '../'+src;               /* gepubliceerde foto's staan naast de website */
+}
+function loadPendingUrls(c){
+  var ids=[]; walkImgs(c,function(img){ var id=pendingId(img.src); if(id && !objUrls[id]) ids.push(id); });
+  return Promise.all(ids.map(function(id){ return IDB.get(id).then(function(rec){ if(rec&&rec.blob) objUrls[id]=URL.createObjectURL(rec.blob); }); }));
+}
+function walkImgs(o,fn){
+  if(!o||typeof o!=='object') return;
+  if(typeof o.src==='string' && 'alt' in o) fn(o);
+  Object.keys(o).forEach(function(k){ walkImgs(o[k],fn); });
+}
+
+/* ============ het schema: wat er op de pagina staat, met uitleg ============ */
+var LINKS=[
+  ['#over','Naar het blok "Over het festival"'],['#doen','Naar "Te doen"'],['#oldtimers','Naar "Oldtimers"'],
+  ['#lineup','Naar de line-up'],['#praktisch','Naar "Praktische info"'],['#meedoen','Naar de oproep "Meedoen"'],
+  ['#contact','Naar de contactgegevens onderaan'],['custom','Naar een andere website of e-mailadres…']];
+var COLORS=[['geel','Geel'],['koraal','Koraal'],['groen','Groen'],['creme','Crème']];
+var EMOJIS=['🎸','🎶','🎤','🥁','🚗','🏎️','🛵','🏍️','🚐','🚌','🌸','🌼','🍔','🌭','🍟','🍦','🍺','🍹','☕','💈','🧸','🎡','🎪','🎨','👗','💿','📸','🔥','☀️','⭐'];
+var KOPJE_HELP='Het kleine regeltje <b>boven</b> de grote titel.';
+var TITEL_HELP='De grote, bewegende titel van dit blok. Houd hem kort en krachtig.';
+
+var SECTIONS=[
+ {id:'hero', title:'Bovenaan: het openingsbeeld', desc:'Het eerste wat bezoekers zien: logo, rollende woorden, datum en knoppen.', where:'.hero', fields:[
+   {t:'image',p:'hero.logo',kind:'logo',label:'Logo',help:'Het grote logo midden bovenaan. Het beste is een <b>PNG met doorzichtige achtergrond</b>. De draaiende stralenkrans erachter blijft gewoon staan.',where:'.logolock'},
+   {t:'words',p:'hero.woorden',label:'Rollende woorden onder het logo',help:'Deze woorden "knallen" één voor één in beeld. Kies <b>korte woorden</b> (één of twee woorden per regel).',max:16,min:1,maxItems:8,itemName:'woord',where:'.stack'},
+   {t:'text',p:'hero.ondertitel',label:'Ondertitel',help:'Het zinnetje onder de rollende woorden.',max:70,where:'[data-c="hero.ondertitel"]'},
+   {t:'list',p:'hero.chips',label:'Info-bolletjes (datum, tijd, plaats…)',help:'De afgeronde labeltjes onder de ondertitel. Zet er <b>"Opvallend"</b> aan om er één koraalrood te maken.',itemName:'bolletje',min:0,maxItems:6,
+     newItem:{tekst:'Nieuw',opvallend:false},whereItem:'[data-cl="chips"] > :nth-child({n})',
+     fields:[{t:'text',k:'tekst',label:'Tekst',max:28},{t:'toggle',k:'opvallend',label:'Opvallend (koraalrood)'}]},
+   {t:'link',p:'hero.knop1',label:'Knop 1 (rood)',help:'De opvallende rode knop. Kies waar hij naartoe gaat.',max:30,where:'[data-ck="hero.knop1"]'},
+   {t:'link',p:'hero.knop2',label:'Knop 2 (wit)',help:'De tweede knop ernaast. Laat de tekst leeg om hem te verbergen.',max:30,where:'[data-ck="hero.knop2"]'},
+   {t:'lines',p:'hero.sticker',label:'Gele sticker rechtsboven',help:'De draaiende ster-sticker. <b>Enter = nieuwe regel.</b> Maximaal 3 korte regels. (Alleen zichtbaar op grotere schermen.)',max:30,where:'[data-cm="hero.sticker"]'}
+ ]},
+ {id:'tickers', title:'De rollende tekstbalken', desc:'De twee "lichtkranten" onder het openingsbeeld die blijven doorrollen.', where:'.ticker', fields:[
+   {t:'words',p:'tickers.boven',label:'Bovenste balk (bruin)',help:'Deze woorden rollen achter elkaar door. Er komt automatisch een ✿-bloemetje tussen.',max:28,min:1,maxItems:12,itemName:'woord',where:'.ticker'},
+   {t:'words',p:'tickers.onder',label:'Onderste balk (geel)',help:'Rolt de andere kant op. Er komt automatisch een ✦-sterretje tussen.',max:28,min:1,maxItems:12,itemName:'woord',where:'.ticker.alt'}
+ ]},
+ {id:'over', title:'Blok "Over het festival"', desc:'De introductie met tekst links en een foto rechts.', where:'#over', fields:[
+   {t:'text',p:'over.kopje',label:'Kopje',help:KOPJE_HELP,max:40,where:'[data-c="over.kopje"]'},
+   {t:'text',p:'over.titel',label:'Titel',help:TITEL_HELP,max:45,where:'[data-c="over.titel"]'},
+   {t:'text',p:'over.intro',label:'Intro (dikgedrukt)',help:'Eén zin in iets grotere letters, direct onder de titel.',max:110,where:'[data-c="over.intro"]'},
+   {t:'area',p:'over.tekst',label:'Tekst',help:'De gewone tekst. <b>Laat een lege regel</b> tussen twee stukken tekst om een nieuwe alinea te beginnen.',max:700,where:'[data-cp="over.tekst"]'},
+   {t:'image',p:'over.foto',kind:'photo',label:'Foto',help:'Een <b>liggende foto</b> werkt het best. Hij wordt een beetje schuin in een kader gezet.',where:'[data-ci="over.foto"]'}
+ ]},
+ {id:'sfeer', title:'Brede sfeerfoto', desc:'De grote foto over de hele breedte van de pagina.', where:'.moodband', fields:[
+   {t:'image',p:'sfeer.foto',kind:'wide',label:'Sfeerfoto',help:'Gebruik een <b>brede, liggende foto</b> met veel sfeer, bijvoorbeeld publiek bij het podium. De boven- en onderkant worden iets bijgesneden.',where:'[data-ci="sfeer.foto"]'}
+ ]},
+ {id:'doen', title:'Te doen (de kaartjes)', desc:'De kaartjes met alles wat er te beleven is.', where:'#doen', fields:[
+   {t:'text',p:'doen.kopje',label:'Kopje',help:KOPJE_HELP,max:40,where:'[data-c="doen.kopje"]'},
+   {t:'text',p:'doen.titel',label:'Titel',help:TITEL_HELP,max:40,where:'[data-c="doen.titel"]'},
+   {t:'list',p:'doen.items',label:'Kaartjes',help:'Elk kaartje heeft een plaatje (emoji), een titel, een gekleurd labeltje en een korte tekst. Op de computer staan er <b>3 naast elkaar</b>, dus 3, 6 of 9 kaartjes ziet er het netst uit.',itemName:'kaartje',min:1,maxItems:12,
+     newItem:{icoon:'⭐',titel:'Nieuw onderdeel',label:'',labelkleur:'geel',tekst:'Korte beschrijving.'},whereItem:'[data-cl="doen"] > :nth-child({n})',
+     fields:[{t:'emoji',k:'icoon',label:'Plaatje'},{t:'text',k:'titel',label:'Titel',max:26},{t:'text',k:'label',label:'Labeltje (mag leeg)',max:18},
+             {t:'color',k:'labelkleur',label:'Kleur van het labeltje'},{t:'area',k:'tekst',label:'Tekst',max:140,rows:3}]}
+ ]},
+ {id:'oldtimers', title:'Blok "Oldtimers"', desc:'Foto links, tekst en een knop rechts.', where:'#oldtimers', fields:[
+   {t:'text',p:'oldtimers.kopje',label:'Kopje',help:KOPJE_HELP,max:40,where:'[data-c="oldtimers.kopje"]'},
+   {t:'text',p:'oldtimers.titel',label:'Titel',help:TITEL_HELP,max:40,where:'[data-c="oldtimers.titel"]'},
+   {t:'area',p:'oldtimers.tekst',label:'Tekst',help:'<b>Lege regel</b> = nieuwe alinea.',max:600,where:'[data-cp="oldtimers.tekst"]'},
+   {t:'text',p:'oldtimers.afsluiter',label:'Afsluitende zin (dikgedrukt)',help:'Een korte, krachtige zin onder de tekst.',max:90,where:'[data-c="oldtimers.afsluiter"]'},
+   {t:'link',p:'oldtimers.knop',label:'Knop',help:'Laat de tekst leeg om de knop te verbergen.',max:30,where:'[data-ck="oldtimers.knop"]'},
+   {t:'image',p:'oldtimers.foto',kind:'photo',label:'Foto',help:'Een <b>liggende foto</b> van de oldtimers werkt het best.',where:'[data-ci="oldtimers.foto"]'}
+ ]},
+ {id:'lineup', title:'Line-up', desc:'Het tijdschema met de bands en artiesten.', where:'#lineup', fields:[
+   {t:'text',p:'lineup.kopje',label:'Kopje',help:KOPJE_HELP,max:40,where:'[data-c="lineup.kopje"]'},
+   {t:'text',p:'lineup.titel',label:'Titel',help:TITEL_HELP,max:40,where:'[data-c="lineup.titel"]'},
+   {t:'list',p:'lineup.labels',label:'Labeltjes onder de titel',help:'Bijvoorbeeld "Onder voorbehoud". Verwijder ze als de line-up definitief is.',itemName:'labeltje',min:0,maxItems:4,
+     newItem:{tekst:'Nieuw',kleur:'geel'},whereItem:'[data-cl="lineupLabels"] > :nth-child({n})',
+     fields:[{t:'text',k:'tekst',label:'Tekst',max:22},{t:'color',k:'kleur',label:'Kleur'}]},
+   {t:'list',p:'lineup.acts',label:'Bands en artiesten',help:'Zet ze <b>in de volgorde van het tijdschema</b>. Met ↑ en ↓ verschuif je een act.',itemName:'act',min:0,maxItems:20,
+     newItem:{tijd:'00:00',naam:'Nieuwe act',omschrijving:''},whereItem:'[data-cl="acts"] > :nth-child({n})',
+     fields:[{t:'text',k:'tijd',label:'Tijd',max:11,half:true},{t:'text',k:'naam',label:'Naam',max:32},{t:'text',k:'omschrijving',label:'Korte omschrijving (mag leeg)',max:40}]},
+   {t:'text',p:'lineup.voetnoot',label:'Kleine tekst onder het schema',help:'Bijvoorbeeld "Onder voorbehoud". Mag leeg.',max:120,where:'[data-c="lineup.voetnoot"]'},
+   {t:'image',p:'lineup.foto',kind:'photo',label:'Foto',help:'Een <b>liggende foto</b> van een optreden.',where:'[data-ci="lineup.foto"]'}
+ ]},
+ {id:'eten', title:'Blok "Eten & drinken"', desc:'Tekst links, foto rechts.', where:'[data-c="eten.titel"]', fields:[
+   {t:'text',p:'eten.kopje',label:'Kopje',help:KOPJE_HELP,max:40,where:'[data-c="eten.kopje"]'},
+   {t:'text',p:'eten.titel',label:'Titel',help:TITEL_HELP,max:40,where:'[data-c="eten.titel"]'},
+   {t:'area',p:'eten.tekst',label:'Tekst',help:'<b>Lege regel</b> = nieuwe alinea.',max:600,where:'[data-cp="eten.tekst"]'},
+   {t:'text',p:'eten.afsluiter',label:'Afsluitende zin (dikgedrukt)',max:90,where:'[data-c="eten.afsluiter"]'},
+   {t:'image',p:'eten.foto',kind:'photo',label:'Foto',help:'Een <b>liggende foto</b> van de foodtrucks.',where:'[data-ci="eten.foto"]'}
+ ]},
+ {id:'praktisch', title:'Praktische info', desc:'Datum, tijd, locatie en entree in losse vakjes.', where:'#praktisch', fields:[
+   {t:'text',p:'praktisch.kopje',label:'Kopje',help:KOPJE_HELP,max:40,where:'[data-c="praktisch.kopje"]'},
+   {t:'text',p:'praktisch.titel',label:'Titel',help:TITEL_HELP,max:40,where:'[data-c="praktisch.titel"]'},
+   {t:'lines',p:'praktisch.sticker',label:'Ronde sticker linksboven',help:'De draaiende sticker. <b>Enter = nieuwe regel.</b> Twee korte regels, bijvoorbeeld de datum. (Alleen op grotere schermen.)',max:20,where:'[data-cm="praktisch.sticker"]'},
+   {t:'list',p:'praktisch.kaarten',label:'Info-vakjes',help:'Op de computer staan er <b>4 naast elkaar</b>.',itemName:'vakje',min:1,maxItems:8,
+     newItem:{label:'Nieuw',waarde:'Waarde',onder:'',onderAlsLabel:false},whereItem:'[data-cl="kaarten"] > :nth-child({n})',
+     fields:[{t:'text',k:'label',label:'Klein kopje (bv. "Datum")',max:16},{t:'text',k:'waarde',label:'Grote tekst',max:20},
+             {t:'text',k:'onder',label:'Kleine tekst eronder (mag leeg)',max:40},{t:'toggle',k:'onderAlsLabel',label:'Kleine tekst als geel labeltje tonen'}]}
+ ]},
+ {id:'meedoen', title:'Oproep "Meedoen"', desc:'Het gekleurde blok dat bezoekers vraagt mee te doen.', where:'#meedoen', fields:[
+   {t:'text',p:'meedoen.titel',label:'Titel',help:TITEL_HELP,max:40,where:'[data-c="meedoen.titel"]'},
+   {t:'area',p:'meedoen.tekst',label:'Tekst',max:240,rows:3,where:'[data-c="meedoen.tekst"]'},
+   {t:'link',p:'meedoen.knop1',label:'Knop 1 (rood)',max:30,where:'[data-ck="meedoen.knop1"]'},
+   {t:'link',p:'meedoen.knop2',label:'Knop 2',help:'Laat de tekst leeg om hem te verbergen.',max:30,where:'[data-ck="meedoen.knop2"]'}
+ ]},
+ {id:'footer', title:'Onderaan: contactgegevens', desc:'De donkere balk helemaal onderaan de pagina.', where:'footer', fields:[
+   {t:'text',p:'footer.omschrijving',label:'Korte omschrijving',max:90,where:'[data-c="footer.omschrijving"]'},
+   {t:'text',p:'footer.adres',label:'Adres',max:90,where:'[data-c="footer.adres"]'},
+   {t:'text',p:'footer.kopOrganisatie',label:'Kopje boven de organisatie',max:30,where:'[data-c="footer.kopOrganisatie"]'},
+   {t:'text',p:'footer.organisatie',label:'Naam organisatie',max:40,where:'[data-c="footer.organisatie"]'},
+   {t:'email',p:'footer.email',label:'E-mailadres',help:'Bezoekers kunnen hierop klikken om je te mailen. Laat leeg om te verbergen.',where:'[data-ce="footer.email"]'},
+   {t:'tel',p:'footer.telefoon',label:'Telefoonnummer',help:'Op een telefoon kun je hierop klikken om te bellen. Laat leeg om te verbergen.',max:20,where:'[data-ct="footer.telefoon"]'},
+   {t:'text',p:'footer.kopVolgen',label:'Kopje boven de links',max:30,where:'[data-c="footer.kopVolgen"]'},
+   {t:'list',p:'footer.links',label:'Links (Facebook, Instagram, website…)',help:'Het webadres moet beginnen met <b>https://</b> — kopieer het gewoon uit de adresbalk van je browser.',itemName:'link',min:0,maxItems:6,
+     newItem:{tekst:'Instagram',url:'https://'},whereItem:'[data-cl="footerLinks"] > a:nth-of-type({n})',
+     fields:[{t:'text',k:'tekst',label:'Tekst',max:30},{t:'url',k:'url',label:'Webadres'}]}
+ ]},
+ {id:'algemeen', title:'Algemeen: naam, menu en Google', desc:'De naam bovenin, de knoppen in het menu en hoe de site in Google en in het tabblad heet.', where:'.nav', fields:[
+   {t:'text',p:'algemeen.naam',label:'Naam van het festival',help:'Staat linksboven in de menubalk en onderaan de pagina.',max:30,where:'[data-c="algemeen.naam"]'},
+   {t:'text',p:'menu.over',label:'Menu-knop 1',help:'De knoppen in de menubalk bovenaan. Alleen de tekst kun je aanpassen; ze springen altijd naar hetzelfde blok.',max:16,where:'[data-c="menu.over"]'},
+   {t:'text',p:'menu.doen',label:'Menu-knop 2',max:16,where:'[data-c="menu.doen"]'},
+   {t:'text',p:'menu.oldtimers',label:'Menu-knop 3',max:16,where:'[data-c="menu.oldtimers"]'},
+   {t:'text',p:'menu.lineup',label:'Menu-knop 4',max:16,where:'[data-c="menu.lineup"]'},
+   {t:'text',p:'menu.praktisch',label:'Menu-knop 5',max:16,where:'[data-c="menu.praktisch"]'},
+   {t:'text',p:'menu.meedoen',label:'Menu-knop 6',max:16,where:'[data-c="menu.meedoen"]'},
+   {t:'text',p:'algemeen.tabbladtitel',label:'Titel in het tabblad en in Google',help:'Zie je niet op de pagina zelf, maar wel bovenin het tabblad van je browser en als titel in Google.',max:60},
+   {t:'area',p:'algemeen.beschrijving',label:'Beschrijving voor Google',help:'Het korte stukje tekst dat Google onder de titel laat zien. Eén of twee zinnen.',max:160,rows:3}
+ ]}
+];
+
+/* ============ status ============ */
+var user='', base=null, draft=null, frameReady=false, publishing=false;
+
+function changedCount(sec){
+  var n=0;
+  sec.fields.forEach(function(f){ if(!same(getP(draft,f.p),getP(base,f.p))) n++; });
+  return n;
+}
+function totalChanges(){ return SECTIONS.reduce(function(a,s){ return a+changedCount(s); },0); }
+function updateStatus(){
+  var n=totalChanges();
+  $('#status').classList.toggle('dirty',n>0);
+  $('#statusText').textContent = n ? (n===1?'1 wijziging nog niet gepubliceerd':n+' wijzigingen nog niet gepubliceerd') : 'Alles is gepubliceerd';
+  $('#publishBtn').disabled = n===0 || publishing;
+  $('#discardBtn').disabled = n===0 || publishing;
+  $('#pvlabel').textContent = n ? 'Voorbeeld · nog niet gepubliceerd' : 'Voorbeeld · zo staat het nu online';
+  SECTIONS.forEach(function(s){
+    var c=changedCount(s), el=$('#sec-'+s.id+' .changes');
+    if(el){ el.hidden=!c; el.textContent=c===1?'1 wijziging':c+' wijzigingen'; }
+  });
+}
+
+/* ============ concept bewaren op dit apparaat ============ */
+var saveT=null, pvT=null;
+function touched(){
+  clearTimeout(saveT); saveT=setTimeout(saveDraft,400);
+  clearTimeout(pvT); pvT=setTimeout(renderPreview,220);
+  updateStatus();
+}
+function saveDraft(){
+  try{
+    if(same(stripMeta(draft),stripMeta(base))) localStorage.removeItem(LS_DRAFT);
+    else localStorage.setItem(LS_DRAFT,JSON.stringify({draft:draft,baseStamp:base._bijgewerkt||'',savedAt:new Date().toISOString()}));
+  }catch(e){}
+}
+
+/* ============ veld-weergave ============ */
+var uid=0;
+function nid(){ return 'f'+(++uid); }
+function counterHtml(v,max){
+  if(!max) return '';
+  var n=String(v||'').length;
+  return '<div class="counter'+(n>max?' long':'')+'">'+n+' / ±'+max+' tekens'+(n>max?' — wordt misschien te lang voor de pagina':'')+'</div>';
+}
+function eyeBtn(where){ return where?'<button type="button" class="eye" data-where="'+esc(where)+'">👁 Waar staat dit?</button>':''; }
+
+function renderSections(){
+  var box=$('#sections'); box.innerHTML='';
+  SECTIONS.forEach(function(s,i){
+    var el=document.createElement('div'); el.className='sec'; el.id='sec-'+s.id;
+    el.innerHTML='<button type="button" class="sechead" aria-expanded="false">'+
+      '<span class="secnum">'+(i+1)+'</span>'+
+      '<span class="sectitle"><b>'+esc(s.title)+'</b><span>'+esc(s.desc)+'</span></span>'+
+      '<span class="changes" hidden></span><span class="chev">›</span></button>'+
+      '<div class="secbody"><div class="secwhere">'+eyeBtn(s.where)+'</div><div class="fields"></div></div>';
+    box.appendChild(el);
+    el.querySelector('.sechead').addEventListener('click',function(){
+      var open=!el.classList.contains('open');
+      el.classList.toggle('open',open); this.setAttribute('aria-expanded',open);
+      if(open){ fillSection(s); if(s.where) highlight(s.where,true); }
+    });
+  });
+  updateStatus();
+}
+function fillSection(s){
+  var box=$('#sec-'+s.id+' .fields'); box.innerHTML='';
+  s.fields.forEach(function(f){ box.appendChild(renderField(f)); });
+}
+function refreshSection(sid){ var s=SECTIONS.filter(function(x){return x.id===sid;})[0]; if(s && $('#sec-'+sid).classList.contains('open')) fillSection(s); }
+function sectionOf(f){ return SECTIONS.filter(function(s){ return s.fields.indexOf(f)>=0; })[0]; }
+
+function fieldShell(f,inner){
+  var w=document.createElement('div'); w.className='field'; w.dataset.path=f.p;
+  w.innerHTML='<div class="flabel"><span class="grow">'+esc(f.label)+' <span class="changed-dot">gewijzigd</span></span>'+
+    '<button type="button" class="reset" title="Zet terug naar wat nu online staat">↺ herstel</button>'+eyeBtn(f.where)+'</div>'+
+    (f.help?'<p class="fhelp">'+f.help+'</p>':'')+inner;
+  w.querySelector('.reset').addEventListener('click',function(){
+    setP(draft,f.p,clone(getP(base,f.p))); touched();
+    var nw=renderField(f); w.replaceWith(nw); toast('Teruggezet naar wat nu online staat.');
+  });
+  markChanged(w,f);
+  return w;
+}
+function markChanged(w,f){ w.classList.toggle('changed',!same(getP(draft,f.p),getP(base,f.p))); }
+
+function renderField(f){
+  var v=getP(draft,f.p), id=nid(), w;
+  if(f.t==='text'||f.t==='email'||f.t==='tel'){
+    var type=f.t==='text'?'text':f.t;
+    w=fieldShell(f,'<input id="'+id+'" type="'+type+'" value="'+esc(v)+'"'+(f.t==='email'?' placeholder="naam@voorbeeld.nl"':'')+'>'+counterHtml(v,f.max));
+    bindInput(w,f,function(el){ return el.value; });
+  } else if(f.t==='area'||f.t==='lines'){
+    w=fieldShell(f,'<textarea id="'+id+'" rows="'+(f.rows||(f.t==='lines'?3:6))+'">'+esc(v)+'</textarea>'+counterHtml(v,f.max));
+    bindInput(w,f,function(el){ return el.value; });
+  } else if(f.t==='link'){
+    w=fieldShell(f,linkHtml(v,f.max));
+    bindLink(w,function(){ return getP(draft,f.p); },function(nv){ setP(draft,f.p,nv); touched(); markChanged(w,f); });
+  } else if(f.t==='image'){
+    w=fieldShell(f,imageHtml(v,f));
+    bindImage(w,f);
+  } else if(f.t==='words'){
+    w=fieldShell(f,'<div class="items words"></div><button type="button" class="btn small addbtn">＋ Nog een '+esc(f.itemName)+' toevoegen</button>');
+    renderWords(w,f);
+  } else if(f.t==='list'){
+    w=fieldShell(f,'<div class="items"></div><button type="button" class="btn small addbtn">＋ Nog een '+esc(f.itemName)+' toevoegen</button>');
+    renderList(w,f);
+  }
+  return w;
+}
+function bindInput(w,f,read){
+  var el=w.querySelector('input,textarea');
+  el.addEventListener('input',function(){
+    setP(draft,f.p,read(el)); touched(); markChanged(w,f);
+    var c=w.querySelector('.counter'); if(c) c.outerHTML=counterHtml(el.value,f.max);
+  });
+  el.addEventListener('focus',function(){ if(f.where) highlight(f.where,true); });
+}
+
+/* ---- link (tekst + bestemming) ---- */
+function linkHtml(v,max){
+  v=v||{tekst:'',link:''};
+  var isCustom=!LINKS.some(function(l){ return l[0]===v.link; });
+  var opts=LINKS.map(function(l){ var sel=(isCustom?l[0]==='custom':l[0]===v.link); return '<option value="'+l[0]+'"'+(sel?' selected':'')+'>'+esc(l[1])+'</option>'; }).join('');
+  return '<div class="row2"><div><div class="fhelp" style="margin:0 0 3px"><b>Tekst op de knop</b></div><input type="text" class="lk-t" value="'+esc(v.tekst)+'"></div>'+
+    '<div><div class="fhelp" style="margin:0 0 3px"><b>Waar gaat de knop naartoe?</b></div><select class="lk-s">'+opts+'</select></div></div>'+
+    '<div class="lk-cwrap"'+(isCustom?'':' hidden')+' style="margin-top:8px"><div class="fhelp" style="margin:0 0 3px"><b>Webadres of e-mailadres</b> (bv. https://www.facebook.com/… of naam@gmail.com)</div>'+
+    '<input type="text" class="lk-c" value="'+esc(isCustom?v.link:'')+'" placeholder="https://"></div>'+counterHtml(v.tekst,max);
+}
+function bindLink(w,get,set){
+  var t=w.querySelector('.lk-t'), s=w.querySelector('.lk-s'), c=w.querySelector('.lk-c'), cw=w.querySelector('.lk-cwrap');
+  function upd(){
+    var cur=clone(get()||{});
+    cur.tekst=t.value;
+    if(s.value==='custom'){ cw.hidden=false; cur.link=c.value.trim(); } else { cw.hidden=true; cur.link=s.value; }
+    set(cur);
+  }
+  t.addEventListener('input',upd); s.addEventListener('change',upd); c.addEventListener('input',upd);
+}
+
+/* ---- foto ---- */
+var KIND={logo:{max:1400,label:'logo',min:600},photo:{max:1600,label:'foto',min:900},wide:{max:2200,label:'brede foto',min:1400}};
+function imageHtml(v,f){
+  v=v||{src:'',alt:''};
+  var url=v.src?urlFor(v.src):'';
+  return '<div class="imgfield"><div class="thumb'+(f.kind==='logo'?' logo':'')+'">'+(url?'<img alt="" src="'+esc(url)+'">':'')+'</div>'+
+    '<div class="imgside"><button type="button" class="btn small yellow pick">📷 Andere '+KIND[f.kind].label+' kiezen</button>'+
+    '<div class="fhelp" style="margin:0 0 3px"><b>Korte beschrijving van de foto</b> — voor blinde bezoekers en voor Google. Bijvoorbeeld: "Publiek danst bij het podium".</div>'+
+    '<input type="text" class="alt" value="'+esc(v.alt)+'"><div class="imgmsg"></div></div></div>';
+}
+function bindImage(w,f){
+  w.querySelector('.alt').addEventListener('input',function(){
+    var cur=clone(getP(draft,f.p)||{}); cur.alt=this.value; setP(draft,f.p,cur); touched(); markChanged(w,f);
+  });
+  w.querySelector('.pick').addEventListener('click',function(){
+    pickFile(function(file){ handleImage(file,f,w); });
+  });
+}
+function pickFile(cb){
+  var inp=$('#filepick'); inp.value='';
+  inp.onchange=function(){ if(inp.files&&inp.files[0]) cb(inp.files[0]); };
+  inp.click();
+}
+function loadImage(url){ return new Promise(function(res,rej){ var im=new Image(); im.onload=function(){res(im);}; im.onerror=rej; im.src=url; }); }
+function handleImage(file,f,w){
+  var msg=w.querySelector('.imgmsg'), K=KIND[f.kind];
+  msg.innerHTML='<p class="uploading"><span class="spin"></span> Foto klaarmaken…</p>';
+  if(file.size>40*1024*1024){ msg.innerHTML='<div class="warn">Dit bestand is erg groot ('+Math.round(file.size/1048576)+' MB). Kies een kleinere foto.</div>'; return; }
+  var src=URL.createObjectURL(file);
+  loadImage(src).then(function(im){
+    var W=im.naturalWidth, H=im.naturalHeight, scale=Math.min(1,K.max/Math.max(W,H));
+    var cw=Math.round(W*scale), ch=Math.round(H*scale);
+    var cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
+    var ctx=cv.getContext('2d');
+    var keepPng = f.kind==='logo' && /png|webp|gif/i.test(file.type);
+    if(!keepPng){ ctx.fillStyle='#fff'; ctx.fillRect(0,0,cw,ch); }
+    ctx.drawImage(im,0,0,cw,ch);
+    URL.revokeObjectURL(src);
+    return new Promise(function(res){ cv.toBlob(function(b){ res({blob:b,w:W,h:H,ext:keepPng?'png':'jpg'}); }, keepPng?'image/png':'image/jpeg', .84); });
+  }).then(function(r){
+    if(!r||!r.blob) throw new Error('blob');
+    var id='i'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    return IDB.put(id,{blob:r.blob,ext:r.ext,slug:f.p.replace(/\./g,'-')}).then(function(){
+      objUrls[id]=URL.createObjectURL(r.blob);
+      var cur=clone(getP(draft,f.p)||{}); cur.src='pending:'+id; setP(draft,f.p,cur); touched(); markChanged(w,f);
+      w.querySelector('.thumb').innerHTML='<img alt="" src="'+objUrls[id]+'">';
+      var warns=[];
+      if(Math.max(r.w,r.h)<K.min) warns.push('Deze foto is vrij klein ('+r.w+'×'+r.h+' pixels) en kan op grote schermen wazig worden. Heb je een grotere versie?');
+      if(f.kind!=='logo' && r.h>r.w) warns.push('Dit is een <b>staande</b> foto. Op de website staat hij in een liggend kader, dus de boven- en onderkant worden afgesneden. Kijk in het voorbeeld of het goed uitkomt.');
+      msg.innerHTML=warns.length?'<div class="warn">'+warns.join('<br><br>')+'</div>':'<p class="fhelp" style="margin-top:6px">✓ Foto staat klaar in het voorbeeld. Hij komt pas online als je publiceert.</p>';
+      if(f.where) highlight(f.where,true);
+    });
+  }).catch(function(){
+    URL.revokeObjectURL(src);
+    msg.innerHTML='<div class="warn">Deze foto kon niet worden gelezen. Foto\'s van een iPhone ("HEIC") lukken soms niet op de computer: kies dan een JPG-foto, of upload de foto vanaf je telefoon zelf.</div>';
+  });
+}
+
+/* ---- lijst met losse woorden ---- */
+function renderWords(w,f){
+  var box=w.querySelector('.items'), arr=getP(draft,f.p)||[];
+  box.innerHTML='';
+  arr.forEach(function(word,i){
+    var row=document.createElement('div'); row.className='wordrow';
+    row.innerHTML='<input type="text" value="'+esc(word)+'" aria-label="'+esc(f.itemName)+' '+(i+1)+'">'+
+      '<button type="button" class="iconbtn up" title="Omhoog"'+(i===0?' disabled':'')+'>↑</button>'+
+      '<button type="button" class="iconbtn down" title="Omlaag"'+(i===arr.length-1?' disabled':'')+'>↓</button>'+
+      '<button type="button" class="iconbtn danger del" title="Verwijderen"'+(arr.length<=(f.min||0)?' disabled':'')+'>🗑</button>';
+    var inp=row.querySelector('input');
+    inp.addEventListener('input',function(){ var a=clone(getP(draft,f.p)); a[i]=inp.value; setP(draft,f.p,a); touched(); markChanged(w,f); });
+    inp.addEventListener('focus',function(){ if(f.where) highlight(f.where,true); });
+    row.querySelector('.up').onclick=function(){ move(f,i,-1); renderWords(w,f); markChanged(w,f); };
+    row.querySelector('.down').onclick=function(){ move(f,i,1); renderWords(w,f); markChanged(w,f); };
+    row.querySelector('.del').onclick=function(){ removeAt(f,i,function(){ renderWords(w,f); markChanged(w,f); }); renderWords(w,f); markChanged(w,f); };
+    box.appendChild(row);
+  });
+  var add=w.querySelector('.addbtn');
+  add.disabled=arr.length>=(f.maxItems||99);
+  add.onclick=function(){ var a=clone(getP(draft,f.p)||[]); a.push(''); setP(draft,f.p,a); touched(); renderWords(w,f); markChanged(w,f);
+    var ins=box.querySelectorAll('input'); if(ins.length) ins[ins.length-1].focus(); };
+}
+function move(f,i,d){
+  var a=clone(getP(draft,f.p)||[]); var j=i+d; if(j<0||j>=a.length) return;
+  var t=a[i]; a[i]=a[j]; a[j]=t; setP(draft,f.p,a); touched();
+}
+function removeAt(f,i,rerender){
+  var a=clone(getP(draft,f.p)||[]); var gone=a.splice(i,1)[0]; setP(draft,f.p,a); touched();
+  toast('Verwijderd.', 'Ongedaan maken', function(){
+    var b=clone(getP(draft,f.p)||[]); b.splice(i,0,gone); setP(draft,f.p,b); touched(); rerender();
+  }, 7000);
+}
+
+/* ---- lijst met items (kaartjes, acts…) ---- */
+function renderList(w,f){
+  var box=w.querySelector('.items'), arr=getP(draft,f.p)||[];
+  box.innerHTML='';
+  if(!arr.length) box.innerHTML='<p class="fhelp">Er staat nu niets. Klik op "Nog een '+esc(f.itemName)+' toevoegen".</p>';
+  arr.forEach(function(it,i){
+    var card=document.createElement('div'); card.className='item';
+    var name=it.titel||it.naam||it.tekst||it.label||'';
+    card.innerHTML='<div class="itemhead"><b>'+esc(f.itemName.charAt(0).toUpperCase()+f.itemName.slice(1))+' '+(i+1)+(name?' · <span style="font-weight:600">'+esc(name)+'</span>':'')+'</b>'+
+      (f.whereItem?'<button type="button" class="eye" data-where="'+esc(f.whereItem.replace('{n}',i+1))+'">👁</button>':'')+
+      '<button type="button" class="iconbtn up" title="Omhoog"'+(i===0?' disabled':'')+'>↑</button>'+
+      '<button type="button" class="iconbtn down" title="Omlaag"'+(i===arr.length-1?' disabled':'')+'>↓</button>'+
+      '<button type="button" class="iconbtn danger del" title="Verwijderen"'+(arr.length<=(f.min||0)?' disabled':'')+'>🗑</button></div>';
+    var grid=document.createElement('div');
+    f.fields.forEach(function(sf){ grid.appendChild(subField(f,i,sf,w,card)); });
+    card.appendChild(grid);
+    card.querySelector('.up').onclick=function(){ move(f,i,-1); renderList(w,f); markChanged(w,f); };
+    card.querySelector('.down').onclick=function(){ move(f,i,1); renderList(w,f); markChanged(w,f); };
+    card.querySelector('.del').onclick=function(){
+      if(!confirm('Weet je zeker dat je '+f.itemName+' '+(i+1)+(name?' ("'+name+'")':'')+' wilt verwijderen?')) return;
+      removeAt(f,i,function(){ renderList(w,f); markChanged(w,f); }); renderList(w,f); markChanged(w,f);
+    };
+    box.appendChild(card);
+  });
+  var add=w.querySelector('.addbtn');
+  add.disabled=arr.length>=(f.maxItems||99);
+  add.title=add.disabled?'Er passen er niet meer bij':'';
+  add.onclick=function(){
+    var a=clone(getP(draft,f.p)||[]); a.push(clone(f.newItem)); setP(draft,f.p,a); touched(); renderList(w,f); markChanged(w,f);
+    var cards=box.querySelectorAll('.item'); var last=cards[cards.length-1];
+    if(last){ last.scrollIntoView({block:'center',behavior:'smooth'}); var inp=last.querySelector('input[type=text]'); if(inp) inp.focus(); }
+    if(f.whereItem) highlight(f.whereItem.replace('{n}',a.length),true);
+  };
+}
+function subField(f,i,sf,w,card){
+  var path=f.p+'.'+i+'.'+sf.k, v=getP(draft,path), d=document.createElement('div'); d.className='field';
+  var where=f.whereItem?f.whereItem.replace('{n}',i+1):null;
+  function set(nv){ setP(draft,path,nv); touched(); markChanged(w,f); }
+  var lab='<div class="flabel"><span class="grow">'+esc(sf.label)+'</span></div>';
+  if(sf.t==='text'||sf.t==='url'){
+    d.innerHTML=lab+'<input type="text" value="'+esc(v)+'"'+(sf.t==='url'?' placeholder="https://"':'')+'>'+counterHtml(v,sf.max);
+    var inp=d.querySelector('input');
+    inp.addEventListener('input',function(){
+      set(inp.value); var c=d.querySelector('.counter'); if(c) c.outerHTML=counterHtml(inp.value,sf.max);
+      if(sf.k==='titel'||sf.k==='naam'){ var s=card.querySelector('.itemhead b span'); if(s) s.textContent=inp.value; }
+    });
+    inp.addEventListener('focus',function(){ if(where) highlight(where,true); });
+  } else if(sf.t==='area'){
+    d.innerHTML=lab+'<textarea rows="'+(sf.rows||3)+'">'+esc(v)+'</textarea>'+counterHtml(v,sf.max);
+    var ta=d.querySelector('textarea');
+    ta.addEventListener('input',function(){ set(ta.value); var c=d.querySelector('.counter'); if(c) c.outerHTML=counterHtml(ta.value,sf.max); });
+    ta.addEventListener('focus',function(){ if(where) highlight(where,true); });
+  } else if(sf.t==='toggle'){
+    d.innerHTML='<label class="toggle"><input type="checkbox"'+(v?' checked':'')+'> '+esc(sf.label)+'</label>';
+    d.querySelector('input').addEventListener('change',function(){ set(this.checked); });
+  } else if(sf.t==='color'){
+    d.innerHTML=lab+'<div class="swatches">'+COLORS.map(function(c){ return '<button type="button" class="sw '+c[0]+(v===c[0]?' on':'')+'" data-c="'+c[0]+'">'+c[1]+'</button>'; }).join('')+'</div>';
+    $$('.sw',d).forEach(function(b){ b.onclick=function(){ $$('.sw',d).forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); set(b.dataset.c); }; });
+  } else if(sf.t==='emoji'){
+    d.innerHTML=lab+'<div class="row3"><input type="text" value="'+esc(v)+'" maxlength="8" style="font-size:22px;text-align:center"><div class="fhelp" style="margin:0">Kies hieronder een plaatje, of plak zelf een emoji in het vakje.</div></div>'+
+      '<div class="emojis">'+EMOJIS.map(function(e){ return '<button type="button"'+(e===v?' class="on"':'')+'>'+e+'</button>'; }).join('')+'</div>';
+    var ei=d.querySelector('input');
+    ei.addEventListener('input',function(){ set(ei.value); });
+    $$('.emojis button',d).forEach(function(b){ b.onclick=function(){ ei.value=b.textContent; set(b.textContent);
+      $$('.emojis button',d).forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); }; });
+  }
+  return d;
+}
+
+/* ============ voorbeeld ============ */
+var device='desktop';
+function frameWin(){ try{ return $('#pv').contentWindow; }catch(e){ return null; } }
+function resolved(c){
+  var x=clone(c);
+  walkImgs(x,function(img){ var id=pendingId(img.src); if(id) img.src=objUrls[id]||''; else if(justPublished[img.src]) img.src=justPublished[img.src]; });
+  return x;
+}
+function renderPreview(){
+  var w=frameWin(); if(!frameReady||!w||!w.FOW) return;
+  try{ w.FOW.render(resolved(draft)); }catch(e){}
+}
+function startPreview(){
+  frameReady=false;
+  var f=$('#pv');
+  f.onload=function(){
+    var tries=0;
+    (function wait(){
+      var w=frameWin();
+      if(w&&w.FOW){ frameReady=true; renderPreview(); return; }
+      if(++tries<60) setTimeout(wait,100);
+    })();
+  };
+  f.src='../index.html?beheer='+Date.now();
+}
+function layoutPreview(){
+  var wrap=$('#pvwrap'), fr=$('#pvframe');
+  var W=wrap.clientWidth-28, H=wrap.clientHeight-28;
+  if(W<=0||H<=0) return;
+  if(device==='phone'){
+    var pw=390+20, ph=Math.min(844+20,H);
+    fr.className='pvframe phone'; fr.style.width=pw+'px'; fr.style.height=ph+'px'; fr.style.transform='';
+    if(pw>W){ var s=W/pw; fr.style.transform='scale('+s+')'; fr.style.height=(H/s)+'px'; }
+  } else {
+    var vw=1280, sc=Math.min(1,W/vw);
+    fr.className='pvframe'; fr.style.width=vw+'px'; fr.style.height=(H/sc)+'px'; fr.style.transform='scale('+sc+')';
+  }
+  /* past het telefoonkader niet, dan verkleinen vanaf links (centreren + schalen botst) */
+  var fits = device==='phone' && (390+20)<=W;
+  wrap.style.justifyContent = fits?'center':'flex-start';
+}
+$$('.seg button').forEach(function(b){ b.onclick=function(){
+  $$('.seg button').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); device=b.dataset.dev; layoutPreview(); }; });
+window.addEventListener('resize',layoutPreview);
+
+var hlT=null;
+function highlight(sel,soft){
+  var w=frameWin(); if(!frameReady||!w||!w.FOW) return;
+  var mobile=window.matchMedia('(max-width:900px)').matches;
+  if(mobile && soft) return;             /* op de telefoon alleen springen als je er zelf om vraagt */
+  if(mobile){ setTab('preview'); }
+  clearTimeout(hlT);
+  hlT=setTimeout(function(){
+    var shown=w.FOW.highlight(sel);
+    if(shown===false && !soft) toast('Dit onderdeel is op dit schermformaat niet zichtbaar — kijk op "💻 Computer".');
+  }, mobile?150:60);
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('.eye'); if(!b) return;
+  highlight(b.dataset.where,false);
+});
+
+/* telefoon: wisselen tussen bewerken en voorbeeld */
+function setTab(t){
+  document.body.classList.toggle('show-preview',t==='preview');
+  $$('.mtabs button').forEach(function(b){ b.classList.toggle('on',b.dataset.tab===t); });
+  if(t==='preview'){ setTimeout(layoutPreview,30); }
+}
+$$('.mtabs button').forEach(function(b){ b.onclick=function(){ setTab(b.dataset.tab); }; });
+
+/* ============ inloggen ============ */
+function session(){ try{ return localStorage.getItem(LS_SESSION)||''; }catch(e){ return ''; } }
+function api(path,opts){
+  opts=opts||{}; opts.headers=opts.headers||{};
+  opts.headers.Authorization='Bearer '+session();
+  if(opts.body) opts.headers['Content-Type']='application/json';
+  return fetch(WORKER+path,opts).then(function(r){
+    return r.json().catch(function(){ return {}; }).then(function(j){ j._status=r.status; return j; });
+  });
+}
+function readHash(){
+  var h=location.hash||'';
+  if(h.indexOf('token=')>=0){
+    var m=h.match(/token=([^&]+)/); if(m){ try{ localStorage.setItem(LS_SESSION,decodeURIComponent(m[1])); }catch(e){} }
+    history.replaceState(null,'',location.pathname);
+  } else if(h.indexOf('error=')>=0){
+    var em=h.match(/error=([^&]+)/), code=em?em[1]:'';
+    history.replaceState(null,'',location.pathname);
+    return code==='notallowed'
+      ? 'Dit Google-account heeft (nog) geen toegang. Log in met het e-mailadres dat je aan Teun hebt doorgegeven, of vraag hem om je toe te voegen.'
+      : 'Inloggen is niet gelukt. Probeer het nog een keer. Blijft het misgaan? Laat het Teun weten.';
+  }
+  return '';
+}
+function showLogin(err){
+  $('#app').hidden=true; $('#login').hidden=false;
+  var e=$('#loginErr'); e.hidden=!err; e.textContent=err||'';
+}
+$('#loginBtn').onclick=function(){
+  location.href=WORKER+'/auth/login?redirect='+encodeURIComponent(location.origin+location.pathname);
+};
+$('#logoutBtn').onclick=function(e){
+  e.preventDefault();
+  if(totalChanges() && !confirm('Je hebt nog wijzigingen die niet gepubliceerd zijn. Die blijven op dit apparaat bewaard. Toch uitloggen?')) return;
+  try{ localStorage.removeItem(LS_SESSION); }catch(x){}
+  location.reload();
+};
+
+/* ============ starten ============ */
+function loadContent(){
+  if(TEST){
+    return fetch('../content.json?t='+Date.now(),{cache:'no-store'}).then(function(r){ return r.json(); });
+  }
+  return api('/api/read?path='+encodeURIComponent(CONTENT_PATH)).then(function(j){
+    if(j._status===401){ throw {login:true}; }
+    if(!j.ok||!j.content) throw new Error(j.error||'lezen mislukt');
+    return JSON.parse(j.content);
+  });
+}
+function start(){
+  var err=readHash();
+  if(TEST){
+    user='test@lokaal'; $('#testmode').hidden=false; return boot();
+  }
+  if(!session()) return showLogin(err);
+  api('/auth/me').then(function(j){
+    if(!j.ok){ try{ localStorage.removeItem(LS_SESSION); }catch(e){}
+      return showLogin(j._status===401 && j.error==='no access' ? 'Dit account heeft geen toegang (meer). Vraag Teun om je toe te voegen.' : err); }
+    user=j.email; boot();
+  }).catch(function(){ showLogin('Geen verbinding. Controleer je internet en probeer het opnieuw.'); });
+}
+function boot(){
+  $('#login').hidden=true; $('#app').hidden=false;
+  $('#whoEmail').textContent=user;
+  try{ if(localStorage.getItem(LS_WELCOME)==='1') $('#welcome').hidden=true; }catch(e){}
+  $('#welcomeClose').onclick=function(){ $('#welcome').hidden=true; try{ localStorage.setItem(LS_WELCOME,'1'); }catch(e){} };
+  var mob=window.matchMedia('(max-width:900px)').matches;
+  if(mob){ device='phone'; $$('.seg button').forEach(function(x){ x.classList.toggle('on',x.dataset.dev==='phone'); }); }
+  $$('.dsk').forEach(function(e){ e.hidden=mob; }); $$('.mob').forEach(function(e){ e.hidden=!mob; });
+  loadContent().then(function(c){
+    base=c; draft=clone(c);
+    var saved=null; try{ saved=JSON.parse(localStorage.getItem(LS_DRAFT)||'null'); }catch(e){}
+    return (saved&&saved.draft?loadPendingUrls(saved.draft):Promise.resolve()).then(function(){
+      if(saved && saved.draft && !same(stripMeta(saved.draft),stripMeta(base))){
+        offerDraft(saved);
+      }
+      renderSections(); startPreview(); setTimeout(layoutPreview,50);
+    });
+  }).catch(function(e){
+    if(e&&e.login){ try{ localStorage.removeItem(LS_SESSION); }catch(x){} return showLogin('Je bent uitgelogd. Log opnieuw in.'); }
+    $('#sections').innerHTML='<div class="err">De website-inhoud kon niet worden opgehaald. Controleer je internet en ververs de pagina. Blijft het misgaan? Laat het Teun weten.</div>';
+  });
+}
+function offerDraft(saved){
+  var newer = (saved.baseStamp||'') !== (base._bijgewerkt||'');
+  var b=document.createElement('div'); b.className='banner';
+  b.innerHTML='📝 Je hebt nog <b>niet-gepubliceerde wijzigingen</b> van '+esc(fmtDate(saved.savedAt))+'.'+
+    (newer?'<br><br>⚠️ <b>Let op:</b> de website is sindsdien ook bijgewerkt'+(base._door?' (door '+esc(base._door)+')':'')+'. Als je verder gaat met je oude wijzigingen en publiceert, worden die nieuwere aanpassingen overschreven.':'')+
+    '<div class="row"><button type="button" class="btn small primary" id="dKeep">Verder werken</button><button type="button" class="btn small" id="dDrop">Weggooien en opnieuw beginnen</button></div>';
+  $('#banners').appendChild(b);
+  b.querySelector('#dKeep').onclick=function(){ draft=saved.draft; b.remove(); renderSections(); renderPreview(); toast('Je wijzigingen staan weer klaar.'); };
+  b.querySelector('#dDrop').onclick=function(){ try{ localStorage.removeItem(LS_DRAFT); }catch(e){} IDB.clear(); b.remove(); toast('Oude wijzigingen weggegooid.'); };
+}
+
+/* ============ weggooien ============ */
+$('#discardBtn').onclick=function(){
+  modal('<h2>Wijzigingen weggooien?</h2><p>Al je wijzigingen die nog niet gepubliceerd zijn worden weggegooid. Het CMS laat daarna weer precies zien wat er nu op de website staat.</p>'+
+    '<p class="fine">De echte website verandert hier niet door.</p>'+
+    '<div class="row"><button type="button" class="btn" id="mNo">Nee, terug</button><button type="button" class="btn primary" id="mYes">Ja, weggooien</button></div>');
+  $('#mNo').onclick=closeModal;
+  $('#mYes').onclick=function(){
+    draft=clone(base); try{ localStorage.removeItem(LS_DRAFT); }catch(e){} IDB.clear();
+    closeModal(); renderSections(); renderPreview(); toast('Alles staat weer zoals op de website.');
+  };
+};
+
+/* ============ controleren & publiceren ============ */
+function problems(){
+  var out=[];
+  SECTIONS.forEach(function(s){ s.fields.forEach(function(f){
+    var v=getP(draft,f.p);
+    if((f.t==='text'||f.t==='area') && /titel$|naam$|^hero\.ondertitel$/.test(f.p) && !String(v||'').trim())
+      out.push({s:s,f:f,msg:'"'+f.label+'" in '+s.title+' is leeg.'});
+    if(f.t==='email' && v && !/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(v)) out.push({s:s,f:f,msg:'Het e-mailadres onderaan lijkt niet te kloppen.'});
+    if(f.t==='link' && v && v.tekst && !/^#/.test(v.link||'') && !/^(https?:\/\/[^\s.]+\.[^\s]+|mailto:\S+@\S+|[^@\s]+@[^@\s]+\.[a-z]{2,}|www\.\S+\.\S+)$/i.test(v.link||''))
+      out.push({s:s,f:f,msg:'De knop "'+v.tekst+'" in '+s.title+' heeft geen geldig webadres.'});
+    if(f.t==='words' && !(v||[]).some(function(x){return String(x).trim();})) out.push({s:s,f:f,msg:'"'+f.label+'" heeft geen woorden.'});
+    if(f.t==='list' && f.p==='footer.links') (v||[]).forEach(function(l,i){
+      if(l.tekst && !/^https?:\/\/\S+\.\S+/i.test(l.url||'')) out.push({s:s,f:f,msg:'Link '+(i+1)+' onderaan ("'+l.tekst+'") moet beginnen met https://'}); });
+    if(f.t==='image' && v && pendingId(v.src) && !objUrls[pendingId(v.src)]) out.push({s:s,f:f,msg:'Een nieuwe foto bij "'+f.label+'" in '+s.title+' is niet meer beschikbaar. Kies hem opnieuw.'});
+  }); });
+  return out;
+}
+function changedSections(){ return SECTIONS.filter(function(s){ return changedCount(s)>0; }); }
+function goToField(sid,path){
+  var sec=$('#sec-'+sid); if(!sec) return;
+  if(!sec.classList.contains('open')) sec.querySelector('.sechead').click();
+  setTab('edit');
+  setTimeout(function(){
+    var f=sec.querySelector('.field[data-path="'+path+'"]');
+    (f||sec).scrollIntoView({block:'center',behavior:'smooth'});
+    var i=f&&f.querySelector('input,textarea'); if(i) i.focus();
+  },120);
+}
+$('#publishBtn').onclick=function(){
+  var probs=problems();
+  if(probs.length){
+    modal('<div class="big">🤔</div><h2>Nog even nakijken</h2><p>Voordat je publiceert:</p><ul>'+
+      probs.map(function(p,i){ return '<li>'+esc(p.msg)+' <button type="button" class="btn ghost small" data-go="'+i+'">Ga erheen</button></li>'; }).join('')+
+      '</ul><div class="row"><button type="button" class="btn" id="mNo">Sluiten</button></div>');
+    $('#mNo').onclick=closeModal;
+    $$('[data-go]').forEach(function(b){ b.onclick=function(){ var p=probs[+b.dataset.go]; closeModal(); goToField(p.s.id,p.f.p); }; });
+    return;
+  }
+  checkRemote().then(function(remote){
+    if(remote && (remote._bijgewerkt||'')!==(base._bijgewerkt||'')){
+      modal('<div class="big">⚠️</div><h2>Iemand anders was je net voor</h2><p>De website is bijgewerkt nadat jij begon'+
+        (remote._door?' (door <b>'+esc(remote._door)+'</b>'+(remote._bijgewerkt?', '+esc(fmtDate(remote._bijgewerkt)):'')+')':'')+'.</p>'+
+        '<p>Als je nu publiceert, worden die nieuwere aanpassingen <b>overschreven</b> door jouw versie.</p>'+
+        '<div class="row"><button type="button" class="btn" id="mNo">Annuleren</button><button type="button" class="btn primary" id="mYes">Toch mijn versie publiceren</button></div>');
+      $('#mNo').onclick=closeModal;
+      $('#mYes').onclick=function(){ base._bijgewerkt=remote._bijgewerkt; confirmPublish(); };
+      return;
+    }
+    confirmPublish();
+  });
+};
+function checkRemote(){
+  if(TEST) return Promise.resolve(window.__remote||null);
+  return api('/api/read?path='+encodeURIComponent(CONTENT_PATH)).then(function(j){
+    return j.ok&&j.content?JSON.parse(j.content):null;
+  }).catch(function(){ return null; });
+}
+function confirmPublish(){
+  var secs=changedSections();
+  modal('<div class="big">🚀</div><h2>Klaar om te publiceren?</h2><p>Deze onderdelen worden bijgewerkt op de echte website:</p><ul>'+
+    secs.map(function(s){ return '<li><b>'+esc(s.title)+'</b> ('+changedCount(s)+')</li>'; }).join('')+
+    '</ul><p>Na het publiceren staat alles binnen <b>1 à 2 minuten</b> online.</p>'+
+    '<div class="row"><button type="button" class="btn" id="mNo">Nog niet</button><button type="button" class="btn primary" id="mYes">Ja, publiceren</button></div>');
+  $('#mNo').onclick=closeModal;
+  $('#mYes').onclick=doPublish;
+}
+function blobToB64(blob){ return new Promise(function(res,rej){ var fr=new FileReader(); fr.onload=function(){ res(String(fr.result).split(',')[1]); }; fr.onerror=rej; fr.readAsDataURL(blob); }); }
+function utf8b64(s){ var b=new TextEncoder().encode(s), bin=''; for(var i=0;i<b.length;i+=0x8000) bin+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000)); return btoa(bin); }
+function stamp(){ var d=new Date(); function z(n){return (n<10?'0':'')+n;} return d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+z(d.getHours())+z(d.getMinutes()); }
+function setProgress(pct,text){ var i=$('#pubbar'); if(i) i.style.width=pct+'%'; var t=$('#pubtext'); if(t) t.textContent=text; }
+
+function doPublish(){
+  publishing=true; updateStatus();
+  $('#dialog').dataset.lock='1';
+  modal('<h2>Bezig met publiceren…</h2><p id="pubtext">Foto\'s klaarmaken…</p><div class="progressline"><i id="pubbar"></i></div><p class="fine">Sluit dit venster niet.</p>');
+  var out=clone(draft), files=[], jobs=[];
+  walkImgs(out,function(img){
+    var id=pendingId(img.src); if(!id) return;
+    jobs.push(IDB.get(id).then(function(rec){
+      if(!rec||!rec.blob) throw new Error('foto ontbreekt');
+      var name=(rec.slug||'foto').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40)+'-'+stamp()+'-'+Math.random().toString(36).slice(2,6)+'.'+(rec.ext==='png'?'png':'jpg');
+      img.src='img/u/'+name;
+      if(objUrls[id]) justPublished[img.src]=objUrls[id];
+      return blobToB64(rec.blob).then(function(b64){ files.push({path:UPLOAD_DIR+name,base64:b64}); });
+    }));
+  });
+  Promise.all(jobs).then(function(){
+    setProgress(45,'Opslaan op de website…');
+    out._bijgewerkt=new Date().toISOString(); out._door=user;
+    var json=JSON.stringify(out,null,2)+'\n';
+    files.unshift({path:CONTENT_PATH,base64:utf8b64(json)});
+    var msg='Festival op Wielen: website bijgewerkt via beheer\n\n'+changedSections().map(function(s){ return '- '+s.title; }).join('\n')+
+      (files.length>1?'\n- '+(files.length-1)+' nieuwe foto(\'s)':'');
+    if(TEST){ window.__lastPublish={message:msg,files:files,content:out}; return new Promise(function(r){ setTimeout(function(){ r({ok:true,sha:'test'}); },700); }); }
+    return api('/api/commit',{method:'POST',body:JSON.stringify({message:msg,files:files})});
+  }).then(function(j){
+    if(!j||!j.ok){
+      var e=new Error(j&&j.error||'opslaan mislukt'); e.status=j&&j._status; throw e;
+    }
+    setProgress(100,'Opgeslagen!');
+    base=clone(out); draft=clone(out);
+    try{ localStorage.removeItem(LS_DRAFT); }catch(e){}
+    IDB.clear();
+    publishing=false; delete $('#dialog').dataset.lock;
+    renderSections(); renderPreview();
+    modal('<div class="big">🎉</div><h2>Gepubliceerd!</h2><p>Je wijzigingen zijn opgeslagen. Ze staan over <b>1 à 2 minuten</b> op de website.</p>'+
+      '<p id="liveState" class="fine"><span class="spin"></span> Even wachten tot het online staat…</p>'+
+      '<div class="row"><a class="btn" href="../" target="_blank" rel="noopener">Bekijk de website</a><button type="button" class="btn primary" id="mOk">Top!</button></div>');
+    $('#mOk').onclick=closeModal;
+    watchLive(out._bijgewerkt);
+  }).catch(function(e){
+    publishing=false; delete $('#dialog').dataset.lock; updateStatus();
+    var why = e&&e.status===401 ? 'Je bent uitgelogd. Log opnieuw in — je wijzigingen blijven bewaard.'
+            : e&&e.status===413 ? 'Een van de foto\'s is te groot. Kies een kleinere foto en probeer het opnieuw.'
+            : e&&e.status===403 ? 'Je account mag dit niet opslaan. Laat het Teun weten.'
+            : 'Er ging iets mis bij het opslaan. Je wijzigingen zijn niet verloren. Probeer het over een minuutje opnieuw; blijft het misgaan, laat het Teun weten.';
+    modal('<div class="big">😕</div><h2>Publiceren is niet gelukt</h2><p>'+esc(why)+'</p><p class="fine">Technische melding: '+esc(e&&e.message||'onbekend')+'</p>'+
+      '<div class="row">'+(e&&e.status===401?'<button type="button" class="btn primary" id="mLogin">Opnieuw inloggen</button>':'')+'<button type="button" class="btn" id="mNo">Sluiten</button></div>');
+    $('#mNo').onclick=closeModal;
+    var ml=$('#mLogin'); if(ml) ml.onclick=function(){ saveDraft(); $('#loginBtn').click(); };
+  });
+}
+function watchLive(st){
+  var t0=Date.now();
+  if(TEST){ setTimeout(function(){ var el=$('#liveState'); if(el) el.innerHTML='✅ <b>Staat online!</b> (testmodus)'; },1500); return; }
+  (function poll(){
+    fetch('../content.json?t='+Date.now(),{cache:'no-store'}).then(function(r){ return r.json(); }).then(function(c){
+      var el=$('#liveState');
+      if(c && c._bijgewerkt===st){ if(el) el.innerHTML='✅ <b>Staat online!</b> Ververs de website als je hem al open had.'; else toast('✅ Je wijzigingen staan nu online.'); return; }
+      if(Date.now()-t0>6*60*1000){ if(el) el.textContent='Het duurt langer dan normaal. Kijk over een paar minuten nog eens; je wijzigingen zijn wel opgeslagen.'; return; }
+      setTimeout(poll,12000);
+    }).catch(function(){ setTimeout(poll,15000); });
+  })();
+}
+
+/* ============ hulp ============ */
+$('#helpBtn').onclick=function(){
+  modal('<h2>Hulp</h2><div class="helpgrid">'+
+    '<h3>Hoe pas ik iets aan?</h3><p>Klik op een onderdeel (bijvoorbeeld "Line-up") om het open te klappen en typ in de vakjes. In het voorbeeld zie je meteen het resultaat.</p>'+
+    '<h3>Waar staat dit op de pagina?</h3><p>Klik op <b>👁 Waar staat dit?</b>. Het voorbeeld springt erheen en het stukje knippert even.</p>'+
+    '<h3>Een foto vervangen</h3><p>Klik op <b>📷 Andere foto kiezen</b>. Het CMS maakt de foto zelf kleiner, zodat de website snel blijft. Liggende foto\'s werken het best.</p>'+
+    '<h3>Iets toevoegen of weghalen</h3><p>Onder lijsten (kaartjes, bands, links) staat <b>＋ Nog een … toevoegen</b>. Met <b>↑ ↓</b> verschuif je iets, met <b>🗑</b> haal je het weg. Per ongeluk verwijderd? Klik direct op <b>Ongedaan maken</b>.</p>'+
+    '<h3>Publiceren</h3><p>Pas als je op <b>🚀 Publiceren</b> klikt, komt het op de echte website (na 1 à 2 minuten). Tot die tijd ziet niemand anders je wijzigingen.</p>'+
+    '<h3>Fout gemaakt?</h3><p>Bij een gewijzigd veld staat <b>↺ herstel</b>: dat zet dat ene veld terug. Met <b>↺ Wijzigingen weggooien</b> bovenaan begin je helemaal opnieuw vanaf wat nu online staat.</p>'+
+    '<h3>Waar wordt mijn werk bewaard?</h3><p>Tot je publiceert, op <b>dit apparaat</b>. Begin je op je laptop, dan zie je die wijzigingen niet op je telefoon. Publiceer dus op het apparaat waar je bent begonnen.</p>'+
+    '</div><div class="row"><a class="btn" href="handleiding.html" target="_blank" rel="noopener">📖 Volledige handleiding</a><button type="button" class="btn primary" id="mOk">Sluiten</button></div>');
+  $('#mOk').onclick=closeModal;
+};
+
+start();
+})();
+</script>
+</body>
+</html>

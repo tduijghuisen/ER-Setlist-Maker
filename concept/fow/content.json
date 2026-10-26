@@ -1,0 +1,120 @@
+{
+  "_versie": 1,
+  "_bijgewerkt": "",
+  "_door": "",
+  "algemeen": {
+    "naam": "Festival op Wielen",
+    "tabbladtitel": "Festival op Wielen — concept",
+    "beschrijving": "Conceptpresentatie"
+  },
+  "menu": {
+    "over": "Het festival",
+    "doen": "Te doen",
+    "oldtimers": "Oldtimers",
+    "lineup": "Line-up",
+    "praktisch": "Praktisch",
+    "meedoen": "Meedoen"
+  },
+  "hero": {
+    "logo": { "src": "img/logo-mark.png", "alt": "Festival op Wielen" },
+    "woorden": ["Live bands", "Foodtrucks", "Oldtimers", "Festivalmarkt"],
+    "ondertitel": "Waar muziek, mensen en het moment samenkomen.",
+    "chips": [
+      { "tekst": "✿ Zaterdag 17 april ’27", "opvallend": false },
+      { "tekst": "15:00 – 00:00", "opvallend": false },
+      { "tekst": "Zevenbergen", "opvallend": false },
+      { "tekst": "Gratis entree", "opvallend": true }
+    ],
+    "knop1": { "tekst": "Kom met je oldtimer →", "link": "#meedoen" },
+    "knop2": { "tekst": "Bekijk de line-up", "link": "#lineup" },
+    "sticker": "Sixties\n&\nSeventies"
+  },
+  "tickers": {
+    "boven": ["Live bands", "Oldtimers", "Foodtrucks", "Festivalmarkt", "Retro campers", "Gratis entree"],
+    "onder": ["Zaterdag 17 april ’27", "Zevenbergen", "Gratis entree", "Oude Suikerfabriek"]
+  },
+  "over": {
+    "kopje": "Back to the 60s & 70s",
+    "titel": "Het festival voor levensgenieters",
+    "intro": "Geen strakke schema's, maar een dag die rolt zoals hij rolt.",
+    "tekst": "Op het terrein van de Oude Suikerfabriek staat alles in het teken van muziek, vrijheid en vintage pracht. Tussen glimmende klassiekers, retro campers en vintage caravans slenter je van de festivalmarkt naar de foodtrucks, met livemuziek die je zó terugzet in de tijd van flower power en rock-'n-roll.\n\nVolledig gerestaureerd of juist met karakter: alles mag er zijn. Neem je stoeltje mee, pak een burger, en laat de middag overlopen in de avond.",
+    "foto": { "src": "img/markt.jpg", "alt": "Festivalmarkt met kraampjes vol retro kleding en vintage vondsten" }
+  },
+  "sfeer": {
+    "foto": { "src": "img/hero.jpg", "alt": "Publiek danst bij het podium tussen de geparkeerde oldtimers" }
+  },
+  "doen": {
+    "kopje": "Wat is er te doen",
+    "titel": "Alles op wielen",
+    "items": [
+      { "icoon": "🎸", "titel": "Live bands", "label": "Hele dag", "labelkleur": "geel", "tekst": "Rock-'n-roll, sixties en een flinke scheut Woodstock. De hele middag en avond door." },
+      { "icoon": "🚗", "titel": "Oldtimers", "label": "Te-koop plein", "labelkleur": "koraal", "tekst": "Auto's, motoren en brommers — van showroomstaat tot heerlijk doorleefd." },
+      { "icoon": "🚐", "titel": "Campers & caravans", "label": "Retro", "labelkleur": "groen", "tekst": "Retro busjes en vintage caravans, dwars tussen het publiek geparkeerd." },
+      { "icoon": "🌸", "titel": "Festivalmarkt", "label": "Struinen", "labelkleur": "creme", "tekst": "Hippie & vintage: kleding, accessoires, platen en woonvondsten. Struinen tot je iets vindt." },
+      { "icoon": "🍔", "titel": "Foodtrucks", "label": "Zoet & hartig", "labelkleur": "geel", "tekst": "Van hartige klassiekers tot zoete lekkernijen, met een fris glas erbij." },
+      { "icoon": "💈", "titel": "Barberbus & kids", "label": "Kids corner", "labelkleur": "groen", "tekst": "Even in het scheermes? En voor de kleinsten een eigen kids-corner." }
+    ]
+  },
+  "oldtimers": {
+    "kopje": "Oldtimers",
+    "titel": "Chroom in het gras",
+    "tekst": "Van een strak gepoetste Amerikaan tot een brommer met verhalen: het hele terrein staat vol klassiekers. Eigenaren staan er gewoon bij, dus vraag gerust door — de mooiste verhalen staan niet op het bordje.",
+    "afsluiter": "Volledig gerestaureerd of juist met karakter — alles mag er zijn.",
+    "knop": { "tekst": "Meld je klassieker aan →", "link": "#meedoen" },
+    "foto": { "src": "img/cars.jpg", "alt": "Rij glimmende klassieke auto's op het gras in het gouden avondlicht" }
+  },
+  "lineup": {
+    "kopje": "Line-up",
+    "titel": "De hele dag muziek",
+    "labels": [
+      { "tekst": "Onder voorbehoud", "kleur": "koraal" },
+      { "tekst": "Concept-invulling", "kleur": "creme" }
+    ],
+    "acts": [
+      { "tijd": "15:00", "naam": "DJ Vinyl", "omschrijving": "Sixties & seventies platen" },
+      { "tijd": "16:30", "naam": "Woodstock Tribute", "omschrijving": "Flower power classics" },
+      { "tijd": "18:30", "naam": "Drukwerk", "omschrijving": "Nederpop & meezingers" },
+      { "tijd": "20:30", "naam": "Rock-'n-roll act", "omschrijving": "Dansvloer vol" },
+      { "tijd": "22:30", "naam": "Afterparty", "omschrijving": "Tot de lichten aan gaan" }
+    ],
+    "voetnoot": "Indicatieve invulling voor dit concept — namen en tijden onder voorbehoud.",
+    "foto": { "src": "img/band.jpg", "alt": "Band op het podium met dansend publiek in de schemering" }
+  },
+  "eten": {
+    "kopje": "Eten & drinken",
+    "titel": "Foodtrucks & koud bier",
+    "tekst": "Een rij foodtrucks langs het terrein, een caravanbar in het midden en genoeg plek om neer te ploffen. Van burgers en friet tot iets zoets voor later op de avond.",
+    "afsluiter": "Blijf plakken tot de lampjes aangaan.",
+    "foto": { "src": "img/food.jpg", "alt": "Foodtrucks en een caravanbar met lampjes in de avond" }
+  },
+  "praktisch": {
+    "kopje": "Praktisch",
+    "titel": "Waar & wanneer",
+    "sticker": "Za 17\napril",
+    "kaarten": [
+      { "label": "Datum", "waarde": "Za 17 april", "onder": "2027", "onderAlsLabel": false },
+      { "label": "Tijd", "waarde": "15:00–00:00", "onder": "Loop binnen wanneer je wilt", "onderAlsLabel": false },
+      { "label": "Locatie", "waarde": "Zevenbergen", "onder": "Oude Suikerfabriek · Blokweg", "onderAlsLabel": false },
+      { "label": "Entree", "waarde": "Gratis", "onder": "Ook de kids", "onderAlsLabel": true }
+    ]
+  },
+  "meedoen": {
+    "titel": "Kom je met je oldtimer?",
+    "tekst": "Auto, motor of brommer — meld 'm aan en zet 'm zaterdag tussen de klassiekers. Deelname is gratis, plek is beperkt.",
+    "knop1": { "tekst": "Meld je voertuig aan", "link": "#contact" },
+    "knop2": { "tekst": "Standhouder worden", "link": "#contact" }
+  },
+  "footer": {
+    "omschrijving": "Een dag waar auto's, muziek en gezelligheid samenkomen.",
+    "adres": "Oude Suikerfabriek · Blokweg · Zevenbergen (Moerdijk)",
+    "kopOrganisatie": "Organisatie",
+    "organisatie": "Nezz Events",
+    "email": "nezzevents@gmail.com",
+    "telefoon": "06 11 95 68 85",
+    "kopVolgen": "Volg het festival",
+    "links": [
+      { "tekst": "Facebook", "url": "https://www.facebook.com/festivalopwielen/" },
+      { "tekst": "festivalopwielen.nl", "url": "https://www.festivalopwielen.nl" }
+    ]
+  }
+}

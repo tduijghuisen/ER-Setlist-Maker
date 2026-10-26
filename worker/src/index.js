@@ -10,7 +10,12 @@
 //
 // Secrets (set in Cloudflare → Worker → Settings → Variables and secrets):
 //   GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GITHUB_TOKEN, SESSION_SECRET,
-//   ALLOWED_EMAILS  (comma-separated list of allowed Google e-mails)
+//   ALLOWED_EMAILS  (comma-separated list of allowed Google e-mails — band members)
+//   FOW_EMAILS      (optional, comma-separated — Festival op Wielen editors. They
+//                    may ONLY read/write concept/fow/content.json and add photos
+//                    under concept/fow/img/u/; nothing else, not the pipeline.)
+//   EXTRA_ORIGINS   (optional, comma-separated extra site origins allowed to use
+//                    this Worker, e.g. a future own domain for the festival site)
 
 const REPO = { owner: "tduijghuisen", name: "ER-Setlist-Maker", branch: "main" };
 const ALLOWED_ORIGINS = [
@@ -18,6 +23,8 @@ const ALLOWED_ORIGINS = [
   "https://www.explosionrockets.com",
   "https://tduijghuisen.github.io",
 ];
+let EXTRA_ORIGINS = []; // filled per request from env.EXTRA_ORIGINS
+function origins() { return ALLOWED_ORIGINS.concat(EXTRA_ORIGINS); }
 const SESSION_TTL = 30 * 24 * 60 * 60 * 1000; // 30 days
 const STATE_TTL = 10 * 60 * 1000;             // 10 minutes
 
@@ -71,7 +78,7 @@ async function verifyToken(token, secret) {
 
 /* ---------- responses / CORS ---------- */
 function corsHeaders(origin) {
-  const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  const allow = origins().includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
     "Access-Control-Allow-Origin": allow,
     "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
@@ -88,12 +95,44 @@ function json(obj, status, origin) {
 function safeRedirect(target) {
   try {
     const u = new URL(target);
-    if (ALLOWED_ORIGINS.includes(u.origin)) return u.toString();
+    if (origins().includes(u.origin)) return u.toString();
   } catch (e) {}
   return ALLOWED_ORIGINS[0] + "/admin/";
 }
-function allowedEmails(env) {
-  return (env.ALLOWED_EMAILS || "").split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+function listFrom(v) {
+  return (v || "").split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+}
+function allowedEmails(env) { return listFrom(env.ALLOWED_EMAILS); }
+function fowEmails(env) { return listFrom(env.FOW_EMAILS); }
+
+/* ---------- roles & path permissions ----------
+   "band": the members CMS (data/, assets/) and the festival page.
+   "fow":  Festival op Wielen editors — only the festival page content and
+           newly uploaded photos. Decided per request from the env lists, so
+           removing an e-mail revokes access immediately, old sessions included. */
+function roleOf(email, env) {
+  email = (email || "").toLowerCase();
+  if (allowedEmails(env).includes(email)) return "band";
+  if (fowEmails(env).includes(email)) return "fow";
+  return null;
+}
+const FOW_CONTENT = "concept/fow/content.json";
+const FOW_UPLOAD = /^concept\/fow\/img\/u\/[a-z0-9][a-z0-9-]{0,80}\.(jpg|png)$/;
+function cleanPath(p) {
+  return typeof p === "string" && /^[\w\-./]+$/.test(p) && !p.includes("..") && !p.startsWith("/");
+}
+function canRead(role, p) {
+  if (!cleanPath(p)) return false;
+  if (role === "band") return p.startsWith("data/") || p.startsWith("assets/") || p === FOW_CONTENT;
+  if (role === "fow") return p === FOW_CONTENT;
+  return false;
+}
+function canWrite(role, p) {
+  if (!cleanPath(p)) return false;
+  const fow = p === FOW_CONTENT || FOW_UPLOAD.test(p);
+  if (role === "band") return p.startsWith("data/") || p.startsWith("assets/") || fow;
+  if (role === "fow") return fow;
+  return false;
 }
 
 /* ---------- GitHub ---------- */
@@ -211,6 +250,7 @@ export default {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin") || "";
     const path = url.pathname;
+    EXTRA_ORIGINS = listFrom(env.EXTRA_ORIGINS).map((o) => o.replace(/\/+$/, ""));
 
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
@@ -268,7 +308,7 @@ export default {
       if (claims.aud !== env.GOOGLE_CLIENT_ID || !claims.email_verified || !email) {
         return Response.redirect(redirect + "#error=verify", 302);
       }
-      if (!allowedEmails(env).includes(email)) {
+      if (!roleOf(email, env)) {
         return Response.redirect(redirect + "#error=notallowed", 302);
       }
       const session = await signToken({ email, exp: Date.now() + SESSION_TTL }, env.SESSION_SECRET);
@@ -279,15 +319,19 @@ export default {
     if (path === "/auth/me") {
       const s = await sessionFrom(request, env);
       if (!s) return json({ ok: false }, 401, origin);
-      return json({ ok: true, email: s.email }, 200, origin);
+      const role = roleOf(s.email, env);
+      if (!role) return json({ ok: false, error: "no access" }, 401, origin);
+      return json({ ok: true, email: s.email, role }, 200, origin);
     }
 
     /* ----- read a repo file ----- */
     if (path === "/api/read") {
       const s = await sessionFrom(request, env);
       if (!s) return json({ ok: false, error: "unauthorized" }, 401, origin);
+      const role = roleOf(s.email, env);
+      if (!role) return json({ ok: false, error: "no access" }, 401, origin);
       const p = url.searchParams.get("path") || "";
-      if (!p.startsWith("data/") && !p.startsWith("assets/")) return json({ ok: false, error: "bad path" }, 400, origin);
+      if (!canRead(role, p)) return json({ ok: false, error: "forbidden path" }, 403, origin);
       try {
         const content = await readFile(env, p);
         return json({ ok: true, path: p, content }, 200, origin);
@@ -306,12 +350,29 @@ export default {
       } catch (e) {
         return json({ ok: false, error: "bad json" }, 400, origin);
       }
+      const role = roleOf(s.email, env);
+      if (!role) return json({ ok: false, error: "no access" }, 401, origin);
       const files = Array.isArray(body.files) ? body.files : [];
       if (!files.length) return json({ ok: false, error: "no files" }, 400, origin);
+      if (files.length > 25) return json({ ok: false, error: "too many files" }, 400, origin);
       for (const f of files) {
-        if (typeof f.path !== "string" || typeof f.base64 !== "string" ||
-            !(f.path.startsWith("data/") || f.path.startsWith("assets/"))) {
+        if (!f || typeof f.path !== "string" || typeof f.base64 !== "string") {
           return json({ ok: false, error: "bad file: " + (f && f.path) }, 400, origin);
+        }
+        if (!canWrite(role, f.path)) {
+          return json({ ok: false, error: "forbidden path: " + f.path }, 403, origin);
+        }
+        if (f.base64.length > 8000000) {
+          return json({ ok: false, error: "file too large: " + f.path }, 413, origin);
+        }
+        // The festival page reads this file directly: refuse anything that would break it.
+        if (f.path === FOW_CONTENT) {
+          try {
+            const c = JSON.parse(ghDecode(f.base64));
+            if (!c || typeof c !== "object" || !c.hero) throw new Error("shape");
+          } catch (e) {
+            return json({ ok: false, error: "invalid content.json" }, 400, origin);
+          }
         }
       }
       const message = (body.message || "CMS update") + "\n\nby " + s.email;
@@ -330,6 +391,7 @@ export default {
     if (path === "/api/pipeline") {
       const s = await sessionFrom(request, env);
       if (!s) return json({ ok: false, error: "unauthorized" }, 401, origin);
+      if (roleOf(s.email, env) !== "band") return json({ ok: false, error: "forbidden" }, 403, origin);
       if (request.method !== "GET") return json({ ok: false, error: "read-only (managed in Notion)" }, 405, origin);
       if (!env.NOTION_TOKEN) return json({ ok: false, error: "notion not connected" }, 503, origin);
       const fresh = url.searchParams.get("fresh") === "1";

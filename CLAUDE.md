@@ -104,6 +104,25 @@ NL, **Belgium**, Germany, Luxembourg, Spain, England, **Wales**. 9 albums; **500
 **"Reelin' & Rockin'"** (Spotify album embed). Spotify artist `50oIPfD4YcZc5xCzvMYBVZ`.
 Webshop: https://shop.ermusicevents.nl/explosion-rockets/
 
+## Festival op Wielen concept (`concept/fow/`)
+A separate, code-gated (`vanessa`, client-side only) one-pager for the festival — **not linked** from the band
+site, `noindex`. Meant to become the festival's own site later, so keep it self-contained (relative paths only).
+- **`content.json`** is the single source of all editable text/photos/lists. `index.html` keeps the same text as
+  built-in fallback and renders `content.json` over it via `data-c` (text), `data-cm` (enter = line break),
+  `data-cp` (blank line = paragraph), `data-ci` (image), `data-ck` (button: text+link), `data-ce`/`data-ct`
+  (mail/phone), `data-cl` (lists, see `LISTS` in the script). Everything is set with `textContent` — never innerHTML.
+- **`beheer/`** = the CMS for Vanessa (0 code knowledge): Google login via the same Worker with role `fow`
+  (`FOW_EMAILS` secret), live preview in an iframe (`index.html` detects it is framed by `/beheer/` →
+  `window.FOW.render/highlight`), drafts in localStorage + new photos in IndexedDB until "Publiceren", which
+  commits `content.json` + resized photos to `concept/fow/img/u/` in one commit. `beheer/handleiding.html` is
+  her illustrated manual (screenshots in `beheer/img/`).
+- **Test mode:** open `/concept/fow/beheer/` on `localhost`/`127.0.0.1` (`python3 -m http.server`) → no login,
+  publish is simulated (`window.__lastPublish`). Use it to test and to re-shoot manual screenshots.
+- Fixed on purpose (not editable): design, background video, gate code, concept bar + disclaimer.
+- **Moving to its own domain:** copy `concept/fow/` to the new site, add the domain to the Worker secret
+  `EXTRA_ORIGINS`, and point the Worker/paths at the new repo (`REPO`, `FOW_CONTENT`, `FOW_UPLOAD` in
+  `worker/src/index.js`); drop the gate, concept bar and disclaimer there.
+
 ## Open TODOs / nice-to-haves
 - Real album covers for the placeholders if a discography section is reinstated.
 - Confirm/extend the tour agenda (currently 4/19/26 Jul 2026 found via search; the live
