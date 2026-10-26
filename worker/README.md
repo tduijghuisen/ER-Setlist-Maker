@@ -41,9 +41,8 @@ Add each as an **encrypted secret**:
 
 The booking pipeline is **managed in Notion** (the "ER Booking Pipeline" database).
 The Worker fetches it **live via the Notion API** and serves a read-only copy to the
-CMS — it is never written to the public repo/site. The `PIPELINE_KV` namespace is used
-only as a short (5 min) cache. If `NOTION_TOKEN` is missing the endpoint returns
-`503 notion not connected`.
+CMS — it is never written to the public repo/site. If `NOTION_TOKEN` is missing the
+endpoint returns `503 notion not connected`.
 
 Set up once:
 
@@ -53,8 +52,24 @@ Set up once:
    ••• → Connections → add the integration). Without this, Notion returns nothing.
 3. Add the token as an encrypted Worker secret **`NOTION_TOKEN`**.
 
-The database id is hard-coded in `src/index.js` (`NOTION_DB`). The `PIPELINE_KV`
-binding stays in `wrangler.toml` (used as the cache).
+The database id is hard-coded in `src/index.js` (`NOTION_DB`).
+
+**Optional cache.** The code can keep a 5-minute cache in a KV namespace bound as
+`PIPELINE_KV`, but no such binding is configured: the namespace that was bound
+lived in a *different* Cloudflare account, which made every deploy fail with
+"KV namespace not found" (2026-08-29 → 2026-10). Without the binding the pipeline
+is simply fetched from Notion on each request. To restore the cache, create a KV
+namespace **in the er-cms account** and add it to `wrangler.toml` (see the
+commented block there).
+
+## Deploys
+
+Workers Builds runs `npx wrangler deploy` (root `worker/`) on **every push to
+`main`**, including CMS publishes. If those builds fail, the CMS content still
+lands on the site (GitHub Pages deploys it separately), but the Worker keeps
+running its last successful version. Check Cloudflare → `er-cms` → Deployments
+after changing anything in `worker/`. `keep_vars = true` in `wrangler.toml`
+stops a deploy from removing variables set in the dashboard.
 
 Session tokens are HMAC-signed with `SESSION_SECRET`, valid 30 days, and only
 work against this Worker (they are not GitHub credentials).

@@ -2,7 +2,16 @@ name = "er-cms"
 main = "src/index.js"
 compatibility_date = "2025-06-01"
 
-# Private booking-pipeline storage (never in the public repo/site).
-[[kv_namespaces]]
-binding = "PIPELINE_KV"
-id = "92a0c3ad0e844049a3786d548a93029f"
+# Variables and secrets are managed in the Cloudflare dashboard. keep_vars stops a
+# deploy from removing plain-text variables that were set there.
+keep_vars = true
+
+# No KV binding: the booking-pipeline cache (env.PIPELINE_KV) is optional in the
+# code. The namespace that used to be bound here lived in another Cloudflare
+# account, which made every deploy since 2026-08-29 fail ("KV namespace not
+# found"). To bring the cache back, create a KV namespace in the er-cms account
+# and add it again:
+#
+# [[kv_namespaces]]
+# binding = "PIPELINE_KV"
+# id = "<namespace id from the er-cms account>"
