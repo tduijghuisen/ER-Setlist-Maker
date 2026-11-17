@@ -386,6 +386,11 @@
   .vcard .vtitle{position:absolute; z-index:2; left:0; right:0; bottom:0; padding:24px 12px 11px;
     font-family:'Archivo Black',sans-serif; font-style:italic; font-size:14px; color:var(--paper-2); background:linear-gradient(transparent, rgba(22,19,15,.92));}
   .vcard iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  /* showreel in De Band, direct onder de knoppen */
+  .showreel{margin:26px 0 0;}
+  .showreel .vcard{display:block; width:100%;}
+  .panel.ink .showreel .vcard{border-color:var(--paper-2); box-shadow:10px 10px 0 var(--yellow);}
+  .panel.ink .showreel .vcard:hover{box-shadow:13px 13px 0 var(--yellow);}
 
   /* booking */
   .booking h2{font-family:'Bangers',sans-serif; font-size:clamp(32px,6vw,58px); margin:0 0 8px; color:var(--red);
@@ -559,6 +564,14 @@ sender('cbe481761a3968');
           <a class="cbtn cbtn-r" href="#booking">✦ BOOK THE BAND</a>
           <a class="cbtn cbtn-y" href="https://shop.ermusicevents.nl/explosion-rockets/" target="_blank" rel="noopener">🛒 WEBSHOP</a>
         </div>
+      </div>
+      <!-- SHOWREEL: YouTube laadt pas na een klik -->
+      <div class="showreel">
+        <button class="vcard" type="button" id="showreel" data-yt="bSA4j9nS1po" aria-label="Speel de showreel 2027 af">
+          <img src="https://i.ytimg.com/vi/bSA4j9nS1po/maxresdefault.jpg" alt="The Explosion Rockets — showreel 2027" loading="lazy" width="1280" height="720" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/bSA4j9nS1po/hqdefault.jpg'" />
+          <span class="vplay">▶</span>
+          <span class="vtitle" data-i18n="showreel_title">SHOWREEL 2027</span>
+        </button>
       </div>
       <figure class="live-feat" style="margin:24px 0 0;">
         <img src="assets/live/live-duo.jpg" alt="The Explosion Rockets — live op het podium" loading="lazy" width="1600" height="1073" />
@@ -825,6 +838,7 @@ var I18N = {
   shows_label:['UPCOMING SHOWS','UPCOMING SHOWS'],
   video_label:['VIDEO','VIDEO'],
   newsletter_title:['ROCK ’N’ ROLL IN JE MAILBOX!','ROCK ’N’ ROLL IN YOUR INBOX!'],
+  showreel_title:['SHOWREEL 2027','SHOWREEL 2027'],
   newsletter_copy:['Mis geen optreden of nieuwtje van The Explosion Rockets. Meld je aan voor onze nieuwsbrief en blijf op de hoogte!','Never miss a show or news from The Explosion Rockets. Sign up for our newsletter and stay in the loop!'],
   newsletter_link:['AANMELDEN VOOR DE NIEUWSBRIEF','SIGN UP FOR OUR NEWSLETTER'],
   newsletter_help:['Uitschrijven kan via de link onderaan elke nieuwsbrief. Zie je het formulier niet? Mail ons op <a href="mailto:info@explosionrockets.com?subject=Nieuwsbrief">info@explosionrockets.com</a>.','You can unsubscribe using the link at the bottom of each newsletter. Can’t see the form? Email <a href="mailto:info@explosionrockets.com?subject=Newsletter">info@explosionrockets.com</a>.'],
@@ -952,6 +966,17 @@ function renderVideos(){
     g.appendChild(b);
   });
 }
+function initShowreel(){
+  var b=document.getElementById('showreel'); if(!b) return;
+  b.addEventListener('click',function(){
+    if(b.querySelector('iframe')) return;
+    var f=document.createElement('iframe');
+    f.src='https://www.youtube-nocookie.com/embed/'+b.getAttribute('data-yt')+'?autoplay=1&rel=0';
+    f.title='The Explosion Rockets — showreel 2027';
+    f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'; f.allowFullscreen=true;
+    b.innerHTML=''; b.appendChild(f);
+  });
+}
 function renderRep(){ var t=document.getElementById('repTrack'); var h=''; ARTISTS.concat(ARTISTS).forEach(function(a){ h+='<span>'+a+'</span>'; }); t.innerHTML=h; }
 
 function countUp(el){
@@ -1019,7 +1044,7 @@ function onScroll(){ var y=window.scrollY, h=document.documentElement.scrollHeig
 
 document.getElementById('year').textContent=new Date().getFullYear();
 (function(){ var t=document.getElementById('tickerTrack'); if(t) t.innerHTML+=t.innerHTML; })();
-renderVideos(); renderRep();
+renderVideos(); renderRep(); initShowreel();
 function initSingle(){
   var btn=document.getElementById('singleBtn'), box=document.getElementById('singlePlayer'), host=document.getElementById('singleEmbed');
   if(!btn||!box||!host) return;
