@@ -334,5 +334,13 @@
     "flyer": "",
     "thumb": "",
     "ticket": ""
+  },
+  {
+    "date": "2027-11-21",
+    "description": "ROCK AND ROLLIN'  SUNDAY AFTERNOON",
+    "location": "'BABBELZ' /  Klappeijstraat 11 - OOSTERHOUT (NB)",
+    "flyer": "assets/shows/rock-and-roll-sunday-afternoon-2027-11-21-mwsvwi72.jpg",
+    "thumb": "assets/shows/rock-and-roll-sunday-afternoon-2027-11-21-mwsvwi72-thumb.jpg",
+    "ticket": ""
   }
 ]
