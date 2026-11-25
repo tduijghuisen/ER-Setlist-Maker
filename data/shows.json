@@ -192,14 +192,6 @@
     "ticket": ""
   },
   {
-    "date": "2027-03-29",
-    "description": "SET THE CLOCK ON ROCK! - NOORDHOLLANDS OLDTIMERFESTIVAL VENHUIZEN",
-    "location": "VENHUIZEN(NH) / Torenweg 44",
-    "flyer": "assets/shows/set-the-clock-on-rock-noordhollands-oldt-2027-03-29-mvxhzpfe.jpg",
-    "thumb": "assets/shows/set-the-clock-on-rock-noordhollands-oldt-2027-03-29-mvxhzpfe-thumb.jpg",
-    "ticket": "https://noordhollandsoldtimerfestival.nl"
-  },
-  {
     "date": "2027-04-04",
     "description": "SHAKE, RATTLE AND ROLL! THE GOLDEN HITS OF ROCK AND ROLL",
     "location": "'Het Witte Schaap' · BREDA -  Wegedoornpage 2 - 14:30",
@@ -246,6 +238,14 @@
     "flyer": "assets/shows/1e-pinksterdag-the-explosion-rockets-fan-2027-05-16-mtuxiv38.jpg",
     "thumb": "assets/shows/1e-pinksterdag-the-explosion-rockets-fan-2027-05-16-mtuxiv38-thumb.jpg",
     "ticket": "https://www.mgtickets.nl/3443/fandag"
+  },
+  {
+    "date": "2027-05-29",
+    "description": "'FESTIVAL OP WIELEN'",
+    "location": "Ridderkerk",
+    "flyer": "assets/shows/festival-op-wielen-2027-05-29-mww0iudi.jpg",
+    "thumb": "assets/shows/festival-op-wielen-2027-05-29-mww0iudi-thumb.jpg",
+    "ticket": ""
   },
   {
     "date": "2027-06-06",
